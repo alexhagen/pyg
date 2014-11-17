@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 13 12:24:39 2014
-
-@author: ahagen
-"""
-
 import numpy as np;
 import datetime as dt;
 import math;
@@ -27,10 +20,67 @@ class ctmfd_pressure_data:
         self.calc();
     
     def calc(self):
-        self.wt = self.wt_data[self.wt_data>0.0].sum()/self.det_data[self.wt_data>0.0].sum();
-        self.wt_sigma = self.wt/math.sqrt(self.det_data[self.wt_data>0.0].sum());
-        self.p_sigma = np.std(self.p_data);
-        self.p = np.mean(self.p_data);
+        calc_meth_1(self);
+        calc_meth_2(self);
+        calc_meth_3(self);
+        calc_meth_4(self);
+        
+    def calc_meth_1(self):
+        """ In this method, we concatenate tests into one long test with many
+        events.  This removes any information from cavitations at speedup and
+        performs poorly for those tests with long waiting times."""
+        # remove all those that cavitated before up to speed
+        p_data = self.p_data[self.wt_data > 0.0]
+        det_data = self.det_data[self.wt_data > 0.0]
+        wt_data = self.wt_data[self.wt_data > 0.0]
+        # assume the entire thing is one long run with multiple events, then
+        # calculate and print those statistics
+        wt = wt_data.sum()/det_data.sum();
+        wt_sigma = wt/math.sqrt(det_data.sum());
+        p_sigma = np.std(p_data);
+        p = np.mean(p_data);
+        # print out the waiting time and such
+        print "The waiting time was %f $\pm$ %f s at pressure of %f $\pm$ %f s" % (wt, wt_sigma, p, p_sigma)
+        # histogram the data
+        # do a chi squared test
+        # regress with a gaussian
+        
+    def calc_meth_2(self):
+        """ In this method, we remove the assumption of a binomial test, and
+        make every test successful, but of a different time.  Then, we should
+        see a normal distribution around the true value of waiting time. This 
+        removes any information from cavitations at speedup"""
+        # remove all those that cavitated before up to speed
+        p_data = self.p_data[self.wt_data > 0.0]
+        det_data = self.det_data[self.wt_data > 0.0]
+        wt_data = self.wt_data[self.wt_data > 0.0]
+        p_desired = self.p_desired[self.wt_data > 0.0]
+        # turn all the data into single event runs (even if longer than 60 seconds)
+        # calculate the average run time
+        # print out the waiting time and such
+        print "The waiting time was %f $\pm$ %f s at pressure of %f $\pm$ %f s" % (wt, wt_sigma, p, p_sigma)
+        # histogram
+        # do a chi squared test
+        # regress with a gaussian
+        
+    def calc_meth_3(self):
+        """ In this method we assume that there is a value of pressure-seconds
+        that gives the data available.  This allows us to retrieve information
+        about runs that cavitation before startup. """
+        # clone the data to local variables
+        p_data = self.p_data;
+        det_data = self.det_data;
+        wt_data = self.wt_data;
+        p_desired = self.p_desired;
+        # determine the pressure seconds required for each run (speed up is triangular, then flat)
+        # determine the error with the pressure seconds
+        # print data
+        # histogram
+        # perform a chi squared test
+        # regress with a gaussian
+        
+    def calc_meth_4(self):
+        
 
 class ctmfd_data:
     ctmfd = ''; # user defined
