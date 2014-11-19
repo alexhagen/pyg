@@ -184,8 +184,18 @@ class ctmfd_data(object):
         # go through and dilute the data
         for i in np.unique(self.pneg_desired):
             pneg_desired_string = "%4.2f" % (i);
+            print pneg_desired_string;
+            print i;
             wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
-            self.data_split[pneg_desired_string] = wt;
+            if pneg_desired_string not in self.data_split:
+                self.data_split[pneg_desired_string] = wt;
+            else:
+                wt = self.data_split[pneg_desired_string];
+                np.append(wt.p_data,self.pneg[self.pneg_desired==i]);
+                np.append(wt.wt_data,self.time[self.pneg_desired==i]);
+                np.append(wt.det_data,self.det[self.pneg_desired==i]);
+                wt.calc();
+                self.data_split[pneg_desired_string] = wt;
 
     def plot_waiting_times(self):
         self.vis = ahp.ah2d();
@@ -194,6 +204,7 @@ class ctmfd_data(object):
         self.vis.add_reg_line(self.p,self.wt,regtype='exp',xerr=self.p_sigma,yerr=self.wt_sigma);
         self.vis.xlabel("Pressure ($p$) [$\mathrm{bar}$]");
         self.vis.ylabel("Waiting Time ($t_{wait}$) [$\mathrm{s}$]");
+        self.vis.add_wt_info_box(self);
         return self.vis;
     
     def generate_figure(self):

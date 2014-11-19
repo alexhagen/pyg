@@ -99,8 +99,7 @@ class ah2d:
             exp_data = RealData(x_np,y_np,sx=x_err_np,sy=y_err_np);
             odr = ODR(exp_data,exp_model,beta0=[0.,1.])
             out = odr.run();
-            print out.sum_square;
-            if out.res_var > 3:
+            if out.res_var > 1.0 and out.beta[1] < 0.0:
                 x_fit = np.linspace(min(x),max(x),num=1000);
                 y_fit = exp_func(out.beta,x_fit);
                 if out.sum_square < 20:
@@ -137,6 +136,12 @@ class ah2d:
             downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
             self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
+    def add_wt_info_box(self,ctmfd_data):
+        textstr = "ctmfd: $%s$\nfluid: %s\nsource: %s at $%s\,\mathrm{cm}$\ntemperature: $%.1f\,\mathrm{\,^{o}C}$\nperformed on: %d/%d/%d" % (ctmfd_data.ctmfd,ctmfd_data.fluid,ctmfd_data.source,str(ctmfd_data.source_dist_cm).strip('[]'),ctmfd_data.temperature,ctmfd_data.month,ctmfd_data.day,ctmfd_data.year);
+        posx = 1 - (0.05/1.61803398875);
+        posy = 1 - (0.05);
+        self.ax.text(posx, posy, textstr, transform=self.ax.transAxes, fontsize='xx-small',
+        verticalalignment='top',ha='right')
     def add_line(self,x,y,name='plot',xerr=None,yerr=None):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
