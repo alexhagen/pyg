@@ -1,10 +1,9 @@
 #import modules
-from ..ahhelper import ahimport
+from ..data import ctmfd
 #set svg as export
 import matplotlib
 matplotlib.use('pgf')
 pgf_with_pdflatex = {
-    "pgf.texsystem": "pdflatex",
     "font.family": "serif",
     "font.serif": [],
     "axes.edgecolor": "#746C66",
