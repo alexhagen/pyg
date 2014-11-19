@@ -23,7 +23,7 @@ pgf_with_pdflatex = {
 matplotlib.rcParams.update(pgf_with_pdflatex)
 import matplotlib.pyplot as plt
 plt.close("all")
-#import numpy as np
+import numpy as np
 #import matplotlib.animation as animation
 
 #make the line graphing class
@@ -32,8 +32,10 @@ class ah2d:
     width = 3.25;
     height = 3.25/1.61803398875;
     plotnum = 0;
+    regnum = 0;
     lines = {};
     bars = {};
+    regs = {};
     leg=False;
     marker = {0: '.',
               1: ',',
@@ -67,6 +69,33 @@ class ah2d:
     def lines_off(self):
         for key in self.lines:
             self.lines[key].set_lw(0.0)
+    def add_reg_line(self,x,y,regtype='lin',name='reg',xerr=None,yerr=None):
+        self.regnum = self.regnum+1;
+        if name is 'reg':
+            name = 'reg%d' % (self.regnum);
+        # determine the regression
+        if regtype.isdigit():
+            # determine the coefficients of degree regtype
+            coeffs = np.polyfit(x,y,regtype);
+            # determine a fine grid of values
+            x_fit = np.linspace(x.min(),x.max(),num=1000);
+            y_fit = np.zeros(x_fit.shape);
+            for i in np.arange(0,regtype):
+                print i;
+                y_fit = y_fit + coeffs[i] * np.power(x_fit,i);
+        elif regtype is 'exp':
+            print 'hi';            
+            #do something;
+        elif regtype is 'log':
+            print 'hi';            
+            #do something;         
+        # plot the regression
+        lines = plt.plot(x_fit,y_fit,label=name,color='#A7A9AC');
+        # add the regression to the dict of regressions
+        self.regs[name] = line
+        # make sure these are lines
+        self.regs[name].set_markersize(0);
+        self.regs[name].set_lw(1.0);
     def add_line(self,x,y,name='plot',xerr=None,yerr=None):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
