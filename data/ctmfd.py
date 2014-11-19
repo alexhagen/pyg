@@ -1,16 +1,19 @@
 import numpy as np;
 import datetime as dt;
 import math;
+from matplotlib.pyplot import close
+from ..plotting import twod as ahp
 
-class ctmfd_pressure_data:
-    wt = 0.00;
-    wt_sigma = 0.00;
-    p = 0.00;
-    p_sigma = 0.00;
-    p_desired = 0.00;
-    p_data = np.ndarray((1,1));
-    wt_data = np.ndarray((1,1));
-    det_data = np.ndarray((1,1));
+class ctmfd_pressure_data(object):
+    def __init__(self):
+        self.wt = 0.00;
+        self.wt_sigma = 0.00;
+        self.p = 0.00;
+        self.p_sigma = 0.00;
+        self.p_desired = 0.00;
+        self.p_data = np.ndarray((1,1));
+        self.wt_data = np.ndarray((1,1));
+        self.det_data = np.ndarray((1,1));
     
     def __init__(self,_p_desired,_p_data,_wt_data,_det_data):
         self.p_desired = _p_desired;
@@ -78,20 +81,29 @@ class ctmfd_pressure_data:
         # perform a chi squared test
         # regress with a gaussian
 
-class ctmfd_data:
-    ctmfd = ''; # user defined
-    fluid = ''; # from header of file
-    density = 0.00; # from header of file
-    start = ''; # from header of file
-    stop = ''; # from header of file
-    pneg_desired = np.ndarray((1,1)); # this can change
-    source = ''; # user defined
-    source_dist_cm = 0.00; # user defined
-    source_shielding = ''; # user defined
-    meniscus = 0.00; # from header of file
-    temperature = 0.00; # user defined
-    det = np.ndarray((1,1)); # this can change
-    data_split = {}; # this is hard
+class ctmfd_data(object):
+    def __init__(self):
+        self.ctmfd = ''; # user defined
+        self.fluid = ''; # from header of file
+        self.density = 0.00; # from header of file
+        self.year = 0;
+        self.month = 0;
+        self.day = 0;
+        self.start = ''; # from header of file
+        self.stop = ''; # from header of file
+        self.pneg_desired = np.ndarray((1,1)); # this can change
+        self.source = ''; # user defined
+        self.source_dist_cm = 0.00; # user defined
+        self.source_shielding = 'none'; # user defined
+        self.meniscus = 0.00; # from header of file
+        self.temperature = 0.00; # user defined
+        self.det = np.ndarray((1,1)); # this can change
+        self.data_split = {}; # this is hard
+        # data stuff
+        self.wt = [];
+        self.wt_sigma = [];
+        self.p = [];
+        self.p_sigma = [];
     
     def add_data(self,filename):
         f = open(filename,'r')
@@ -99,6 +111,11 @@ class ctmfd_data:
         l = f.readline();
         if "Start Date: " in l:
             self.read_jeff_ctmfd_file(filename);
+        for key in self.data_split:
+            self.wt.append(self.data_split[key].wt);
+            self.wt_sigma.append(self.data_split[key].wt_sigma);
+            self.p.append(self.data_split[key].p);
+            self.p_sigma.append(self.data_split[key].p_sigma);
     
     def read_jeff_ctmfd_file(self,filename):
         f = open(filename,'r')
@@ -108,14 +125,14 @@ class ctmfd_data:
         # Second line is header with the start time
         l = f.readline();
         starttime = l.strip(" Start Time: ");
-        self.start = timestamptodatetime(starttime,startdate);
+        self.start,self.year,self.month,self.day = timestamptodatetime(starttime,startdate);
         # Third line is header with end date
         l = f.readline();
         stopdate = l.strip("Save Date: ");
         # Fourth line is header with end time
         l = f.readline();
         stoptime = l.strip(" Save Time: ");
-        self.stop = timestamptodatetime(stoptime,stopdate);
+        self.stop,_,_,_ = timestamptodatetime(stoptime,stopdate);
         # Fifth line is blank
         f.readline()
         # Sixth line is the fluid name
@@ -138,12 +155,18 @@ class ctmfd_data:
         # Eleventh line is blank
         f.readline()
         # Twelth line is the headers
-        f.readline()
+        l = f.readline()
         # Close the file, we've processed the header
         f.close()
-        # Now read the data
-        arr=np.loadtxt(filename,skiprows=13)
-        arr=arr[0:-1,:]
+        if "IR Temp" in l:
+            print 'we have temp data'
+            arr=np.loadtxt(filename,skiprows=13);
+            arr=arr[0:-1,:];
+            self.temperature = np.mean(arr[:,12]);
+        else:
+            # Now read the data
+            arr=np.loadtxt(filename,skiprows=13)
+            arr=arr[0:-1,:]
         self.pneg_desired = arr[:,1]
         self.rps = arr[:,2]
         self.pneg = arr[:,3]
@@ -163,7 +186,21 @@ class ctmfd_data:
             pneg_desired_string = "%4.2f" % (i);
             wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
             self.data_split[pneg_desired_string] = wt;
-        
+
+    def plot_waiting_times(self):
+        self.vis = ahp.ah2d();
+        for key in self.data_split:
+            self.vis.add_waiting_time(self);
+        self.vis.add_reg_line(self.p,self.wt,regtype='exp',xerr=self.p_sigma,yerr=self.wt_sigma);
+        self.vis.xlabel("Pressure ($p$) [$\mathrm{bar}$]");
+        self.vis.ylabel("Waiting Time ($t_{wait}$) [$\mathrm{s}$]");
+        return self.vis;
+    
+    def generate_figure(self):
+        self.plot_waiting_times();
+        filename = "%s_%s_%scm_%s_(%d_%d_%d)" % (self.ctmfd,self.source,str(self.source_dist_cm).strip('[]'),self.source_shielding,self.month,self.day,self.year)
+        print filename        
+        #self.vis.export(filename);
     
 def timestamptodatetime(timestr,datestr):
     arr = datestr.split("/");
@@ -179,4 +216,4 @@ def timestamptodatetime(timestr,datestr):
         hour = hour + 12;
     # Convert to datetime
     datetime_obj = dt.datetime(year,month,day,hour,minute);
-    return datetime_obj;
+    return datetime_obj, year, month, day;

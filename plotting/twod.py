@@ -1,5 +1,8 @@
 #import modules
-from ..data import ctmfd
+#from ..data import ctmfd
+from scipy.optimize import curve_fit
+from scipy.odr import *
+from math import exp
 #set svg as export
 import matplotlib
 matplotlib.use('pgf')
@@ -78,24 +81,62 @@ class ah2d:
             # determine the coefficients of degree regtype
             coeffs = np.polyfit(x,y,regtype);
             # determine a fine grid of values
-            x_fit = np.linspace(x.min(),x.max(),num=1000);
-            y_fit = np.zeros(x_fit.shape);
-            for i in np.arange(0,regtype):
-                print i;
-                y_fit = y_fit + coeffs[i] * np.power(x_fit,i);
+            x_fit = np.linspace(min(x),max(x),num=1000);
+            y_fit = np.polyval(coeffs,x_fit);
         elif regtype is 'exp':
-            print 'hi';            
-            #do something;
+            x_np = np.array(x);
+            x_err_np = np.array(xerr);
+            y_np = np.array(y);
+            y_err_np = np.array(yerr);
+            #coeffs = np.polyfit(x,y_log,1);
+            #x_fit = np.linspace(min(x),max(x),num=1000);
+            #y_fit_log = np.polyval(coeffs,x_fit);
+            #y_fit = np.exp(y_fit_log);
+            def exp_func(B,x):
+                return B[0]*np.exp(B[1]*x);
+            
+            exp_model = Model(exp_func);
+            exp_data = RealData(x_np,y_np,sx=x_err_np,sy=y_err_np);
+            odr = ODR(exp_data,exp_model,beta0=[0.,1.])
+            out = odr.run();
+            print out.sum_square;
+            if out.res_var > 3:
+                x_fit = np.linspace(min(x),max(x),num=1000);
+                y_fit = exp_func(out.beta,x_fit);
+                if out.sum_square < 20:
+                    y_err_up = exp_func(out.beta+out.sd_beta,x_fit);
+                    y_err_down = exp_func(out.beta-out.sd_beta,x_fit);
+                else:
+                    y_err_up = None;
+                    y_err_down = None;
+                    print "showing the exponential error will occlude data";
+            else:
+                y_fit = None;
+                x_fit = None;
+                y_err_up = None;
+                y_err_down = None;
+                print "the exponential does not fit to the data";
         elif regtype is 'log':
-            print 'hi';            
-            #do something;         
+            print 'I haven\'t yet completed the log fitting!';            
+            #do something;
+        elif regtype is 'gaussian':
+            def gaus(x,a,x0,sigma):
+                return a*exp(-(x-x0)**2/(2*sigma**2));
+            pop,pcov = curve_fit(gaus,x,y,p0=[1,np.mean(y),np.std(y)]);
+            x_fit = x_fit = np.linspace(min(x),max(x),num=1000);
+            y_fit = gaus(x_fit);
         # plot the regression
-        lines = plt.plot(x_fit,y_fit,label=name,color='#A7A9AC');
-        # add the regression to the dict of regressions
-        self.regs[name] = line
-        # make sure these are lines
-        self.regs[name].set_markersize(0);
-        self.regs[name].set_lw(1.0);
+        if x_fit is not None and y_fit is not None:
+            lines = plt.plot(x_fit,y_fit,label=name,color='#A7A9AC',ls='--');
+            self.regs[name] = lines[0];
+            # make sure these are lines
+            lines[0].set_markersize(0);
+            lines[0].set_lw(1.0);
+        if y_err_up is not None and y_err_down is not None:
+            uperrlines = plt.plot(x_fit,y_err_up,color='#D1D3D4',ls='--');
+            downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
+            self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
+            # add the regression to the dict of regressions
     def add_line(self,x,y,name='plot',xerr=None,yerr=None):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
