@@ -39,6 +39,7 @@ class ah2d:
     lines = {};
     bars = {};
     regs = {};
+    reg_string = {};
     leg=False;
     marker = {0: '.',
               1: ',',
@@ -54,6 +55,7 @@ class ah2d:
     def __init__(self):
         self.fig = plt.figure();
         self.ax = self.fig.add_subplot(111);
+        self.reg_string = {};
     def xlabel(self,label):
         self.ax.set_xlabel(label);
     def ylabel(self,label):
@@ -102,9 +104,13 @@ class ah2d:
             if out.res_var > 1.0 and out.beta[1] < 0.0:
                 x_fit = np.linspace(min(x),max(x),num=1000);
                 y_fit = exp_func(out.beta,x_fit);
+                self.reg_string[name] = '$t_{wait} = e^{%.2f \cdot p} + %.2f$' % (out.beta[1],out.beta[0]);
                 if out.sum_square < 20:
                     y_err_up = exp_func(out.beta+out.sd_beta,x_fit);
                     y_err_down = exp_func(out.beta-out.sd_beta,x_fit);
+                    if y_err_up[0] > 120:
+                        y_err_up = None;
+                        y_err_down = None;
                 else:
                     y_err_up = None;
                     y_err_down = None;
@@ -136,12 +142,21 @@ class ah2d:
             downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
             self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
-    def add_wt_info_box(self,ctmfd_data):
-        textstr = "ctmfd: $%s$\nfluid: %s\nsource: %s at $%s\,\mathrm{cm}$\ntemperature: $%.1f\,\mathrm{\,^{o}C}$\nperformed on: %d/%d/%d" % (ctmfd_data.ctmfd,ctmfd_data.fluid,ctmfd_data.source,str(ctmfd_data.source_dist_cm).strip('[]'),ctmfd_data.temperature,ctmfd_data.month,ctmfd_data.day,ctmfd_data.year);
+    def add_wt_info_box(self,ctmfd_data):        
+        textstr = "ctmfd: $%s$\n" % (ctmfd_data.ctmfd);
+        textstr += "fluid: %s\n" % (ctmfd_data.fluid);
+        textstr += "source: %s at $%s\,\mathrm{cm}$\n" % (ctmfd_data.source,
+                        str(ctmfd_data.source_dist_cm).strip('[]'));
+        textstr += "temperature: $%.1f\,\mathrm{\,^{o}C}$\n" % (ctmfd_data.temperature);
+        textstr += "performed on: %d/%d/%d\n" % (ctmfd_data.month,ctmfd_data.day,ctmfd_data.year);
+        print self.reg_string
+        if self.reg_string is not {}:
+            for key in self.reg_string:
+                textstr += "reg: %s\n" % (self.reg_string[key]);
         posx = 1 - (0.05/1.61803398875);
         posy = 1 - (0.05);
-        self.ax.text(posx, posy, textstr, transform=self.ax.transAxes, fontsize='xx-small',
-        verticalalignment='top',ha='right')
+        self.ax.text(posx, posy, textstr, transform=self.ax.transAxes,
+                     fontsize='xx-small',va='top',ha='right')
     def add_line(self,x,y,name='plot',xerr=None,yerr=None):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
