@@ -5,5 +5,5 @@ Most of my work in my Masters was involved with simulation of physics.  In this 
 ## Contents
 
 - [MCNP Wrapper](../blob/master/simulation/AHMCNP-README.md)
-- [CAGG - a COMSOL wrapper](AHCAGG-README.md)
-- [SPICE Wrapper](AHSPICE-README.md)
+- [CAGG - a COMSOL wrapper](../blob/master/simulation/AHCAGG-README.md)
+- [SPICE Wrapper](../blob/master/simulation/AHSPICE-README.md)
