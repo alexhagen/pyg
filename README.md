@@ -34,6 +34,13 @@ cd /path/to/parent/dir
 git clone ssh://git@githost.ecn.purdue.edu/alexhagen/ahpy.git
 ```
 
+Everytime you start writing code, you should make sure you have updated sources, so always make sure to go into the directory and pull when you start writing:
+
+```bash
+cd /path/to/parent/dir
+git pull
+```
+
 Then, you can use it in any python file by putting the following lines or something similar in your file:
 
 ```python
