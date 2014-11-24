@@ -8,7 +8,7 @@ An input deck can be created with just a few line python file, such as:
 
 ```python
 
-import ..simulation.ahmcnp
+import ..simulation.mcnp
 
 sim = mcnp();
 sim.add_message("hi");
