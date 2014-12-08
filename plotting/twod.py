@@ -21,7 +21,8 @@ pgf_with_pdflatex = {
     "axes.linewidth": 0.5,
     "axes.labelsize": "medium",
     "legend.fontsize": "x-small",
-    "legend.frameon": False
+    "legend.frameon": False,
+    "font.serif": "Bitstream Vera Serif"
 }
 matplotlib.rcParams.update(pgf_with_pdflatex)
 import matplotlib.pyplot as plt
@@ -30,7 +31,8 @@ import numpy as np
 #import matplotlib.animation as animation
 
 #make the line graphing class
-class ah2d:
+class ah2d(object):
+    artists = [];
     landscape = True;
     width = 3.25;
     height = 3.25/1.61803398875;
@@ -41,6 +43,9 @@ class ah2d:
     regs = {};
     reg_string = {};
     leg=False;
+    leg_col_one_col = 2
+    leg_col_two_col = 3
+    leg_col_full_page = 4
     marker = {0: '.',
               1: ',',
               2: '+',
@@ -57,9 +62,15 @@ class ah2d:
         self.ax = self.fig.add_subplot(111);
         self.reg_string = {};
     def xlabel(self,label):
-        self.ax.set_xlabel(label);
+        xlab=self.ax.set_xlabel(label);
+        self.artists.append(xlab);
     def ylabel(self,label):
-        self.ax.set_ylabel(label);
+        ylab=self.ax.set_ylabel(label);
+        self.artists.append(ylab);
+    def xlim(self,minx,maxx):
+        self.ax.set_xlim([minx,maxx]);
+    def ylim(self,miny,maxy):
+        self.ax.set_ylim([miny,maxy]);
     def legend(self):
         self.ax.legend();
     def markers_on(self):
@@ -78,6 +89,10 @@ class ah2d:
         self.regnum = self.regnum+1;
         if name is 'reg':
             name = 'reg%d' % (self.regnum);
+        # set up the error bounds
+        if yerr is None:
+            y_err_up = None;
+            y_err_down = None;
         # determine the regression
         if regtype.isdigit():
             # determine the coefficients of degree regtype
@@ -85,6 +100,19 @@ class ah2d:
             # determine a fine grid of values
             x_fit = np.linspace(min(x),max(x),num=1000);
             y_fit = np.polyval(coeffs,x_fit);
+            self.coeffs = coeffs;
+            name = '$y\left( x \\right) = ';
+            for i in range(0,int(regtype)):
+                if coeffs[i] > 0:
+                    name += '+ %f' % (abs(coeffs[i]));
+                    if i > 0:
+                        name += 'x^{%d}' % (i);
+                elif coeffs[i] < 0:
+                    name += '- %f' % (abs(coeffs[i]));
+                    if i > 0:
+                        name += 'x^{%d}' % (i);
+            name += '$';
+            print name;
         elif regtype is 'exp':
             x_np = np.array(x);
             x_err_np = np.array(xerr);
@@ -132,6 +160,8 @@ class ah2d:
             y_fit = gaus(x_fit);
         # plot the regression
         if x_fit is not None and y_fit is not None:
+            self.x_fit = x_fit;
+            self.y_fit = y_fit;
             lines = plt.plot(x_fit,y_fit,label=name,color='#A7A9AC',ls='--');
             self.regs[name] = lines[0];
             # make sure these are lines
@@ -165,12 +195,22 @@ class ah2d:
         self.lines[name] = (line)
         self.markers_on();
         self.lines_off();
-    def add_bar(self,y,bins,name='plot'):
+    def add_hist(self,y,bins,name='plot'):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
         n,bins,patches=plt.hist(y,bins=bins,label=name,facecolor='gray',alpha=0.5);
         self.bars[name] = patches;
+    def add_bar(self,x,y,name='plot'):
+        self.plotnum=self.plotnum+1;
+        if name is 'plot':
+            name = 'plot%d' % (self.plotnum)
+        delta = [j-i for i, j in zip(x[:-1], x[1:])];
+        delta.append(delta[-1]);
+        #x = [j - (i/2) for i, j in zip(delta, x)];
+        patches=plt.bar(x,y,width=delta,label=name,facecolor='gray',alpha=0.5);
+        self.bars[name] = patches;
+        return x,y,delta;
     def add_waiting_time(self,ctmfd_data,name='plot'):
         p = [];
         perr = [];
@@ -192,21 +232,25 @@ class ah2d:
             self.height = self.width*1.61803398875;
     def remove_font_sizes(self,filename):
         f=open(filename,'r')
-        string = f.read()
+        string = "\\centering \n" + f.read()
         f.close()
         f=open(filename,'w')
         string=string.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
         string=string.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")       
         f.write(string)
         f.close()
+    def long_name(self):
+        self.leg_col_one_col = 1
+        self.leg_col_two_col = 1
+        self.leg_col_full_page = 1
     def export(self,filename):
         self.width=3.25;
         self.det_height();
         self.fig.set_size_inches(self.width,self.height);
         if self.leg:        
             self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=2, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_onecolumn.pgf');
+                           ncol=self.leg_col_one_col, mode="expand", borderaxespad=0.)        
+        plt.savefig(filename+'_onecolumn.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
         self.remove_font_sizes(filename+'_onecolumn.pgf');
         plt.savefig(filename+'_onecolumn.svg');
         self.width=6.25;
@@ -214,8 +258,8 @@ class ah2d:
         self.fig.set_size_inches(self.width,self.height);
         if self.leg:        
             self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=3, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_twocolumn.pgf');
+                           ncol=self.leg_col_two_col, mode="expand", borderaxespad=0.)        
+        plt.savefig(filename+'_twocolumn.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
         self.remove_font_sizes(filename+'_twocolumn.pgf');
         plt.savefig(filename+'_twocolumn.svg');
         self.width=10;
@@ -223,7 +267,7 @@ class ah2d:
         self.fig.set_size_inches(self.width,self.height);
         if self.leg:        
             self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=4, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_fullpage.pgf');
+                           ncol=self.leg_col_full_page, mode="expand", borderaxespad=0.)        
+        plt.savefig(filename+'_fullpage.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
         self.remove_font_sizes(filename+'_fullpage.pgf');
         plt.savefig(filename+'_fullpage.svg');
