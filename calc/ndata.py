@@ -4,6 +4,11 @@ import math;
 # decay:  https://t2.lanl.gov/nis/data/endf/decayVII.1.html
 # photon: https://t2.lanl.gov/nis/data/endf/endfvii-g.html
 # neutron: https://t2.lanl.gov/nis/data/endf/endfvii-n.html
+class nuclide(object):
+	name = '';
+	t_1_2 = None;
+	d_const = None;
+	
 
 class ndata(object):
 	nuclide = '';
