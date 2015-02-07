@@ -5,43 +5,54 @@ from scipy.odr import *
 from math import exp
 #set svg as export
 import matplotlib
+import string
 matplotlib.use('pgf')
 pgf_with_pdflatex = {
     "font.family": "serif",
     "font.serif": [],
+    "axes.linewidth": 0.5,
     "axes.edgecolor": "#746C66",
+    "xtick.major.width" : 0.25,
+    "xtick.major.size" : 2,
+    "xtick.direction" : "in",
+    "xtick.minor.width" : 0.125,
     "xtick.color": "#746C66",
+    "ytick.major.width" : 0.25,
+    "ytick.major.size" : 2,
+    "ytick.minor.width" : 0.125,
     "ytick.color": "#746C66",
+    "ytick.direction" : "in",
     "text.color": "#746C66",
     "axes.facecolor": "none",
     "figure.facecolor": "none",
-    "axes.labelcolor": "black",
+    "axes.labelcolor": "#746C66",
     "xtick.labelsize": "x-small",
     "ytick.labelsize": "x-small",
-    "axes.linewidth": 0.5,
     "axes.labelsize": "medium",
     "legend.fontsize": "x-small",
     "legend.frameon": False,
-    "font.serif": "Bitstream Vera Serif"
+    "axes.grid"     : False,
+    "grid.color"    : "#A7A9AC",   # grid color
+    "grid.linestyle": ":",       # dotted
+    "grid.linewidth": 0.125,     # in points
+    "grid.alpha"    : 0.5,     # transparency, between 0.0 and 1.0
+    "savefig.transparent" : True,
+    "path.simplify" : True
 }
+'''
+    "path.simplify" : True,
+    "axes.formatter.use_mathtext" : True,
+    "axes.below" : True
+'''
 matplotlib.rcParams.update(pgf_with_pdflatex)
 import matplotlib.pyplot as plt
 plt.close("all")
 import numpy as np
+#from mpl_toolkits.axes_grid.axislines import Subplot
 #import matplotlib.animation as animation
 
 #make the line graphing class
 class ah2d(object):
-    artists = [];
-    landscape = True;
-    width = 3.25;
-    height = 3.25/1.61803398875;
-    plotnum = 0;
-    regnum = 0;
-    lines = {};
-    bars = {};
-    regs = {};
-    reg_string = {};
     leg=False;
     leg_col_one_col = 2
     leg_col_two_col = 3
@@ -60,6 +71,19 @@ class ah2d(object):
     def __init__(self):
         self.fig = plt.figure();
         self.ax = self.fig.add_subplot(111);
+        self.ax.spines['top'].set_visible(False);
+        self.ax.spines['right'].set_visible(False);
+        self.ax.get_xaxis().tick_bottom();
+        self.ax.get_yaxis().tick_left();
+        self.artists = [];
+        self.landscape = True;
+        self.width = 3.25;
+        self.height = self.width/1.61803398875;
+        self.plotnum = 0;
+        self.regnum = 0;
+        self.lines = {};
+        self.bars = {};
+        self.regs = {};
         self.reg_string = {};
     def xlabel(self,label):
         xlab=self.ax.set_xlabel(label);
@@ -73,6 +97,14 @@ class ah2d(object):
         self.ax.set_ylim([miny,maxy]);
     def legend(self):
         self.ax.legend();
+        (legobjs,legtitles) = self.ax.get_legend_handles_labels();
+        inc_objs = [];
+        inc_titles = [];
+        for i in range(0,len(legtitles)):
+            if 'connector' not in legtitles[i]:
+                inc_objs.append(legobjs[i]);
+                inc_titles.append(legtitles[i]);
+        self.ax.legend(inc_objs,inc_titles);
     def markers_on(self):
         for key in self.lines:
             self.lines[key].set_markersize(6)
@@ -81,10 +113,10 @@ class ah2d(object):
             self.lines[key].set_markersize(0)
     def lines_on(self):
         for key in self.lines:
-            self.lines[key].set_lw(1.0)
+            self.lines[key].set_alpha(1.0)
     def lines_off(self):
         for key in self.lines:
-            self.lines[key].set_lw(0.0)
+            self.lines[key].set_alpha(0.0)
     def add_reg_line(self,x,y,regtype='lin',name='reg',xerr=None,yerr=None):
         self.regnum = self.regnum+1;
         if name is 'reg':
@@ -187,12 +219,25 @@ class ah2d(object):
         posy = 1 - (0.05);
         self.ax.text(posx, posy, textstr, transform=self.ax.transAxes,
                      fontsize='xx-small',va='top',ha='right')
-    def add_line(self,x,y,name='plot',xerr=None,yerr=None):
+    def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        line,caplines,barlinecols=plt.errorbar(x,y,label=name,color='black',xerr=xerr,yerr=yerr,marker=self.marker[self.plotnum%7],ls=self.linestyle[self.plotnum%4])
-        self.lines[name] = (line)
+        if linestyle is None:
+            _ls = self.linestyle[self.plotnum%4];
+        else:
+            _ls = linestyle;
+        if xerr is None and yerr is None:
+            line=plt.plot(x,y,label=name,color='black',
+                marker=self.marker[self.plotnum%7],
+                ls=_ls,lw=linewidth,solid_capstyle='butt');
+            for i in range(0,len(line)):
+                self.lines[name+'%d' % (i)] = (line[i])
+        else:
+            line,caplines,barlinecols=plt.errorbar(x,y,label=name,color='black',
+                xerr=xerr,yerr=yerr,marker=self.marker[self.plotnum%7],
+                ls=_ls,ecolor='#A7A9AC',lw=linewidth);
+            self.lines[name] = (line)
         self.markers_on();
         self.lines_off();
     def add_hist(self,y,bins,name='plot'):
@@ -224,7 +269,8 @@ class ah2d(object):
         self.add_line(p,wt,xerr=perr,yerr=wterr,name=name)
     def add_legend(self):
         self.leg=True
-        self.ax.legend();
+        leg = self.ax.legend();
+        self.artists.append(leg);
     def det_height(self):
         if self.landscape:
             self.height = self.width/1.61803398875;
@@ -232,12 +278,13 @@ class ah2d(object):
             self.height = self.width*1.61803398875;
     def remove_font_sizes(self,filename):
         f=open(filename,'r')
-        string = "\\centering \n" + f.read()
+        fstring = "\\centering \n" + f.read()
         f.close()
         f=open(filename,'w')
-        string=string.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
-        string=string.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")       
-        f.write(string)
+        fstring=fstring.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
+        fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")       
+        fstring = filter(lambda x: x in string.printable, fstring);
+        f.write(fstring)
         f.close()
     def long_name(self):
         self.leg_col_one_col = 1
@@ -271,3 +318,12 @@ class ah2d(object):
         plt.savefig(filename+'_fullpage.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
         self.remove_font_sizes(filename+'_fullpage.pgf');
         plt.savefig(filename+'_fullpage.svg');
+    def export_png(self,filename):
+        self.width=3.25*4;
+        self.det_height();
+        self.fig.set_size_inches(self.width,self.height);
+        '''
+        if self.leg:        
+            self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+                           ncol=self.leg_col_one_col, mode="expand", borderaxespad=0.)'''    
+        plt.savefig(filename+'_onecolumn.png',bbox_extra_artists=self.artists, bbox_inches='tight');

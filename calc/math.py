@@ -1,4 +1,7 @@
 import numpy as np
+from ahpy.plotting import twod as ahp
+from scipy.optimize import curve_fit
+from scipy.odr import *
 
 class rand_gen(object):
 	def __init__(self):
@@ -17,3 +20,161 @@ class rand_gen(object):
 		r_bar = np.average(self.rands);
 		r_std = np.std(self.rands);
 		return (r_bar,r_std);
+
+class curve(object):
+	def __init__(self,x,y,data='smooth',name=''):
+		self.name = name;
+		self.data = data;
+		# assert that x and y are 1d lists of same size
+		if isinstance(x,list):
+			self.x = np.array(x);
+		else:
+			self.x = x;
+		if isinstance(y,list):
+			self.y = np.array(y);
+		else:
+			self.y = y;
+		self.sort();
+	def sort(self):
+		idx = self.x.argsort();
+		self.x = self.x[idx];
+		self.y = self.y[idx];
+	def add_data(self,x,y):
+		self.x = np.append(self.x,x);
+		self.y = np.append(self.y,y);
+		self.sort();
+	def inrange(self,x):
+		if x >= self.x.min() and x <= self.x.max():
+			return True;
+		else:
+			return False;
+	def at(self,x):
+		if x >= self.x.min() and x <= self.x.max():
+			# if it is in the data range, interpolate
+			y = self.interpolate(x);
+		else: 
+			# if it is not in the data range, extrapolate
+			y = self.extrapolate(x);
+		return y;
+	def normalize(self,xmin=None,xmax=None,norm='max'):
+		if norm is 'max':
+			self.y = self.y / self.y.max();
+		elif norm is 'int':
+			if xmin is None:
+				xmin = self.x.min();
+			if xmax is None:
+				xmax = self.x.max();
+			self.y = self.y / \
+				self.integrate(xmin,xmax);
+	def average(self,xmin=None,xmax=None):
+		if xmin is None:
+			xmin = self.x.min();
+		if xmax is None:
+			xmax = self.x.max();
+		mean = self.integrate(self.x.min(),self.x.max()) \
+			/ (xmax - xmin);
+		return mean;
+	def interpolate(self,x):
+		# if not, we have to do linear interpolation
+		# find closest value below
+		x_down,y_down = self.find_nearest_down(x);
+		# find the closest value above
+		x_up,y_up = self.find_nearest_up(x);
+		# find the percentage of x distance between
+		x_dist = (x-x_down);
+		# find the slope
+		m = (y_up-y_down)/(x_up-x_down);
+		# find the y value
+		y = y_down + x_dist * m;
+		return y;
+	def extrapolate(self,x):
+		#print "You need to write the extrapolate method!";
+		return 0;
+	def find_nearest_down(self,x):
+		idx = (np.abs(x-self.x)).argmin()
+		return (self.x[idx-1], self.y[idx-1])
+	def find_nearest_up(self,x):
+		idx = (np.abs(x-self.x)).argmin()
+		return (self.x[idx], self.y[idx])
+	def integrate(self,x_min,x_max,quad='lin'):
+		# for now, we'll just do simpsons rule until I write 
+		# more sophisticated
+		return self.trapezoidal(x_min,x_max,quad);
+	def trapezoidal(self,x_min,x_max,quad='lin'):
+		# first we assert that all values are in the region
+		# then, we find a bunch of x's between these values
+		if quad is 'lin':
+			x_sub = np.linspace(x_min,x_max,1000);
+		elif quad is 'log':
+			x_sub = np.logspace(np.log10(x_min),np.log10(x_max),num=1000);
+		# then, between each x, we find the value there
+		y_sub = [ self.at(x_i) for x_i in x_sub ];
+		# then, we do the trapezoidal rule
+		#return np.sum([ ((x_sub[i + 1] - x_sub[i]) / 2.0) * \
+		#	(y_sub[i] + y_sub[i + 1]) \
+		#	for i in np.arange(0,len(x_sub)-1)]);
+		return np.sum([ ((x_sub[i+1]-x_sub[i])*y_sub[i]) + \
+			((x_sub[i+1]-x_sub[i])*(y_sub[i+1]-y_sub[i]))/2 \
+			for i in np.arange(0,len(x_sub)-1) ]);
+	def plot(self,x=None,y=None,addto=None,linestyle=None):
+		if addto is None:
+			plot = ahp.ah2d();
+		else:
+			plot = addto;
+		if x is None and y is None:
+			x = self.x;
+			y = self.y;
+		if self.data is 'binned':
+			# plot the bins
+			# setup a matix
+			# preallocate this later ***********************************
+			plot_x = np.array([]);
+			plot_y = np.array([]);
+			# plot the thick bars
+			for i in np.arange(0,len(x)-1):
+				plot_x = np.append(plot_x,x[i]);
+				plot_y = np.append(plot_y,y[i]);
+				plot_x = np.append(plot_x,x[i+1]);
+				plot_y = np.append(plot_y,y[i]);
+				plot_x = np.append(plot_x,np.nan);
+				plot_y = np.append(plot_y,np.nan);
+			plot.add_line(plot_x,plot_y,name=self.name,linewidth=4.0,linestyle='-');
+			conn_x = np.array([]);
+			conn_y = np.array([]);
+			for i in np.arange(1,len(x)):
+				conn_x = np.append(conn_x,x[i]);
+				conn_y = np.append(conn_y,y[i-1]);
+				conn_x = np.append(conn_x,x[i]);
+				conn_y = np.append(conn_y,y[i]);
+				conn_x = np.append(conn_x,np.nan);
+				conn_y = np.append(conn_y,np.nan);
+			plot.add_line(conn_x,conn_y,name=self.name+'connectors',linewidth=0.1,linestyle='-');
+			plot.markers_off();
+			plot.lines_on();
+		elif self.data is 'smooth':
+			plot.add_line(x,y,name=self.name,linestyle=linestyle);
+		return plot;
+	def decimate(self,R):
+		pad_size = math.ceil(float(self.x.size)/R)*R - self.x.size;
+		arr_x_padded = np.append(self.x, np.zeros(pad_size)*np.NaN);
+		self.x = scipy.nanmean(arr_x_padded.reshape(-1,R), axis=1);
+		arr_y_padded = np.append(self.y, np.zeros(pad_size)*np.NaN);
+		self.y = scipy.nanmean(arr_y_padded.reshape(-1,R), axis=1);
+	def fit_exp(self):
+		def exp_func(coeffs,x):
+			return np.exp(np.polyval(coeffs,x));
+		coeffs = np.polyfit(self.x,np.log(self.y),1);
+		self.fun = exp_func;
+		self.coeffs = coeffs;
+	def fit_at(self,x):
+		return self.fun(self.coeffs,x);
+	def fit_square(self):
+		def square_func(coeffs,x):
+			return np.polyval(coeffs,x);
+		coeffs = np.polyfit(self.x,self.y,2);
+		self.fun = square_func;
+		self.coeffs = coeffs;
+	def plot_fit(self):
+		x = np.linspace(self.x.min(),self.x.max(),num=1000);
+		y = self.fit_at(x);
+		return self.plot(x=x,y=y);
