@@ -1,5 +1,18 @@
+def import_non_local(name, custom_name=None):
+    import imp, sys
+
+    custom_name = custom_name or name
+
+    f, pathname, desc = imp.find_module(name, sys.path[1:])
+    module = imp.load_module(custom_name, f, pathname, desc)
+    f.close()
+
+    return module
+
+pymath = import_non_local('math','std_math');
 import numpy as np
 from ahpy.plotting import twod as ahp
+from scipy import nanmean
 from scipy.optimize import curve_fit
 from scipy.odr import *
 
@@ -71,7 +84,7 @@ class curve(object):
 			xmin = self.x.min();
 		if xmax is None:
 			xmax = self.x.max();
-		mean = self.integrate(self.x.min(),self.x.max()) \
+		mean = self.integrate(xmin,xmax) \
 			/ (xmax - xmin);
 		return mean;
 	def interpolate(self,x):
@@ -89,7 +102,18 @@ class curve(object):
 		return y;
 	def extrapolate(self,x):
 		#print "You need to write the extrapolate method!";
-		return 0;
+		if x < self.x.min():
+			x1 = self.x[0];
+			x2 = self.x[1];
+		elif x > self.x.max():
+			x1 = self.x[-1];
+			x2 = self.x[-10];
+		# now find the slope
+		m = (self.at(x1) - self.at(x2))/(x1 - x2);
+		# find the y change between closest point and new point
+		dy = m * (x - x1);
+		# find the new point
+		return self.at(x1) + dy;
 	def find_nearest_down(self,x):
 		idx = (np.abs(x-self.x)).argmin()
 		return (self.x[idx-1], self.y[idx-1])
@@ -110,9 +134,6 @@ class curve(object):
 		# then, between each x, we find the value there
 		y_sub = [ self.at(x_i) for x_i in x_sub ];
 		# then, we do the trapezoidal rule
-		#return np.sum([ ((x_sub[i + 1] - x_sub[i]) / 2.0) * \
-		#	(y_sub[i] + y_sub[i + 1]) \
-		#	for i in np.arange(0,len(x_sub)-1)]);
 		return np.sum([ ((x_sub[i+1]-x_sub[i])*y_sub[i]) + \
 			((x_sub[i+1]-x_sub[i])*(y_sub[i+1]-y_sub[i]))/2 \
 			for i in np.arange(0,len(x_sub)-1) ]);
@@ -155,11 +176,11 @@ class curve(object):
 			plot.add_line(x,y,name=self.name,linestyle=linestyle);
 		return plot;
 	def decimate(self,R):
-		pad_size = math.ceil(float(self.x.size)/R)*R - self.x.size;
+		pad_size = pymath.ceil(float(self.x.size)/R)*R - self.x.size;
 		arr_x_padded = np.append(self.x, np.zeros(pad_size)*np.NaN);
-		self.x = scipy.nanmean(arr_x_padded.reshape(-1,R), axis=1);
+		self.x = nanmean(arr_x_padded.reshape(-1,R), axis=1);
 		arr_y_padded = np.append(self.y, np.zeros(pad_size)*np.NaN);
-		self.y = scipy.nanmean(arr_y_padded.reshape(-1,R), axis=1);
+		self.y = nanmean(arr_y_padded.reshape(-1,R), axis=1);
 	def fit_exp(self):
 		def exp_func(coeffs,x):
 			return np.exp(np.polyval(coeffs,x));
