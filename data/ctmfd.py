@@ -3,6 +3,8 @@ import datetime as dt;
 import math;
 from matplotlib.pyplot import close
 from ..plotting import twod as ahp
+from ..calc import math as ahm
+from scipy import stats
 
 class ctmfd_pressure_data(object):
     def __init__(self):
@@ -23,9 +25,16 @@ class ctmfd_pressure_data(object):
         self.calc();
     
     def calc(self):
-        self.calc_meth_1();
-        #self.calc_meth_2();
-        #self.calc_meth_3();
+        # remove all those that cavitated before up to speed
+        p_data = self.p_data[self.wt_data > 0.0];
+        det_data = self.det_data[self.wt_data > 0.0];
+        wt_data = self.wt_data[self.wt_data > 0.0];
+        # calculate statistics
+        self.wt = wt_data.sum()/det_data.sum();
+        self.wt_sigma = self.wt/math.sqrt(det_data.sum());
+        self.p_sigma = np.std(p_data);
+        self.p = np.mean(p_data);
+        #return plt1,plt2
         
     def calc_meth_1(self):
         """ In this method, we concatenate tests into one long test with many
@@ -35,51 +44,224 @@ class ctmfd_pressure_data(object):
         p_data = self.p_data[self.wt_data > 0.0];
         det_data = self.det_data[self.wt_data > 0.0];
         wt_data = self.wt_data[self.wt_data > 0.0];
-        # assume the entire thing is one long run with multiple events, then
-        # calculate and print those statistics
+        # calculate and print statistics
+        print 'counts'
+        print det_data.sum()
         self.wt = wt_data.sum()/det_data.sum();
         self.wt_sigma = self.wt/math.sqrt(det_data.sum());
+        print self.wt_sigma
         self.p_sigma = np.std(p_data);
         self.p = np.mean(p_data);
-        # print out the waiting time and such
-        print "The waiting time was %f $\pm$ %f s at pressure of %f $\pm$ %f s" % (self.wt, self.wt_sigma, self.p, self.p_sigma)
-        # histogram the data
-        # do a chi squared test
-        # regress with a gaussian
-        
-    def calc_meth_2(self):
-        """ In this method, we remove the assumption of a binomial test, and
-        make every test successful, but of a different time.  Then, we should
-        see a normal distribution around the true value of waiting time. This 
-        removes any information from cavitations at speedup"""
+        # find the total time
+        t_tot = np.sum(wt_data);
+        # find the total cavitations
+        det_tot = np.sum(det_data);
+        # split the time into ~20 bins, then find number of cavs in each
+        bin = np.linspace(0,t_tot,num=50);
+        # have the times that each cavitation occurred
+        t = [];
+        i = 0
+        runtime = 0.0;
+        while i < len(p_data)-1:
+            runtime += wt_data[i];
+            if det_data[i]:
+                t.append(runtime);
+            i += 1;
+        # find which cavitations happened in which bin
+        plt = ahp.ah2d();
+        n,bins = plt.add_hist(t,bin);
+        rate = np.divide(n,(bins[1]-bins[0]));
+        invrate = np.divide(1,rate);
+        del plt;
+        plt = ahp.ah2d();
+        bin=np.linspace(np.min(rate),np.max(rate),num=20);
+        n,bins = plt.add_hist(rate,bin);
+        xdata = bins[:-1];
+        ydata = n;
+        curve = ahm.curve(xdata,ydata);
+        scale = curve.integrate(np.min(xdata),np.max(xdata));
+        x_samp = np.linspace(np.min(rate),np.max(rate),num=400);
+        y_samp2 = scale*stats.norm.pdf(x_samp,*stats.norm.fit(rate));
+        print 'mean is:'
+        print 1.0/self.wt
+        print 'std is'
+        print self.wt_sigma/(self.wt**2.0)
+        y_samp = scale*stats.norm.pdf(x_samp,loc=1.0/self.wt,scale=self.wt_sigma/(self.wt**2.0));
+        samp_curve = ahm.curve(x_samp,y_samp);
+        fit = stats.norm(*stats.norm.fit(rate));
+        fit_param = stats.norm.fit(rate);
+        print fit_param;
+        print 'mean from fit param is:'
+        print 1.0/fit_param[0];
+        med = fit.median();
+        mu = fit.mean();
+        stderr = stats.norm.interval(0.95,loc=fit_param[0],scale=fit_param[1]);
+        a = 1.0*np.array(rate)
+        n = len(a)
+        m, se = np.mean(a), stats.sem(a,ddof=1)
+        h = se * stats.norm.ppf((1+0.95)/2.)
+        print m, m-h, m+h
+        print np.divide(1.0,m);
+        print np.divide(1.0,m-h);
+        print np.divide(1.0,m+h);
+        low = stderr[0] - mu;
+        high = stderr[1] - mu;
+        rel_err = stderr[1] - mu;
+        err = rel_err / (mu**2.0);
+        print err;
+        #mode = 15;
+        #plt.add_data_pointer(mode,samp_curve,'$\mathrm{mode} = %6.4f$' % (mode));
+        plt.title('$\mu = %f \pm %f, %f$' % (mu,low,high));
+        plt.add_line(x_samp,y_samp,name='$\mu=\\frac{T}{N} \pm \\frac{T}{\sqrt{N}}$',linewidth=2.0,linestyle='solid');
+        plt.add_line(x_samp,y_samp2,name='fitted normal distribution',linewidth=2.0,linestyle='dotted');
+        plt.markers_off();
+        plt.lines_on();
+        plt.add_vline(mu,0,samp_curve.at(mu),ls='dashed',lw=2.0);
+        plt.add_data_pointer(mu,samp_curve,'$\mu = %6.4f$' % (1.0/mu));
+        plt.xlabel('Count Rate ($\dot{c}$) [$\mathrm{\\frac{1}{s}}$]');
+        plt.ylabel('Frequency ($\\nu$) [ ]');
+        plt.legend();
+        return plt;
+
+    def calc_meth_2(self,dist,trans=None,invtrans=None):
+        """ In"""
         # remove all those that cavitated before up to speed
         p_data = self.p_data[self.wt_data > 0.0];
         det_data = self.det_data[self.wt_data > 0.0];
         wt_data = self.wt_data[self.wt_data > 0.0];
         p_desired = self.p_desired;
         # turn all the data into single event runs (even if longer than 60 seconds)
-        # calculate the average run time
-        # print out the waiting time and such
-        #print "The waiting time was %f $\pm$ %f s at pressure of %f $\pm$ %f s" % (wt, wt_sigma, p, p_sigma)
-        # histogram
-        # do a chi squared test
-        # regress with a gaussian
-        
-    def calc_meth_3(self):
-        """ In this method we assume that there is a value of pressure-seconds
-        that gives the data available.  This allows us to retrieve information
-        about runs that cavitation before startup. """
+        wt = [];
+        i = 0;
+        runtime = 0;
+        while i < len(p_data)-1:
+            runtime += wt_data[i];
+            if det_data[i]:
+                wt.append(runtime);
+                runtime = 0.0;
+            i+=1;
+        self.wt = wt;
+        # then we make a histogram, delete it, and take the data from it
+        plt = ahp.ah2d();
+        bin = invtrans(np.linspace(trans(np.min(wt)),trans(np.max(wt))));
+        n,bins = plt.add_hist(wt,bin);
+        xdata = bins[:-1];
+        ydata = n
+        del plt;
+        # Now we actually plot the data
+        plt = ahp.ah2d();
+        plt.add_bar(xdata,ydata,name='Frequency');
+        plt.xlabel('Waiting Time ($t_{wait}$) [$\mathrm{s}$]');
+        plt.ylabel('Frequency ($\\nu$) [ ]');
+        # Fit a distribution to it
+        curve = ahm.curve(xdata,ydata);
+        scale = curve.integrate(np.min(xdata),np.max(xdata));
+        x_samp = invtrans(np.linspace(trans(np.min(wt)),
+                             trans(np.max(wt)),
+                             num=400));
+        y_samp = trans(scale)*invtrans(dist.pdf(trans(x_samp),*dist.fit(trans(wt))));
+        samp_curve = ahm.curve(x_samp,y_samp);
+        fit = dist(*dist.fit(trans(wt)));
+        med = invtrans(fit.median());
+        mu = invtrans(fit.mean());
+        sigma = fit.std();
+        plt.add_line(x_samp,y_samp,linewidth=2.0,linestyle='solid');
+        plt.markers_off();
+        plt.lines_on();
+        plt.add_vline(med,0,samp_curve.at(med),ls='dotted',lw=2.0);
+        plt.add_data_pointer(med,samp_curve,'$M = %6.4f$' % (med));
+        plt.add_vline(mu,0,samp_curve.at(mu),ls='dashed',lw=2.0);
+        plt.add_data_pointer(mu,samp_curve,'$\mu = %6.4f$' % (mu));
+        return plt;
+
+    def compare_dist(self,dist,distname='Distribution'):
         # clone the data to local variables
         p_data = self.p_data[self.wt_data > 0.0];
         det_data = self.det_data[self.wt_data > 0.0];
         wt_data = self.wt_data[self.wt_data > 0.0];
         p_desired = self.p_desired;
-        # determine the pressure seconds required for each run (speed up is triangular, then flat)
-        # determine the error with the pressure seconds
-        # print data
-        # histogram
-        # perform a chi squared test
-        # regress with a gaussian
+        # turn all the data into single event runs (even if longer than 60 seconds)
+        wt = [];
+        i = 0;
+        runtime = 0;
+        while i < len(p_data)-1:
+            runtime += wt_data[i];
+            if det_data[i]:
+                wt.append(runtime);
+                runtime = 0.0;
+            i+=1;
+        self.wt = wt;
+        # make a plot
+        plt = ahp.ah2d();
+        # make two open arrays
+        norm_samp_means = [];
+        norm_samp_ci_l = [];
+        norm_samp_ci_h = [];
+        dist_samp_means = [];
+        dist_samp_ci_l = [];
+        dist_samp_ci_h = [];
+        # now, construct a dataset using only the first k points of the dataset
+        # growing iteratively
+        n = len(wt);
+        for k in range(1,n):
+            # slice the data set to only the first k points
+            working_wt = wt[:k];
+            # fit a distribution to the data
+            dist_fit = dist.fit(working_wt);
+            dist_model = dist(*dist_fit);
+            if dist_model.mean() > 1000.0:
+                dist_mu = float('nan');
+                dist_std = float('nan');
+                dist_se = float('nan');
+                dist_ci_l =  float('nan');
+                dist_ci_h =  float('nan');
+            else:
+                # find the inverse gaussian mean
+                dist_mu = dist_model.mean();
+                # find the inverse gaussian standard error/confidence interval
+                dist_std = dist_model.std();
+                dist_se = dist_std / np.sqrt(k);
+                dist_ci_l =  (dist_model.ppf(0.025)-dist_mu)/np.sqrt(k);
+                dist_ci_h =  (dist_model.ppf(0.975)-dist_mu)/np.sqrt(k);
+            # fit a normal distribution to the data
+            norm_fit = stats.norm.fit(working_wt);
+            norm_model = stats.norm(*norm_fit);
+            if norm_model.mean() < 1000.0:
+                # find the normal mean
+                norm_mu = norm_model.mean();
+                # find the normal standard error/confidence interval
+                norm_std = norm_model.std();
+                norm_se = norm_std / np.sqrt(k);
+                norm_ci_l = (norm_model.ppf(0.025)-norm_mu)/np.sqrt(k);
+                norm_ci_h = (norm_model.ppf(0.975)-norm_mu)/np.sqrt(k);
+            else:
+                # find the normal mean
+                norm_mu = float('nan');
+                # find the normal standard error/confidence interval
+                norm_std = float('nan');
+                norm_se = float('nan');
+                norm_ci_l = float('nan');
+                norm_ci_h = float('nan');
+            # add these to an array
+            norm_samp_means.append(norm_mu);
+            norm_samp_ci_l.append(norm_mu+norm_ci_l);
+            norm_samp_ci_h.append(norm_mu+norm_ci_h);
+            dist_samp_means.append(dist_mu);
+            dist_samp_ci_l.append(dist_mu+dist_ci_l);
+            dist_samp_ci_h.append(dist_mu+dist_ci_h);
+        # plot these
+        plt.add_line(range(1,n),norm_samp_means,name='Normal Distribution - $\mu$');
+        plt.fill_between(range(1,n),norm_samp_ci_l,norm_samp_ci_h,fc='#A7A9AC',\
+                         name='Normal Distribution - $\pm 1$ Standard Error');
+        plt.add_line(range(1,n),dist_samp_means,name=distname+' - $\mu$');
+        plt.fill_between(range(1,n),dist_samp_ci_l,dist_samp_ci_h,fc='#E3AE24',\
+                         name=distname+' Distribution - CI');
+        plt.lines_on();
+        plt.markers_on();
+        #plt.ylim(0,200);
+        plt.legend();
+        return plt;
+
 
 class ctmfd_data(object):
     def __init__(self):
@@ -173,7 +355,7 @@ class ctmfd_data(object):
         self.time = arr[:,4]
         cavs = arr[:,5]
         det = arr[:,6]
-        for i in np.arange(1,len(cavs)):
+        for i in np.arange(0,len(cavs)):
             if self.pneg_desired[i-1] == self.pneg_desired[i]:
                 if cavs[i] > cavs[i-1]:
                     det[i]=True
@@ -184,8 +366,6 @@ class ctmfd_data(object):
         # go through and dilute the data
         for i in np.unique(self.pneg_desired):
             pneg_desired_string = "%4.2f" % (i);
-            print pneg_desired_string;
-            print i;
             wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
             if pneg_desired_string not in self.data_split:
                 self.data_split[pneg_desired_string] = wt;

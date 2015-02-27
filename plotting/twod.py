@@ -6,6 +6,7 @@ from math import exp
 #set svg as export
 import matplotlib
 import string
+from matplotlib.patches import Ellipse,Polygon
 matplotlib.use('pgf')
 pgf_with_pdflatex = {
     "font.family": "serif",
@@ -88,6 +89,9 @@ class ah2d(object):
     def xlabel(self,label):
         xlab=self.ax.set_xlabel(label);
         self.artists.append(xlab);
+    def title(self,title):
+        ttl=self.ax.set_title(title);
+        self.artists.append(ttl);
     def ylabel(self,label):
         ylab=self.ax.set_ylabel(label);
         self.artists.append(ylab);
@@ -117,6 +121,19 @@ class ah2d(object):
     def lines_off(self):
         for key in self.lines:
             self.lines[key].set_alpha(0.0)
+    def add_vline(self,x,ymin,ymax,ls='solid',lw=0.5):
+        plt.vlines(x,ymin,ymax,linestyles=ls,linewidths=lw);
+    def add_data_pointer(self,x,curve,string=None):
+        if string is None:
+            string = '$\left( %f,%f \\right)$' % (x,curve.at(x));
+        self.ax.annotate(string, 
+                        xy=(x,curve.at(x)), 
+                        xytext=(4.0*x/3.0,4.0*curve.at(x)/3.0),
+                        arrowprops=dict(arrowstyle="fancy",
+                                        fc="0.3",ec="none",
+                                        patchB=Ellipse((2, -1), 0.5, 0.5),
+                                        connectionstyle="angle3,angleA=0,angleB=-90")
+                        )
     def add_reg_line(self,x,y,regtype='lin',name='reg',xerr=None,yerr=None):
         self.regnum = self.regnum+1;
         if name is 'reg':
@@ -219,6 +236,13 @@ class ah2d(object):
         posy = 1 - (0.05);
         self.ax.text(posx, posy, textstr, transform=self.ax.transAxes,
                      fontsize='xx-small',va='top',ha='right')
+    def fill_between(self,x,y1,y2,fc='red',name='plot'):
+        self.plotnum=self.plotnum+1;
+        if name is 'plot':
+            name = 'plot%d' % (self.plotnum);
+        self.ax.fill_between(x,y1,y2,facecolor=fc,alpha=0.5);
+        patch = self.ax.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
+        self.bars[name]=patch;
     def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
@@ -244,8 +268,9 @@ class ah2d(object):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        n,bins,patches=plt.hist(y,bins=bins,label=name,facecolor='gray',alpha=0.5);
+        n,bins,patches=plt.hist(y,bins=bins,label=name,facecolor='gray',alpha=0.5,normed=False);
         self.bars[name] = patches;
+        return n,bins;
     def add_bar(self,x,y,name='plot'):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
