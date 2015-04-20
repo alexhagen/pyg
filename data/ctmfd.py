@@ -390,7 +390,7 @@ class ctmfd_data(object):
     def generate_figure(self):
         self.plot_waiting_times();
         filename = "%s_%s_%scm_%s_(%d_%d_%d)" % (self.ctmfd,self.source,str(self.source_dist_cm).strip('[]'),self.source_shielding,self.month,self.day,self.year)       
-        self.vis.export(filename);
+        #self.vis.export(filename);
     
 def timestamptodatetime(timestr,datestr):
     arr = datestr.split("/");

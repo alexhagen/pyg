@@ -1,11 +1,11 @@
 #import modules
-#from ..data import ctmfd
 from scipy.optimize import curve_fit
 from scipy.odr import *
 from math import exp
 #set svg as export
 import matplotlib
 import string
+import os
 from matplotlib.patches import Ellipse,Polygon
 matplotlib.use('pgf')
 pgf_with_pdflatex = {
@@ -58,9 +58,9 @@ class ah2d(object):
     leg_col_one_col = 2
     leg_col_two_col = 3
     leg_col_full_page = 4
-    marker = {0: '.',
-              1: ',',
-              2: '+',
+    marker = {0: '+',
+              1: '.',
+              2: '1',
               3: '1',
               4: '2',
               5: '3',
@@ -68,10 +68,17 @@ class ah2d(object):
     linestyle = {0: '-',
             1: '--',
             2: '-.',
-            3: ':'}
+            3: ':'};
+    sizestring = {'1': 'onecolumn',
+            '2': 'twocolumn',
+            'fp': 'fullpage',
+            'cs': 'customsize',
+            'none': ''};
     def __init__(self):
         self.fig = plt.figure();
         self.ax = self.fig.add_subplot(111);
+        self.ax_subp = [];
+        self.ax2 = None;
         self.ax.spines['top'].set_visible(False);
         self.ax.spines['right'].set_visible(False);
         self.ax.get_xaxis().tick_bottom();
@@ -86,18 +93,29 @@ class ah2d(object):
         self.bars = {};
         self.regs = {};
         self.reg_string = {};
-    def xlabel(self,label):
-        xlab=self.ax.set_xlabel(label);
+    def xlabel(self,label,axes=None):
+        if axes is None:
+            axes = self.ax;
+        xlab=axes.set_xlabel(label);
         self.artists.append(xlab);
+    def add_subplot(self,subp=121):
+        gsstr = str(subp);
+        gs1 = int(gsstr[0]);
+        gs2 = int(gsstr[1]);
+        self.ax.change_geometry(gs1,gs2,1);
+        self.ax2.change_geometry(gs1,gs2,1);
+        self.ax_subp.append(self.fig.add_subplot(subp));
     def title(self,title):
         ttl=self.ax.set_title(title);
         self.artists.append(ttl);
-    def ylabel(self,label):
-        ylab=self.ax.set_ylabel(label);
+    def ylabel(self,label,axes=None):
+        if axes is None:
+            axes = self.ax;
+        ylab=axes.set_ylabel(label);
         self.artists.append(ylab);
-    def xlim(self,minx,maxx):
+    def xlim(self,minx,maxx,axes=None):
         self.ax.set_xlim([minx,maxx]);
-    def ylim(self,miny,maxy):
+    def ylim(self,miny,maxy,axes=None):
         self.ax.set_ylim([miny,maxy]);
     def legend(self):
         self.ax.legend();
@@ -109,26 +127,58 @@ class ah2d(object):
                 inc_objs.append(legobjs[i]);
                 inc_titles.append(legtitles[i]);
         self.ax.legend(inc_objs,inc_titles);
+    def xticks(self,ticks,labels,axes=None):
+        if axes is not None:
+            plt.sca(axes);
+        else:
+            plt.sca(self.ax);
+        plt.xticks(ticks,labels);
+    def yticks(self,ticks,labels,axes=None):
+        if axes is not None:
+            plt.sca(axes);
+        else:
+            plt.sca(self.ax);
+        plt.yticks(ticks,labels);
     def markers_on(self):
         for key in self.lines:
+            self.lines[key].set_alpha(1.0)
             self.lines[key].set_markersize(6)
     def markers_off(self):
         for key in self.lines:
             self.lines[key].set_markersize(0)
     def lines_on(self):
         for key in self.lines:
-            self.lines[key].set_alpha(1.0)
+            self.lines[key].set_linewidth(1.0)
     def lines_off(self):
         for key in self.lines:
-            self.lines[key].set_alpha(0.0)
+            self.lines[key].set_linewidth(0.0)
     def add_vline(self,x,ymin,ymax,ls='solid',lw=0.5):
-        plt.vlines(x,ymin,ymax,linestyles=ls,linewidths=lw);
-    def add_data_pointer(self,x,curve,string=None):
+        return plt.vlines(x,ymin,ymax,linestyles=ls,linewidths=lw);
+    def add_hline(self,y,xmin=None,xmax=None,ls='solid',lw=1.5,color='red'):
+        return plt.axhline(y,linestyle=ls,linewidth=lw,color=color);
+    def add_label(self,x,y,string):
+        curve_place = (x,y);
+        self.ax.annotate(string, 
+                        xy=curve_place, 
+                        xytext=curve_place);
+    def add_data_pointer(self,x,curve,string=None,place='up-right',axes=None):
+        if axes is None:
+            axes = self.ax;
         if string is None:
             string = '$\left( %f,%f \\right)$' % (x,curve.at(x));
-        self.ax.annotate(string, 
+        if place == 'up-right':
+            curve_place = (4.0*x/3.0,4.0*curve.at(x)/3.0);
+        elif place == 'up-left':
+            curve_place = (3.0*x/4.0,4.0*curve.at(x)/3.0);
+        elif place == 'down-right':
+            curve_place = (4.0*x/3.0,3.0*curve.at(x)/4.0);
+        elif place == 'down-left':
+            curve_place = (2.0*x/4.0,3.0*curve.at(x)/4.0);
+        elif type(place) is tuple:
+            curve_place = place;
+        axes.annotate(string, 
                         xy=(x,curve.at(x)), 
-                        xytext=(4.0*x/3.0,4.0*curve.at(x)/3.0),
+                        xytext=curve_place,
                         arrowprops=dict(arrowstyle="fancy",
                                         fc="0.3",ec="none",
                                         patchB=Ellipse((2, -1), 0.5, 0.5),
@@ -236,12 +286,14 @@ class ah2d(object):
         posy = 1 - (0.05);
         self.ax.text(posx, posy, textstr, transform=self.ax.transAxes,
                      fontsize='xx-small',va='top',ha='right')
-    def fill_between(self,x,y1,y2,fc='red',name='plot'):
+    def fill_between(self,x,y1,y2,fc='red',name='plot',axes=None):
+        if axes is None:
+            axes = self.ax;
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum);
-        self.ax.fill_between(x,y1,y2,facecolor=fc,alpha=0.5);
-        patch = self.ax.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
+        axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.5);
+        patch = axes.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
         self.bars[name]=patch;
     def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
         self.plotnum=self.plotnum+1;
@@ -264,6 +316,10 @@ class ah2d(object):
             self.lines[name] = (line)
         self.markers_on();
         self.lines_off();
+    def add_line_yy(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
+        # make new axis
+        self.ax2 = self.ax.twinx()
+        self.add_line(x,y,name=name,xerr=xerr,yerr=yerr,linewidth=linewidth,linestyle=linestyle,legend=legend);
     def add_hist(self,y,bins,name='plot'):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
@@ -315,40 +371,58 @@ class ah2d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
-    def export(self,filename):
-        self.width=3.25;
-        self.det_height();
+    def set_size(self,size,sizeofsizes,customsize=None):
+        if size is '1':
+            self.width=3.25;
+            self.det_height();
+            if self.leg:        
+                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+                    ncol=self.leg_col_one_col, mode="expand", 
+                    borderaxespad=0.);
+        elif size is '2':
+            self.width=6.25;
+            self.det_height();
+            self.fig.set_size_inches(self.width,self.height);
+            if self.leg:        
+                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+                               ncol=self.leg_col_two_col, mode="expand", 
+                               borderaxespad=0.);
+        elif size is 'fp':
+            elf.width=10;
+            self.det_height();
+            self.fig.set_size_inches(self.width,self.height);
+            if self.leg:        
+                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+                               ncol=self.leg_col_full_page, mode="expand", 
+                               borderaxespad=0.);
+        elif size is 'cs':
+            if customsize is not None:
+                self.width=customsize[0];
+                self.height=customsize[1];
         self.fig.set_size_inches(self.width,self.height);
-        if self.leg:        
-            self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=self.leg_col_one_col, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_onecolumn.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
-        self.remove_font_sizes(filename+'_onecolumn.pgf');
-        plt.savefig(filename+'_onecolumn.svg');
-        self.width=6.25;
-        self.det_height();
-        self.fig.set_size_inches(self.width,self.height);
-        if self.leg:        
-            self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=self.leg_col_two_col, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_twocolumn.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
-        self.remove_font_sizes(filename+'_twocolumn.pgf');
-        plt.savefig(filename+'_twocolumn.svg');
-        self.width=10;
-        self.det_height();
-        self.fig.set_size_inches(self.width,self.height);
-        if self.leg:        
-            self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=self.leg_col_full_page, mode="expand", borderaxespad=0.)        
-        plt.savefig(filename+'_fullpage.pgf',bbox_extra_artists=self.artists, bbox_inches='tight');
-        self.remove_font_sizes(filename+'_fullpage.pgf');
-        plt.savefig(filename+'_fullpage.svg');
-    def export_png(self,filename):
-        self.width=3.25*4;
-        self.det_height();
-        self.fig.set_size_inches(self.width,self.height);
-        '''
-        if self.leg:        
-            self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                           ncol=self.leg_col_one_col, mode="expand", borderaxespad=0.)'''    
-        plt.savefig(filename+'_onecolumn.png',bbox_extra_artists=self.artists, bbox_inches='tight');
+    def export_fmt(self,filename,size,sizeofsizes,format):
+        if sizeofsizes == 1:
+            size = 'none';
+        if format is 'png':
+            add = '.png';
+        elif format is 'pgf':
+            add = '.pgf';
+        elif format is 'svg':
+            # save as pdf, then pdf2svg
+            plt.savefig(filename+self.sizestring[size]+'.pdf',
+                bbox_extra_artists=self.artists,bbox_inches='tight');
+            os.system('pdf2svg '+filename+self.sizestring[size]+'.pdf '+
+                filename+self.sizestring[size]+'.svg');
+            os.remove(filename+self.sizestring[size]+'.pdf');
+        elif format is 'websvg':
+            add = 'web.svg';
+        if format is not 'svg':
+            plt.savefig(filename+self.sizestring[size]+add,
+                bbox_extra_artists=self.artists,bbox_inches='tight');
+        if format is 'pgf':
+            self.remove_font_sizes(filename+self.sizestring[size]+add);
+    def export(self,filename,sizes=['1'],formats=['pgf'],customsize=None):
+        for size in sizes:
+            for format in formats:
+                self.set_size(size,len(sizes),customsize=customsize);
+                self.export_fmt(filename,size,len(sizes),format);

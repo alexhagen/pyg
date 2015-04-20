@@ -35,9 +35,11 @@ class rand_gen(object):
 		return (r_bar,r_std);
 
 class curve(object):
-	def __init__(self,x,y,data='smooth',name=''):
+	def __init__(self,x,y,u_x=None,u_y=None,data='smooth',name=''):
 		self.name = name;
 		self.data = data;
+		self.u_x = u_x;
+		self.u_y = u_y;
 		# assert that x and y are 1d lists of same size
 		if isinstance(x,list):
 			self.x = np.array(x);
@@ -137,7 +139,7 @@ class curve(object):
 		return np.sum([ ((x_sub[i+1]-x_sub[i])*y_sub[i]) + \
 			((x_sub[i+1]-x_sub[i])*(y_sub[i+1]-y_sub[i]))/2 \
 			for i in np.arange(0,len(x_sub)-1) ]);
-	def plot(self,x=None,y=None,addto=None,linestyle=None):
+	def plot(self,x=None,y=None,addto=None,linestyle=None,yy=False):
 		if addto is None:
 			plot = ahp.ah2d();
 		else:
@@ -173,7 +175,10 @@ class curve(object):
 			plot.markers_off();
 			plot.lines_on();
 		elif self.data is 'smooth':
-			plot.add_line(x,y,name=self.name,linestyle=linestyle);
+			if yy is False:
+				plot.add_line(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle);
+			else:
+				plot.add_line_yy(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle);
 		return plot;
 	def decimate(self,R):
 		pad_size = pymath.ceil(float(self.x.size)/R)*R - self.x.size;
@@ -195,7 +200,12 @@ class curve(object):
 		coeffs = np.polyfit(self.x,self.y,2);
 		self.fun = square_func;
 		self.coeffs = coeffs;
-	def plot_fit(self):
+	def plot_fit(self,addto=None,linestyle=None):
+		if addto is None:
+			plot = ahp.ah2d();
+		else:
+			plot = addto;
 		x = np.linspace(self.x.min(),self.x.max(),num=1000);
 		y = self.fit_at(x);
-		return self.plot(x=x,y=y);
+		plot.add_line(x,y,name=self.name+'fit',linestyle=linestyle);
+		return plot;
