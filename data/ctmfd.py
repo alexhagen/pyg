@@ -293,11 +293,44 @@ class ctmfd_data(object):
         l = f.readline();
         if "Start Date: " in l:
             self.read_jeff_ctmfd_file(filename);
+        else:
+            self.read_alex_ctmfd_file(filename);
         for key in self.data_split:
             self.wt.append(self.data_split[key].wt);
             self.wt_sigma.append(self.data_split[key].wt_sigma);
             self.p.append(self.data_split[key].p);
             self.p_sigma.append(self.data_split[key].p_sigma);
+
+def read_alex_ctmfd_file(self,filename):
+        arr=np.loadtxt(filename,skiprows=13)
+        arr=arr[0:-1,:]
+        self.pneg_desired = arr[:,1]
+        self.rps = arr[:,2]
+        self.pneg = arr[:,3]
+        self.time = arr[:,4]
+        cavs = arr[:,5]
+        det = arr[:,6]
+        for i in np.arange(0,len(cavs)):
+            if self.pneg_desired[i-1] == self.pneg_desired[i]:
+                if cavs[i] > cavs[i-1]:
+                    det[i]=True
+                else:
+                    det[i]=False
+        self.det = det
+        
+        # go through and dilute the data
+        for i in np.unique(self.pneg_desired):
+            pneg_desired_string = "%4.2f" % (i);
+            wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
+            if pneg_desired_string not in self.data_split:
+                self.data_split[pneg_desired_string] = wt;
+            else:
+                wt = self.data_split[pneg_desired_string];
+                np.append(wt.p_data,self.pneg[self.pneg_desired==i]);
+                np.append(wt.wt_data,self.time[self.pneg_desired==i]);
+                np.append(wt.det_data,self.det[self.pneg_desired==i]);
+                wt.calc();
+                self.data_split[pneg_desired_string] = wt;
     
     def read_jeff_ctmfd_file(self,filename):
         f = open(filename,'r')

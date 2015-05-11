@@ -109,7 +109,7 @@ class curve(object):
 			x2 = self.x[1];
 		elif x > self.x.max():
 			x1 = self.x[-1];
-			x2 = self.x[-10];
+			x2 = self.x[-2];
 		# now find the slope
 		m = (self.at(x1) - self.at(x2))/(x1 - x2);
 		# find the y change between closest point and new point

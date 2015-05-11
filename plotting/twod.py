@@ -161,7 +161,8 @@ class ah2d(object):
         self.ax.annotate(string, 
                         xy=curve_place, 
                         xytext=curve_place);
-    def add_data_pointer(self,x,curve,string=None,place='up-right',axes=None):
+    def add_data_pointer(self,x,curve=None,point=None,string=None,
+                         place='up-right',axes=None):
         if axes is None:
             axes = self.ax;
         if string is None:
@@ -176,13 +177,21 @@ class ah2d(object):
             curve_place = (2.0*x/4.0,3.0*curve.at(x)/4.0);
         elif type(place) is tuple:
             curve_place = place;
+        if curve is not None:
+            y = curve.at(x);
+        elif point is not None:
+            y = point;
+        else:
+            raise Exception('No point for the arrow given in reference to ' + \
+                'data pointer.');
         axes.annotate(string, 
-                        xy=(x,curve.at(x)), 
+                        xy=(x,y), 
                         xytext=curve_place,
                         arrowprops=dict(arrowstyle="fancy",
                                         fc="0.3",ec="none",
-                                        patchB=Ellipse((2, -1), 0.5, 0.5),
-                                        connectionstyle="angle3,angleA=0,angleB=-90")
+                                        patchB = Ellipse((2, -1), 0.5, 0.5),
+                                        connectionstyle = \
+                                            "angle3,angleA=0,angleB=-90")
                         )
     def add_reg_line(self,x,y,regtype='lin',name='reg',xerr=None,yerr=None):
         self.regnum = self.regnum+1;

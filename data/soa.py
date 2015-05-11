@@ -1,6 +1,8 @@
 import numpy as np;
 import datetime as dt;
 import math;
+import os;
+import struct;
 from matplotlib.pyplot import close
 from datetime import datetime, timedelta
 from ..plotting import twod as ahp
