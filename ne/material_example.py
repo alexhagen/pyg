@@ -1,6 +1,5 @@
-import ahpy.calc.func as ahm
-
-x = ahm.curve([0,1],[0,2]);
+import ahpy as ah
+import ahpy.ne
 # example of usage for ndata module
 
 # create a material object
