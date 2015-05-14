@@ -391,6 +391,7 @@ class ah2d(object):
         elif size is '2':
             self.width=6.25;
             self.det_height();
+            self.height = self.height/2.0;
             self.fig.set_size_inches(self.width,self.height);
             if self.leg:        
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,

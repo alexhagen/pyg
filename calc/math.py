@@ -129,10 +129,11 @@ class curve(object):
 	def trapezoidal(self,x_min,x_max,quad='lin'):
 		# first we assert that all values are in the region
 		# then, we find a bunch of x's between these values
+		numpoints = 61;
 		if quad is 'lin':
-			x_sub = np.linspace(x_min,x_max,1000);
+			x_sub = np.linspace(x_min,x_max,numpoints);
 		elif quad is 'log':
-			x_sub = np.logspace(np.log10(x_min),np.log10(x_max),num=1000);
+			x_sub = np.logspace(np.log10(x_min),np.log10(x_max),num=numpoints);
 		# then, between each x, we find the value there
 		y_sub = [ self.at(x_i) for x_i in x_sub ];
 		# then, we do the trapezoidal rule
