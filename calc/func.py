@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from ahpy.plotting import twod as ahp
+from ..plotting import twod as ahp
 from scipy import nanmean
 from scipy.optimize import curve_fit
 from scipy.odr import *
@@ -24,11 +24,9 @@ class rand_gen(object):
 		return (r_bar,r_std);
 
 class curve(object):
-	def __init__(self,x,y,u_x=None,u_y=None,data='smooth',name=''):
+	def __init__(self,x,y,name='',u_x=None,u_y=None,data='smooth'):
 		self.name = name;
 		self.data = data;
-		self.u_x = u_x;
-		self.u_y = u_y;
 		# assert that x and y are 1d lists of same size
 		if isinstance(x,list):
 			self.x = np.array(x);
@@ -38,11 +36,23 @@ class curve(object):
 			self.y = np.array(y);
 		else:
 			self.y = y;
+		if isinstance(u_x,list):
+			self.u_x = np.array(u_x);
+		else:
+			self.u_x = u_x;
+		if isinstance(u_y,list):
+			self.u_y = np.array(u_y);
+		else:
+			self.u_y = u_y;
 		self.sort();
 	def sort(self):
 		idx = self.x.argsort();
 		self.x = self.x[idx];
 		self.y = self.y[idx];
+		if self.u_x is not None:
+			self.u_x = self.u_x[idx];
+		if self.u_y is not None:
+			self.u_y = self.u_y[idx];
 	def add_data(self,x,y):
 		self.x = np.append(self.x,x);
 		self.y = np.append(self.y,y);
@@ -129,7 +139,7 @@ class curve(object):
 		return np.sum([ ((x_sub[i+1]-x_sub[i])*y_sub[i]) + \
 			((x_sub[i+1]-x_sub[i])*(y_sub[i+1]-y_sub[i]))/2 \
 			for i in np.arange(0,len(x_sub)-1) ]);
-	def plot(self,x=None,y=None,addto=None,linestyle=None,yy=False):
+	def plot(self,x=None,y=None,addto=None,linestyle=None,yy=False,xerr=None,yerr=None):
 		if addto is None:
 			plot = ahp.ah2d();
 		else:

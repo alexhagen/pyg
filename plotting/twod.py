@@ -165,18 +165,7 @@ class ah2d(object):
                          place='up-right',axes=None):
         if axes is None:
             axes = self.ax;
-        if string is None:
-            string = '$\left( %f,%f \\right)$' % (x,curve.at(x));
-        if place == 'up-right':
-            curve_place = (4.0*x/3.0,4.0*curve.at(x)/3.0);
-        elif place == 'up-left':
-            curve_place = (3.0*x/4.0,4.0*curve.at(x)/3.0);
-        elif place == 'down-right':
-            curve_place = (4.0*x/3.0,3.0*curve.at(x)/4.0);
-        elif place == 'down-left':
-            curve_place = (2.0*x/4.0,3.0*curve.at(x)/4.0);
-        elif type(place) is tuple:
-            curve_place = place;
+        
         if curve is not None:
             y = curve.at(x);
         elif point is not None:
@@ -184,6 +173,18 @@ class ah2d(object):
         else:
             raise Exception('No point for the arrow given in reference to ' + \
                 'data pointer.');
+        if string is None:
+            string = '$\left( %f,%f \\right)$' % (x,y);
+        if place == 'up-right':
+            curve_place = (4.0*x/3.0,4.0*y/3.0);
+        elif place == 'up-left':
+            curve_place = (3.0*x/4.0,4.0*y/3.0);
+        elif place == 'down-right':
+            curve_place = (4.0*x/3.0,3.0*y/4.0);
+        elif place == 'down-left':
+            curve_place = (2.0*x/4.0,3.0*y/4.0);
+        elif type(place) is tuple:
+            curve_place = place;
         axes.annotate(string, 
                         xy=(x,y), 
                         xytext=curve_place,
@@ -329,6 +330,12 @@ class ah2d(object):
         # make new axis
         self.ax2 = self.ax.twinx()
         self.add_line(x,y,name=name,xerr=xerr,yerr=yerr,linewidth=linewidth,linestyle=linestyle,legend=legend);
+    def add_xx(self,calfunc):
+        self.ax2 = self.ax.twiny();
+        mini = calfunc(np.min(self.ax.get_xlim()));
+        maxi = calfunc(np.max(self.ax.get_xlim()));
+        self.ax2.set_xlim(mini,maxi);
+        self.ax2.get_xaxis().tick_top();
     def add_hist(self,y,bins,name='plot'):
         self.plotnum=self.plotnum+1;
         if name is 'plot':

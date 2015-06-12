@@ -6,6 +6,33 @@ import struct;
 from matplotlib.pyplot import close
 from datetime import datetime, timedelta
 from ..plotting import twod as ahp
+from ..calc import func as ahf
+
+class ucs20(object):
+	''' UCS20 is an object for interacting with the UCS20 output files saved in 
+	comma separated value formats '''
+	def __init__(self,filename = None ):
+		if filename is not None:
+			self.import_csv(filename);
+	def import_csv(self,filename = None ):
+		f = open(filename,'r');
+		lineno=0;
+		for line in f:
+			# increment the line number
+			lineno=lineno+1;
+			# import lines to data structures until we get to "Channel Data"
+			if "Channel Data:" in line:
+				break;
+		f.close();
+		arr=np.genfromtxt(filename,skip_header=lineno+1,delimiter=",",
+			usecols=[0,2]);
+		self.channel = arr[:,0].copy();
+		self.counts = arr[:,1].copy()
+	def plot_spectrum(self,addto=None,xerr=None,yerr=None):
+		self.line = ahf.curve(self.channel,self.counts,data='binned');
+		self.plt = self.line.plot(addto=addto,xerr=xerr,yerr=yerr);
+		return self.plt;
+
 
 def calc_eff_ratio(eta_cf=None,sigma_eta_cf=None,eta_dd=None,sigma_eta_dd=None):
 	r = eta_cf / eta_dd;
