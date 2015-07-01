@@ -66,7 +66,7 @@ class curve(object):
 		if x >= self.x.min() and x <= self.x.max():
 			# if it is in the data range, interpolate
 			y = self.interpolate(x);
-		else: 
+		else:
 			# if it is not in the data range, extrapolate
 			y = self.extrapolate(x);
 		return y;
@@ -122,7 +122,7 @@ class curve(object):
 		idx = (np.abs(x-self.x)).argmin()
 		return (self.x[idx], self.y[idx])
 	def integrate(self,x_min,x_max,quad='lin'):
-		# for now, we'll just do simpsons rule until I write 
+		# for now, we'll just do simpsons rule until I write
 		# more sophisticated
 		return self.trapezoidal(x_min,x_max,quad);
 	def trapezoidal(self,x_min,x_max,quad='lin'):
@@ -187,25 +187,38 @@ class curve(object):
 		arr_y_padded = np.append(self.y, np.zeros(pad_size)*np.NaN);
 		self.y = nanmean(arr_y_padded.reshape(-1,R), axis=1);
 	def fit_exp(self):
-		def exp_func(coeffs,x):
+		def exp_func(coeffs=None,x=None):
 			return np.exp(np.polyval(coeffs,x));
 		coeffs = np.polyfit(self.x,np.log(self.y),1);
 		self.fun = exp_func;
 		self.coeffs = coeffs;
+		self.fit_exp_bool = True;
+	def fit_gen(self,fun,guess=None):
+		self.fun = fun;
+		fit = curve_fit(fun, self.x, self.y, p0 = guess);
+		self.coeffs = fit[0];
+		self.fit_exp_bool = False;
 	def fit_at(self,x):
-		return self.fun(self.coeffs,x);
+		if self.fit_exp_bool:
+			return self.fun(self.coeffs,x);
+		else:
+			return self.fun(x,*self.coeffs);
 	def fit_square(self):
 		def square_func(coeffs,x):
 			return np.polyval(coeffs,x);
 		coeffs = np.polyfit(self.x,self.y,2);
 		self.fun = square_func;
 		self.coeffs = coeffs;
-	def plot_fit(self,addto=None,linestyle=None):
+	def plot_fit(self,xmin=None,xmax=None,addto=None,linestyle=None):
 		if addto is None:
 			plot = ahp.ah2d();
 		else:
 			plot = addto;
-		x = np.linspace(self.x.min(),self.x.max(),num=1000);
+		if xmin is None:
+			xmin = self.x.min();
+		if xmax is None:
+			xmax = self.x.max();
+		x = np.linspace(xmin,xmax,num=1000);
 		y = self.fit_at(x);
 		plot.add_line(x,y,name=self.name+'fit',linestyle=linestyle);
 		return plot;
