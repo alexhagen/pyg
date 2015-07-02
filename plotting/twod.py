@@ -152,20 +152,20 @@ class ah2d(object):
     def lines_off(self):
         for key in self.lines:
             self.lines[key].set_linewidth(0.0)
-    def add_vline(self,x,ymin,ymax,ls='solid',lw=0.5):
-        return plt.vlines(x,ymin,ymax,linestyles=ls,linewidths=lw);
-    def add_hline(self,y,xmin=None,xmax=None,ls='solid',lw=1.5,color='red'):
-        return plt.axhline(y,linestyle=ls,linewidth=lw,color=color);
-    def add_label(self,x,y,string):
+    def add_vline(self,x,ymin,ymax,ls='solid',lw=1.5,color='black'):
+        return plt.vlines(x,ymin,ymax,linestyles=ls,linewidths=lw,color=color);
+    def add_hline(self,y,xmin=None,xmax=None,ls='solid',lw=1.5,color='black'):
+        return plt.hlines(y,xmin=xmin,xmax=xmax,linestyle=ls,linewidth=lw,color=color);
+    def add_label(self,x,y,string,color='black'):
         curve_place = (x,y);
-        self.ax.annotate(string, 
-                        xy=curve_place, 
-                        xytext=curve_place);
+        self.ax.annotate(string,
+                        xy=curve_place,
+                        xytext=curve_place,color=color);
     def add_data_pointer(self,x,curve=None,point=None,string=None,
                          place='up-right',axes=None):
         if axes is None:
             axes = self.ax;
-        
+
         if curve is not None:
             y = curve.at(x);
         elif point is not None:
@@ -185,8 +185,8 @@ class ah2d(object):
             curve_place = (2.0*x/4.0,3.0*y/4.0);
         elif type(place) is tuple:
             curve_place = place;
-        axes.annotate(string, 
-                        xy=(x,y), 
+        axes.annotate(string,
+                        xy=(x,y),
                         xytext=curve_place,
                         arrowprops=dict(arrowstyle="fancy",
                                         fc="0.3",ec="none",
@@ -233,7 +233,7 @@ class ah2d(object):
             #y_fit = np.exp(y_fit_log);
             def exp_func(B,x):
                 return B[0]*np.exp(B[1]*x);
-            
+
             exp_model = Model(exp_func);
             exp_data = RealData(x_np,y_np,sx=x_err_np,sy=y_err_np);
             odr = ODR(exp_data,exp_model,beta0=[0.,1.])
@@ -259,7 +259,7 @@ class ah2d(object):
                 y_err_down = None;
                 print "the exponential does not fit to the data";
         elif regtype is 'log':
-            print 'I haven\'t yet completed the log fitting!';            
+            print 'I haven\'t yet completed the log fitting!';
             #do something;
         elif regtype is 'gaussian':
             def gaus(x,a,x0,sigma):
@@ -281,7 +281,7 @@ class ah2d(object):
             downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
             self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
-    def add_wt_info_box(self,ctmfd_data):        
+    def add_wt_info_box(self,ctmfd_data):
         textstr = "ctmfd: $%s$\n" % (ctmfd_data.ctmfd);
         textstr += "fluid: %s\n" % (ctmfd_data.fluid);
         textstr += "source: %s at $%s\,\mathrm{cm}$\n" % (ctmfd_data.source,
@@ -379,7 +379,7 @@ class ah2d(object):
         f.close()
         f=open(filename,'w')
         fstring=fstring.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
-        fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")       
+        fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")
         fstring = filter(lambda x: x in string.printable, fstring);
         f.write(fstring)
         f.close()
@@ -391,26 +391,26 @@ class ah2d(object):
         if size is '1':
             self.width=3.25;
             self.det_height();
-            if self.leg:        
+            if self.leg:
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                    ncol=self.leg_col_one_col, mode="expand", 
+                    ncol=self.leg_col_one_col, mode="expand",
                     borderaxespad=0.);
         elif size is '2':
             self.width=6.25;
             self.det_height();
             self.height = self.height/2.0;
             self.fig.set_size_inches(self.width,self.height);
-            if self.leg:        
+            if self.leg:
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                               ncol=self.leg_col_two_col, mode="expand", 
+                               ncol=self.leg_col_two_col, mode="expand",
                                borderaxespad=0.);
         elif size is 'fp':
             elf.width=10;
             self.det_height();
             self.fig.set_size_inches(self.width,self.height);
-            if self.leg:        
+            if self.leg:
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                               ncol=self.leg_col_full_page, mode="expand", 
+                               ncol=self.leg_col_full_page, mode="expand",
                                borderaxespad=0.);
         elif size is 'cs':
             if customsize is not None:

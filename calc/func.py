@@ -193,9 +193,9 @@ class curve(object):
 		self.fun = exp_func;
 		self.coeffs = coeffs;
 		self.fit_exp_bool = True;
-	def fit_gen(self,fun,guess=None):
+	def fit_gen(self,fun,guess=None,u_y=None):
 		self.fun = fun;
-		fit = curve_fit(fun, self.x, self.y, p0 = guess);
+		fit = curve_fit(fun, self.x, self.y, p0 = guess,sigma=u_y,absolute_sigma=True);
 		self.coeffs = fit[0];
 		self.fit_exp_bool = False;
 	def fit_at(self,x):
