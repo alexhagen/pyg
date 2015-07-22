@@ -38,7 +38,8 @@ pgf_with_pdflatex = {
     "grid.linewidth": 0.125,     # in points
     "grid.alpha"    : 0.5,     # transparency, between 0.0 and 1.0
     "savefig.transparent" : True,
-    "path.simplify" : True
+    "path.simplify" : True,
+    "pgf.preamble" : "\usepackage{nicefrac}"
 }
 '''
     "path.simplify" : True,
@@ -316,13 +317,13 @@ class ah2d(object):
         if xerr is None and yerr is None:
             line=plt.plot(x,y,label=name,color='black',
                 marker=self.marker[self.plotnum%7],
-                ls=_ls,lw=linewidth,solid_capstyle='butt');
+                ls=_ls,lw=linewidth,solid_capstyle='butt',clip_on=True);
             for i in range(0,len(line)):
                 self.lines[name+'%d' % (i)] = (line[i])
         else:
             line,caplines,barlinecols=plt.errorbar(x,y,label=name,color='black',
                 xerr=xerr,yerr=yerr,marker=self.marker[self.plotnum%7],
-                ls=_ls,ecolor='#A7A9AC',lw=linewidth);
+                ls=_ls,ecolor='#A7A9AC',lw=linewidth,clip_on=True);
             self.lines[name] = (line)
         self.markers_on();
         self.lines_off();
@@ -439,6 +440,22 @@ class ah2d(object):
         if format is 'pgf':
             self.remove_font_sizes(filename+self.sizestring[size]+add);
     def export(self,filename,sizes=['1'],formats=['pgf'],customsize=None):
+        '''
+        # remove all points outside the window
+        for key in self.lines:
+            (xdata,ydata) = self.lines[key].get_data();
+            (xmin,xmax) = self.ax.get_xlim();
+            (ymin,ymax) = self.ax.get_ylim();
+            for i in range(len(xdata)):
+                if (xdata[i] < xmin) or (xdata[i] > xmax) \
+                    or (ydata[i] < ymin) or (ydata[i] > ymax):
+                    xdata[i] = np.nan;
+                    ydata[i] = np.nan;
+            self.lines[key].set_xdata(xdata);
+            self.lines[key].set_ydata(ydata);
+            print self.lines[key].get_xdata();
+            print self.lines[key].get_ydata();
+        '''
         for size in sizes:
             for format in formats:
                 self.set_size(size,len(sizes),customsize=customsize);
