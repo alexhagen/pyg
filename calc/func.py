@@ -63,12 +63,14 @@ class curve(object):
 		else:
 			return False;
 	def at(self,x):
-		if x >= self.x.min() and x <= self.x.max():
-			# if it is in the data range, interpolate
-			y = self.interpolate(x);
-		else:
-			# if it is not in the data range, extrapolate
-			y = self.extrapolate(x);
+		y = np.ones_like(x);
+		for index, xi in np.ndenumerate(x):
+			if xi >= self.x.min() and xi <= self.x.max():
+				# if it is in the data range, interpolate
+				y[index] = self.interpolate(xi);
+			else:
+				# if it is not in the data range, extrapolate
+				y[index] = self.extrapolate(xi);
 		return y;
 	def normalize(self,xmin=None,xmax=None,norm='max'):
 		if norm is 'max':

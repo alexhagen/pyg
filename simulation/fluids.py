@@ -53,7 +53,7 @@ class fluid(object):
                 350.27,350.44,350.61 ]
             self.T_b_curve = ahm.curve(np.array(P_b)*1.0E3,np.array(T_b));
             self.M = 58.0791/1000.0;
-            self.omega = 0.625;
+            self.omega = 0.30;
         if name.lower() in ['dfp','decafluoropentane']:
             self.P_c = 2070000.;
             self.T_c = 457.;
@@ -144,18 +144,32 @@ class fluid(object):
         V_o = self.hankinson_thomson();
         # determine the saturation volume from tait's definition
         V_s = self.tait_vs(T_r,V_o);
+        # find the constant left side
+        k = np.exp((1.-(self.M/rho)/V_s)/C);
         # assume P is atmospheric so we can iterate
-        P = 101325.0;
-        P_last = 0.0;
-        while np.sqrt((P - P_last)**2) > self.epsilon_p:
-            self.T_b = self.T_b_curve.at(P);
+        Pi = 101325.;
+        Pi1 = 0.;
+        epsilon = Pi1-Pi;
+        while np.sqrt((epsilon)**2) > self.epsilon_p:
+            self.T_b = self.T_b_curve.at(Pi);
             # determine the reduced boiling temperature from common definitions
             T_br = self.T_b/self.T_c;
             # determine the saturation pressure from the riedel equation
             P_s = self.riedel(T_r,T_br);
-            # finally use the tait equation to determine the molar volume
-            V = V_s * (1.0 - C * np.log((B + P)/(B + P_s)));
             # save the pressure for our iteration
-            P_last = P;
-            P = ((B + P_s)*np.exp((1.-(V/V_s))/C)) - B;
-        return P;
+            f = (B+Pi)/(B+P_s)-k;
+            P_sp = (self.riedel(T_r,self.T_b_curve.at(Pi+1.0)/self.T_c) - \
+                self.riedel(T_r,self.T_b_curve.at(Pi+1.0)/self.T_c))/2.0;
+            fp = (-(B+Pi)*P_sp+B+P_s)/((B+P_s)**2);
+            Pi1 = Pi - f/fp;
+            epsilon = Pi1 - Pi;
+            Pi = Pi1;
+        return Pi1;
+    def c(self,T,P):
+        rho = self.rho(T,P);
+        rho_1 = rho - 0.001;
+        rho_2 = rho + 0.001;
+        p1 = self.p(T,rho_1);
+        p2 = self.p(T,rho_2);
+        c = np.sqrt((p1 - p2)/(rho_1 - rho_2));
+        return c;
