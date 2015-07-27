@@ -53,7 +53,7 @@ class fluid(object):
                 350.27,350.44,350.61 ]
             self.T_b_curve = ahm.curve(np.array(P_b)*1.0E3,np.array(T_b));
             self.M = 58.0791/1000.0;
-            self.omega = 0.30;
+            self.omega = 0.347;#0.30667;
         if name.lower() in ['dfp','decafluoropentane']:
             self.P_c = 2070000.;
             self.T_c = 457.;
