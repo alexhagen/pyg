@@ -53,14 +53,15 @@ class fluid(object):
                 350.27,350.44,350.61 ]
             self.T_b_curve = ahm.curve(np.array(P_b)*1.0E3,np.array(T_b));
             self.M = 58.0791/1000.0;
-            self.omega = 0.347;#0.30667;
+            self.omega_c = 0.347;
+            self.omega_rho = 0.625;#0.30667;
         if name.lower() in ['dfp','decafluoropentane']:
             self.P_c = 2070000.;
             self.T_c = 457.;
             self.T_b_curve = ahm.curve();
             self.M = 252.055032;
             self.omega = 0.62;
-    def tait_const(self,T_r):
+    def tait_const(self,T_r,omega):
         a = -9.070217
         b = 62.45326;
         d= -135.1102;
@@ -69,21 +70,21 @@ class fluid(object):
         h = 1.14188;
         j = 0.0861488;
         k = 0.0344483;
-        e = np.exp(f + g*self.omega + h*self.omega**2);
+        e = np.exp(f + g*omega + h*omega**2);
         B = self.P_c * (-1. + a*np.power((1.-T_r),(1./3.)) + \
             b*np.power((1.-T_r),(2./3.)) + d*(1.-T_r) + \
             e*np.power((1.-T_r),(4./3.)));
-        C = j + k*self.omega**2;
+        C = j + k*omega**2;
         return (B,C);
 
-    def hankinson_thomson(self):
+    def hankinson_thomson(self,omega):
         a = 0.2851686;
         b = -0.06379110;
         c = 0.01379173;
-        V_o = self.R*self.T_c * (a + b*self.omega +c*self.omega**2.0)/self.P_c;
+        V_o = self.R*self.T_c * (a + b*omega +c*omega**2.0)/self.P_c;
         return V_o;
 
-    def tait_vs(self,T_r,V_o):
+    def tait_vs(self,T_r,V_o,omega):
         a = -1.52816;
         b = 1.43907;
         c = -0.81446;
@@ -96,7 +97,7 @@ class fluid(object):
             b*np.power((1.-T_r),(2./3.)) + c*(1.-T_r) + \
             d*np.power((1.-T_r),(4./3.));
         V_r_delta = (e + f*T_r + g*T_r**2 + h*T_r**3)/(T_r - 1.0001);
-        V_s = V_o * V_r_0 * (1.-self.omega*V_r_delta);
+        V_s = V_o * V_r_0 * (1.-omega*V_r_delta);
         return V_s;
 
     def riedel(self,T_r,T_br):
@@ -114,16 +115,18 @@ class fluid(object):
             (B_ant/T_r) + C_ant*np.log(T_r) + D_ant*T_r**6);
         return P_s;
 
-    def rho(self,T,P):
+    def rho(self,T,P,omega=None):
+        if omega is None:
+            omega = self.omega_rho;
         # determine the reduced temperature from common definitions
         T_r = np.divide(T,self.T_c);
         # determine the constats using tait's definitions
-        (B,C) = self.tait_const(T_r);
+        (B,C) = self.tait_const(T_r,omega);
         # determine the characteristic volume from hankinson-thomson's
         # correlation
-        V_o = self.hankinson_thomson();
+        V_o = self.hankinson_thomson(omega);
         # determine the saturation volume from tait's definition
-        V_s = self.tait_vs(T_r,V_o);
+        V_s = self.tait_vs(T_r,V_o,omega);
 
         T_b = self.T_b_curve.at(P);
         T_br = T_b/self.T_c;
@@ -134,16 +137,18 @@ class fluid(object):
         # calculate the density from that molar volume and return it
         rho = self.M/np.array(V);
         return rho;
-    def p(self,T,rho):
+    def p(self,T,rho,omega=None):
+        if omega is None:
+            omega = self.omega_rho;
         # determine the reduced temperature from common definitions
         T_r = np.divide(T,self.T_c);
         # determine the constats using tait's definitions
-        (B,C) = self.tait_const(T_r);
+        (B,C) = self.tait_const(T_r,omega);
         # determine the characteristic volume from hankinson-thomson's
         # correlation
-        V_o = self.hankinson_thomson();
+        V_o = self.hankinson_thomson(omega);
         # determine the saturation volume from tait's definition
-        V_s = self.tait_vs(T_r,V_o);
+        V_s = self.tait_vs(T_r,V_o,omega);
         # find the constant left side
         k = np.exp((1.-(self.M/rho)/V_s)/C);
         # assume P is atmospheric so we can iterate
@@ -166,10 +171,10 @@ class fluid(object):
             Pi = Pi1;
         return Pi1;
     def c(self,T,P):
-        rho = self.rho(T,P);
+        rho = self.rho(T,P,omega=self.omega_c);
         rho_1 = rho - 0.001;
         rho_2 = rho + 0.001;
-        p1 = self.p(T,rho_1);
-        p2 = self.p(T,rho_2);
+        p1 = self.p(T,rho_1,omega=self.omega_c);
+        p2 = self.p(T,rho_2,omega=self.omega_c);
         c = np.sqrt((p1 - p2)/(rho_1 - rho_2));
         return c;

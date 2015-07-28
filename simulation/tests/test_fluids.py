@@ -67,4 +67,4 @@ boiling_plot.add_data_pointer(101325.,point=298.73,\
     string=stp_str,\
     place=(60000.,310.))
 boiling_plot.export('c_ace',
-    formats=['png'],sizes=['cs'],customsize=[10.0,5.0]);
+    formats=['png','pgf'],sizes=['2']);

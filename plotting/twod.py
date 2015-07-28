@@ -11,6 +11,7 @@ matplotlib.use('pgf')
 pgf_with_pdflatex = {
     "font.family": "serif",
     "font.serif": [],
+    "font.size": 8.0,
     "axes.linewidth": 0.5,
     "axes.edgecolor": "#746C66",
     "xtick.major.width" : 0.25,
