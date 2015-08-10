@@ -9,8 +9,9 @@ import os
 from matplotlib.patches import Ellipse,Polygon
 matplotlib.use('pgf')
 pgf_with_pdflatex = {
-    "font.family": "serif",
-    "font.serif": [],
+    "pgf.texsystem": "lualatex",
+    "pgf.rcfonts": False,
+    "font.family": "sans",
     "font.size": 8.0,
     "axes.linewidth": 0.5,
     "axes.edgecolor": "#746C66",
