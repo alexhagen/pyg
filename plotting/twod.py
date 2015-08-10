@@ -57,6 +57,8 @@ import numpy as np
 
 #make the line graphing class
 class ah2d(object):
+""" Object `ah2d` is an object that holds a plot instance using the styles
+    defined by ah_py."""
     leg=False;
     leg_col_one_col = 2
     leg_col_two_col = 3
@@ -408,7 +410,7 @@ class ah2d(object):
                                ncol=self.leg_col_two_col, mode="expand",
                                borderaxespad=0.);
         elif size is 'fp':
-            elf.width=10;
+            self.width=10;
             self.det_height();
             self.fig.set_size_inches(self.width,self.height);
             if self.leg:
