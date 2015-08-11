@@ -7,7 +7,7 @@ import matplotlib
 import string
 import os
 from matplotlib.patches import Ellipse,Polygon
-matplotlib.use('pgf')
+matplotlib.use('pgf');
 pgf_with_pdflatex = {
     "pgf.texsystem": "lualatex",
     "pgf.rcfonts": False,
@@ -43,12 +43,7 @@ pgf_with_pdflatex = {
     "path.simplify" : True,
     "pgf.preamble" : "\usepackage{nicefrac}"
 }
-'''
-    "path.simplify" : True,
-    "axes.formatter.use_mathtext" : True,
-    "axes.below" : True
-'''
-matplotlib.rcParams.update(pgf_with_pdflatex)
+matplotlib.rcParams.update(pgf_with_pdflatex);
 import matplotlib.pyplot as plt
 plt.close("all")
 import numpy as np
@@ -57,8 +52,8 @@ import numpy as np
 
 #make the line graphing class
 class ah2d(object):
-""" Object `ah2d` is an object that holds a plot instance using the styles
-    defined by ah_py."""
+    """ Object ``ah2d`` is an object that holds a plot instance using the styles
+        defined by ``ah_py``."""
     leg=False;
     leg_col_one_col = 2
     leg_col_two_col = 3
@@ -99,11 +94,22 @@ class ah2d(object):
         self.regs = {};
         self.reg_string = {};
     def xlabel(self,label,axes=None):
+        """ ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or
+        other axis given by kwarg ``axes``).  The label can take LaTeX arguments
+        and the ah style guide asks for labels given as 'Label ($variable$)
+        [$unit$]'."""
         if axes is None:
             axes = self.ax;
         xlab=axes.set_xlabel(label);
         self.artists.append(xlab);
     def add_subplot(self,subp=121):
+        """ ``ah2d.add_subplot`` follows Matlab's lead and allows you to plot
+        several axes on one plot.  If kwarg ``subp`` is not defined, the default
+        is to add a second plot in a 1x2 array.  When ``subp`` is defined, it
+        will follow that system (i.e. ``subp=234`` means you have two rows and
+        three columns and you are plotting in the 4th postition ``(2,1)``). The
+        newly created axes is saved as ``ah2d.ax2`` - this should be expanded
+        for more axes later."""
         gsstr = str(subp);
         gs1 = int(gsstr[0]);
         gs2 = int(gsstr[1]);
