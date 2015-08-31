@@ -7,6 +7,7 @@ import matplotlib
 import string
 import os
 from matplotlib.patches import Ellipse,Polygon
+from colour import Color
 matplotlib.use('pgf');
 pgf_with_pdflatex = {
     "pgf.texsystem": "lualatex",
@@ -316,7 +317,21 @@ class ah2d(object):
         axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.5);
         patch = axes.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
         self.bars[name]=patch;
-    def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
+    def fill_betweenx(self,x1,x2,y,fc='red',name='plot',ec='None',axes=None):
+        if axes is None:
+            axes = self.ax;
+        self.plotnum=self.plotnum+1;
+        if name is 'plot':
+            name = 'plot%d' % (self.plotnum);
+        idx = np.argsort(x1);
+        x1 = np.array(x1);
+        x2 = np.array(x2);
+        y = np.array(y);
+        x1 = x1[idx];
+        x2 = x2[idx];
+        y = y[idx];
+        axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=0.5);
+    def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,linecolor='black',legend=True):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
@@ -325,15 +340,22 @@ class ah2d(object):
         else:
             _ls = linestyle;
         if xerr is None and yerr is None:
-            line=plt.plot(x,y,label=name,color='black',
+            line=plt.plot(x,y,label=name,color=linecolor,
                 marker=self.marker[self.plotnum%7],
                 ls=_ls,lw=linewidth,solid_capstyle='butt',clip_on=True);
             for i in range(0,len(line)):
                 self.lines[name+'%d' % (i)] = (line[i])
         else:
-            line,caplines,barlinecols=plt.errorbar(x,y,label=name,color='black',
+            if linecolor == 'black':
+                ecolor = '#A7A9AC';
+            else:
+                col = Color(linecolor);
+                col.saturation = 0.5;
+                col.luminance = 0.75;
+                ecolor = col.hex;
+            line,caplines,barlinecols=plt.errorbar(x,y,label=name,color=linecolor,
                 xerr=xerr,yerr=yerr,marker=self.marker[self.plotnum%7],
-                ls=_ls,ecolor='#A7A9AC',lw=linewidth,clip_on=True);
+                ls=_ls,ecolor=ecolor,lw=linewidth,clip_on=True);
             self.lines[name] = (line)
         self.markers_on();
         self.lines_off();

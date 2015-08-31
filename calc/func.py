@@ -141,7 +141,8 @@ class curve(object):
 		return np.sum([ ((x_sub[i+1]-x_sub[i])*y_sub[i]) + \
 			((x_sub[i+1]-x_sub[i])*(y_sub[i+1]-y_sub[i]))/2 \
 			for i in np.arange(0,len(x_sub)-1) ]);
-	def plot(self,x=None,y=None,addto=None,linestyle=None,yy=False,xerr=None,yerr=None):
+	def plot(self,x=None,y=None,addto=None,linestyle=None,linecolor='black',
+		yy=False,xerr=None,yerr=None):
 		if addto is None:
 			plot = ahp.ah2d();
 		else:
@@ -163,7 +164,8 @@ class curve(object):
 				plot_y = np.append(plot_y,y[i]);
 				plot_x = np.append(plot_x,np.nan);
 				plot_y = np.append(plot_y,np.nan);
-			plot.add_line(plot_x,plot_y,name=self.name,linewidth=4.0,linestyle='-');
+			plot.add_line(plot_x,plot_y,name=self.name,linewidth=4.0,linecolor=linecolor,
+				linestyle='-');
 			conn_x = np.array([]);
 			conn_y = np.array([]);
 			for i in np.arange(1,len(x)):
@@ -173,14 +175,14 @@ class curve(object):
 				conn_y = np.append(conn_y,y[i]);
 				conn_x = np.append(conn_x,np.nan);
 				conn_y = np.append(conn_y,np.nan);
-			plot.add_line(conn_x,conn_y,name=self.name+'connectors',linewidth=0.1,linestyle='-');
+			plot.add_line(conn_x,conn_y,name=self.name+'connectors',linewidth=0.1,linestyle='-',linecolor=linecolor);
 			plot.markers_off();
 			plot.lines_on();
 		elif self.data is 'smooth':
 			if yy is False:
-				plot.add_line(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle);
+				plot.add_line(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle,linecolor=linecolor);
 			else:
-				plot.add_line_yy(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle);
+				plot.add_line_yy(x,y,xerr=self.u_x,yerr=self.u_y,name=self.name,linestyle=linestyle,linecolor=linecolor);
 		return plot;
 	def decimate(self,R):
 		pad_size = pymath.ceil(float(self.x.size)/R)*R - self.x.size;

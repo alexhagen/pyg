@@ -3,7 +3,7 @@ import datetime as dt;
 import math;
 from matplotlib.pyplot import close
 from ..plotting import twod as ahp
-from ..calc import math as ahm
+from ..calc import func as ahm
 from scipy import stats
 
 class ctmfd_pressure_data(object):
@@ -16,26 +16,29 @@ class ctmfd_pressure_data(object):
         self.p_data = np.ndarray((1,1));
         self.wt_data = np.ndarray((1,1));
         self.det_data = np.ndarray((1,1));
-    
-    def __init__(self,_p_desired,_p_data,_wt_data,_det_data):
+
+    def __init__(self,_p_desired,_p_data,_p_sigma_data,_wt_data,_det_data):
         self.p_desired = _p_desired;
         self.p_data = _p_data;
+        self.p_sigma = 0.00;
+        self.p_sigma_data=_p_sigma_data;
         self.wt_data = _wt_data;
         self.det_data = _det_data;
         self.calc();
-    
+
     def calc(self):
         # remove all those that cavitated before up to speed
         p_data = self.p_data[self.wt_data > 0.0];
+        p_sigma_data = self.p_sigma_data[self.wt_data > 0.0];
         det_data = self.det_data[self.wt_data > 0.0];
         wt_data = self.wt_data[self.wt_data > 0.0];
         # calculate statistics
         self.wt = wt_data.sum()/det_data.sum();
         self.wt_sigma = self.wt/math.sqrt(det_data.sum());
-        self.p_sigma = np.std(p_data);
+        self.p_sigma = np.mean(p_sigma_data);
         self.p = np.mean(p_data);
         #return plt1,plt2
-        
+
     def calc_meth_1(self):
         """ In this method, we concatenate tests into one long test with many
         events.  This removes any information from cavitations at speedup and
@@ -286,7 +289,7 @@ class ctmfd_data(object):
         self.wt_sigma = [];
         self.p = [];
         self.p_sigma = [];
-    
+
     def add_data(self,filename):
         f = open(filename,'r')
         # check if the first line has a certain syntax
@@ -301,37 +304,34 @@ class ctmfd_data(object):
             self.p.append(self.data_split[key].p);
             self.p_sigma.append(self.data_split[key].p_sigma);
 
-def read_alex_ctmfd_file(self,filename):
-        arr=np.loadtxt(filename,skiprows=13)
-        arr=arr[0:-1,:]
-        self.pneg_desired = arr[:,1]
-        self.rps = arr[:,2]
-        self.pneg = arr[:,3]
-        self.time = arr[:,4]
-        cavs = arr[:,5]
-        det = arr[:,6]
-        for i in np.arange(0,len(cavs)):
-            if self.pneg_desired[i-1] == self.pneg_desired[i]:
-                if cavs[i] > cavs[i-1]:
-                    det[i]=True
-                else:
-                    det[i]=False
+    def read_alex_ctmfd_file(self,filename):
+        """ in reading alex's input files, there is a lot better structure to
+        where things are put."""
+        arr=np.loadtxt(filename,delimiter=',',usecols=(0,1,2,4,5))
+        self.pneg_desired = arr[:,0]
+        self.pneg = arr[:,1]
+        self.u_pneg = arr[:,2];
+        self.time = arr[:,3]
+        det = arr[:,4]
         self.det = det
-        
+
         # go through and dilute the data
         for i in np.unique(self.pneg_desired):
             pneg_desired_string = "%4.2f" % (i);
-            wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
+            wt = ctmfd_pressure_data(i,self.pneg[self.pneg_desired==i],
+                self.u_pneg[self.pneg_desired==i],
+                self.time[self.pneg_desired==i],self.det[self.pneg_desired==i]);
             if pneg_desired_string not in self.data_split:
                 self.data_split[pneg_desired_string] = wt;
             else:
                 wt = self.data_split[pneg_desired_string];
                 np.append(wt.p_data,self.pneg[self.pneg_desired==i]);
+                np.append(wt.p_sigma_data,self.u_pneg[self.pneg_desired==i]);
                 np.append(wt.wt_data,self.time[self.pneg_desired==i]);
                 np.append(wt.det_data,self.det[self.pneg_desired==i]);
                 wt.calc();
                 self.data_split[pneg_desired_string] = wt;
-    
+
     def read_jeff_ctmfd_file(self,filename):
         f = open(filename,'r')
         # First line is header with the start date
@@ -395,7 +395,7 @@ def read_alex_ctmfd_file(self,filename):
                 else:
                     det[i]=False
         self.det = det
-        
+
         # go through and dilute the data
         for i in np.unique(self.pneg_desired):
             pneg_desired_string = "%4.2f" % (i);
@@ -419,12 +419,12 @@ def read_alex_ctmfd_file(self,filename):
         self.vis.ylabel("Waiting Time ($t_{wait}$) [$\mathrm{s}$]");
         self.vis.add_wt_info_box(self);
         return self.vis;
-    
+
     def generate_figure(self):
         self.plot_waiting_times();
-        filename = "%s_%s_%scm_%s_(%d_%d_%d)" % (self.ctmfd,self.source,str(self.source_dist_cm).strip('[]'),self.source_shielding,self.month,self.day,self.year)       
+        filename = "%s_%s_%scm_%s_(%d_%d_%d)" % (self.ctmfd,self.source,str(self.source_dist_cm).strip('[]'),self.source_shielding,self.month,self.day,self.year)
         #self.vis.export(filename);
-    
+
 def timestamptodatetime(timestr,datestr):
     arr = datestr.split("/");
     month = int(arr[0])
