@@ -30,10 +30,10 @@ pgf_with_pdflatex = {
     "axes.facecolor": "none",
     "figure.facecolor": "none",
     "axes.labelcolor": "#746C66",
-    "xtick.labelsize": "x-small",
-    "ytick.labelsize": "x-small",
+    "xtick.labelsize": "small",
+    "ytick.labelsize": "small",
     "axes.labelsize": "medium",
-    "legend.fontsize": "x-small",
+    "legend.fontsize": "small",
     "legend.frameon": False,
     "axes.grid"     : False,
     "grid.color"    : "#A7A9AC",   # grid color

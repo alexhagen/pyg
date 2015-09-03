@@ -24,7 +24,6 @@ class rand_gen(object):
 		return (r_bar,r_std);
 
 class curve(object):
-""" A ``ah_py.curve`` object is built to deal with data of two dimensions."""
 	def __init__(self,x,y,name='',u_x=None,u_y=None,data='smooth'):
 		self.name = name;
 		self.data = data;
@@ -47,7 +46,7 @@ class curve(object):
 			self.u_y = u_y;
 		self.sort();
 	def sort(self):
-	""" ``ah_py.curve.sort()`` sorts the list depending on the **x** coordinate."""
+		""" ``ah_py.curve.sort()`` sorts the list depending on the **x** coordinate."""
 		idx = self.x.argsort();
 		self.x = self.x[idx];
 		self.y = self.y[idx];
@@ -56,19 +55,19 @@ class curve(object):
 		if self.u_y is not None:
 			self.u_y = self.u_y[idx];
 	def add_data(self,x,y):
-	""" ``ah_py.curve.add_data(x,y)`` adds data to the already populated x and y."""
+		""" ``ah_py.curve.add_data(x,y)`` adds data to the already populated x and y."""
 		self.x = np.append(self.x,x);
 		self.y = np.append(self.y,y);
 		self.sort();
 	def inrange(self,x):
-	""" ``ah_py.curve.inrange(x)`` checks if input ``x`` is in the range of the
+		""" ``ah_py.curve.inrange(x)`` checks if input ``x`` is in the range of the
 	covered by the ``ah_py.curve`` instance's array ``x``."""
 		if x >= self.x.min() and x <= self.x.max():
 			return True;
 		else:
 			return False;
 	def at(self,x):
-	""" ``ah_py.curve.at(x)`` interpolates or extrapolates the curve to give a y
+		""" ``ah_py.curve.at(x)`` interpolates or extrapolates the curve to give a y
 	value for the curve at input ``x``."""
 		y = np.ones_like(x);
 		for index, xi in np.ndenumerate(x):
