@@ -218,6 +218,7 @@ class ah2d(object):
         if regtype.isdigit():
             # determine the coefficients of degree regtype
             coeffs = np.polyfit(x,y,regtype);
+            print coeffs
             # determine a fine grid of values
             x_fit = np.linspace(min(x),max(x),num=1000);
             y_fit = np.polyval(coeffs,x_fit);
@@ -314,7 +315,7 @@ class ah2d(object):
         self.plotnum=self.plotnum+1;
         if name is 'plot':
             name = 'plot%d' % (self.plotnum);
-        axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.5);
+        axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.2,linewidth=0.0);
         patch = axes.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
         self.bars[name]=patch;
     def fill_betweenx(self,x1,x2,y,fc='red',name='plot',ec='None',axes=None):
