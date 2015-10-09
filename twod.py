@@ -129,8 +129,8 @@ class ah2d(object):
         self.ax.set_xlim([minx,maxx]);
     def ylim(self,miny,maxy,axes=None):
         self.ax.set_ylim([miny,maxy]);
-    def legend(self):
-        self.ax.legend();
+    def legend(self,loc=1):
+        self.leg = self.ax.legend(loc=loc);
         (legobjs,legtitles) = self.ax.get_legend_handles_labels();
         inc_objs = [];
         inc_titles = [];
@@ -421,7 +421,7 @@ class ah2d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
-    def set_size(self,size,sizeofsizes,customsize=None):
+    def set_size(self,size,sizeofsizes,customsize=None,legloc=None):
         if size is '1':
             self.width=3.25;
             self.det_height();
@@ -450,6 +450,8 @@ class ah2d(object):
             if customsize is not None:
                 self.width=customsize[0];
                 self.height=customsize[1];
+                if legloc is not None:
+                    self.ax.legend(loc=legloc,ncol=2);
         self.fig.set_size_inches(self.width,self.height);
     def export_fmt(self,filename,size,sizeofsizes,format):
         if sizeofsizes == 1:
@@ -472,7 +474,7 @@ class ah2d(object):
                 bbox_extra_artists=self.artists,bbox_inches='tight');
         if format is 'pgf':
             self.remove_font_sizes(filename+self.sizestring[size]+add);
-    def export(self,filename,sizes=['1'],formats=['pgf'],customsize=None):
+    def export(self,filename,sizes=['1'],formats=['pgf'],customsize=None,legloc=None):
         '''
         # remove all points outside the window
         for key in self.lines:
@@ -491,5 +493,5 @@ class ah2d(object):
         '''
         for size in sizes:
             for format in formats:
-                self.set_size(size,len(sizes),customsize=customsize);
+                self.set_size(size,len(sizes),customsize=customsize,legloc=legloc);
                 self.export_fmt(filename,size,len(sizes),format);
