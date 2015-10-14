@@ -9,47 +9,9 @@ import os
 from matplotlib.patches import Ellipse,Polygon
 from colour import Color
 matplotlib.use('pgf');
-pgf_with_pdflatex = {
-    "pgf.texsystem": "lualatex",
-    "pgf.rcfonts": False,
-    "font.family": "sans",
-    "font.size": 8.0,
-    "axes.linewidth": 0.5,
-    "axes.edgecolor": "#746C66",
-    "xtick.major.width" : 0.25,
-    "xtick.major.size" : 2,
-    "xtick.direction" : "in",
-    "xtick.minor.width" : 0.125,
-    "xtick.color": "#746C66",
-    "ytick.major.width" : 0.25,
-    "ytick.major.size" : 2,
-    "ytick.minor.width" : 0.125,
-    "ytick.color": "#746C66",
-    "ytick.direction" : "in",
-    "text.color": "#746C66",
-    "axes.facecolor": "none",
-    "figure.facecolor": "none",
-    "axes.labelcolor": "#746C66",
-    "xtick.labelsize": "small",
-    "ytick.labelsize": "small",
-    "axes.labelsize": "medium",
-    "legend.fontsize": "small",
-    "legend.frameon": False,
-    "axes.grid"     : False,
-    "grid.color"    : "#A7A9AC",   # grid color
-    "grid.linestyle": ":",       # dotted
-    "grid.linewidth": 0.125,     # in points
-    "grid.alpha"    : 0.5,     # transparency, between 0.0 and 1.0
-    "savefig.transparent" : True,
-    "path.simplify" : True,
-    "pgf.preamble" : "\usepackage{nicefrac}"
-}
-matplotlib.rcParams.update(pgf_with_pdflatex);
 import matplotlib.pyplot as plt
 plt.close("all")
 import numpy as np
-#from mpl_toolkits.axes_grid.axislines import Subplot
-#import matplotlib.animation as animation
 
 #make the line graphing class
 class ah2d(object):
@@ -75,7 +37,7 @@ class ah2d(object):
             'fp': 'fullpage',
             'cs': 'customsize',
             'none': ''};
-    def __init__(self):
+    def __init__(self,env='plot'):
         self.fig = plt.figure();
         self.ax = self.fig.add_subplot(111);
         self.ax_subp = [];
@@ -94,6 +56,79 @@ class ah2d(object):
         self.bars = {};
         self.regs = {};
         self.reg_string = {};
+        if env is 'plot':
+            rcparamsarray = {
+                "pgf.texsystem": "lualatex",
+                "pgf.rcfonts": False,
+                "font.family": "sans",
+                "font.size": 8.0,
+                "axes.linewidth": 0.5,
+                "axes.edgecolor": "#746C66",
+                "xtick.major.width" : 0.25,
+                "xtick.major.size" : 2,
+                "xtick.direction" : "in",
+                "xtick.minor.width" : 0.125,
+                "xtick.color": "#746C66",
+                "ytick.major.width" : 0.25,
+                "ytick.major.size" : 2,
+                "ytick.minor.width" : 0.125,
+                "ytick.color": "#746C66",
+                "ytick.direction" : "in",
+                "text.color": "#746C66",
+                "axes.facecolor": "none",
+                "figure.facecolor": "none",
+                "axes.labelcolor": "#746C66",
+                "xtick.labelsize": "small",
+                "ytick.labelsize": "small",
+                "axes.labelsize": "medium",
+                "legend.fontsize": "small",
+                "legend.frameon": False,
+                "axes.grid"     : False,
+                "grid.color"    : "#A7A9AC",   # grid color
+                "grid.linestyle": ":",       # dotted
+                "grid.linewidth": 0.125,     # in points
+                "grid.alpha"    : 0.5,     # transparency, between 0.0 and 1.0
+                "savefig.transparent" : True,
+                "path.simplify" : True,
+                "pgf.preamble" : "\usepackage{nicefrac}"
+            }
+        elif env is 'gui':
+            rcparamsarray = {
+                "pgf.texsystem": "lualatex",
+                "pgf.rcfonts": False,
+                "font.family": "sans",
+                "font.size": 8.0,
+                "axes.linewidth": 0.5,
+                "axes.edgecolor": "#746C66",
+                "xtick.major.width" : 0.25,
+                "xtick.major.size" : 2,
+                "xtick.direction" : "in",
+                "xtick.minor.width" : 0.125,
+                "xtick.color": "#746C66",
+                "ytick.major.width" : 0.25,
+                "ytick.major.size" : 2,
+                "ytick.minor.width" : 0.125,
+                "ytick.color": "#746C66",
+                "ytick.direction" : "in",
+                "text.color": "#746C66",
+                "axes.facecolor": "none",
+                "figure.facecolor": "none",
+                "axes.labelcolor": "#746C66",
+                "xtick.labelsize": "small",
+                "ytick.labelsize": "small",
+                "axes.labelsize": "medium",
+                "legend.fontsize": "small",
+                "legend.frameon": False,
+                "axes.grid"     : False,
+                "grid.color"    : "#A7A9AC",   # grid color
+                "grid.linestyle": ":",       # dotted
+                "grid.linewidth": 0.125,     # in points
+                "grid.alpha"    : 0.5,     # transparency, between 0.0 and 1.0
+                "savefig.transparent" : True,
+                "path.simplify" : True,
+                "pgf.preamble" : "\usepackage{nicefrac}"
+            }
+        matplotlib.rcParams.update(rcparamsarray);
     def xlabel(self,label,axes=None):
         """ ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or
         other axis given by kwarg ``axes``).  The label can take LaTeX arguments
@@ -240,10 +275,6 @@ class ah2d(object):
             x_err_np = np.array(xerr);
             y_np = np.array(y);
             y_err_np = np.array(yerr);
-            #coeffs = np.polyfit(x,y_log,1);
-            #x_fit = np.linspace(min(x),max(x),num=1000);
-            #y_fit_log = np.polyval(coeffs,x_fit);
-            #y_fit = np.exp(y_fit_log);
             def exp_func(B,x):
                 return B[0]*np.exp(B[1]*x);
 
@@ -294,21 +325,6 @@ class ah2d(object):
             downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
             self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
-    def add_wt_info_box(self,ctmfd_data):
-        textstr = "ctmfd: $%s$\n" % (ctmfd_data.ctmfd);
-        textstr += "fluid: %s\n" % (ctmfd_data.fluid);
-        textstr += "source: %s at $%s\,\mathrm{cm}$\n" % (ctmfd_data.source,
-                        str(ctmfd_data.source_dist_cm).strip('[]'));
-        textstr += "temperature: $%.1f\,\mathrm{\,^{o}C}$\n" % (ctmfd_data.temperature);
-        textstr += "performed on: %d/%d/%d\n" % (ctmfd_data.month,ctmfd_data.day,ctmfd_data.year);
-        print self.reg_string
-        if self.reg_string is not {}:
-            for key in self.reg_string:
-                textstr += "reg: %s\n" % (self.reg_string[key]);
-        posx = 1 - (0.05/1.61803398875);
-        posy = 1 - (0.05);
-        self.ax.text(posx, posy, textstr, transform=self.ax.transAxes,
-                     fontsize='xx-small',va='top',ha='right')
     def fill_between(self,x,y1,y2,fc='red',name='plot',axes=None):
         if axes is None:
             axes = self.ax;
@@ -387,17 +403,6 @@ class ah2d(object):
         patches=plt.bar(x,y,width=delta,label=name,facecolor='gray',alpha=0.5);
         self.bars[name] = patches;
         return x,y,delta;
-    def add_waiting_time(self,ctmfd_data,name='plot'):
-        p = [];
-        perr = [];
-        wt = [];
-        wterr = [];
-        for key in ctmfd_data.data_split:
-            p.append(ctmfd_data.data_split[key].p);
-            perr.append(2*ctmfd_data.data_split[key].p_sigma);
-            wt.append(ctmfd_data.data_split[key].wt);
-            wterr.append(2*ctmfd_data.data_split[key].wt_sigma);
-        self.add_line(p,wt,xerr=perr,yerr=wterr,name=name)
     def add_legend(self):
         self.leg=True
         leg = self.ax.legend();
