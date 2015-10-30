@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to pyg’s documentation! &mdash; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="pyg 0.1a1 documentation" href="#" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-pyg-s-documentation">
+<h1>Welcome to pyg&#8217;s documentation!<a class="headerlink" href="#welcome-to-pyg-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Write an introduction for this documentation.</p>
+</div>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<span class="target" id="module-twod"></span><dl class="class">
+<dt id="twod.ah2d">
+<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">ah2d</code><span class="sig-paren">(</span><em>env='plot'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Object <code class="docutils literal"><span class="pre">ah2d</span></code> is an object that holds a plot instance using the styles
+defined by <code class="docutils literal"><span class="pre">ah_py</span></code>.</p>
+<dl class="method">
+<dt id="twod.ah2d.add_subplot">
+<code class="descname">add_subplot</code><span class="sig-paren">(</span><em>subp=121</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.add_subplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.add_subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">ah2d.add_subplot</span></code> follows Matlab&#8217;s lead and allows you to plot
+several axes on one plot.  If kwarg <code class="docutils literal"><span class="pre">subp</span></code> is not defined, the default
+is to add a second plot in a 1x2 array.  When <code class="docutils literal"><span class="pre">subp</span></code> is defined, it
+will follow that system (i.e. <code class="docutils literal"><span class="pre">subp=234</span></code> means you have two rows and
+three columns and you are plotting in the 4th postition <code class="docutils literal"><span class="pre">(2,1)</span></code>). The
+newly created axes is saved as <code class="docutils literal"><span class="pre">ah2d.ax2</span></code> - this should be expanded
+for more axes later.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.ah2d.xlabel">
+<code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.xlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">ah2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).  The label can take LaTeX arguments
+and the ah style guide asks for labels given as &#8216;Label ($variable$)
+[$unit$]&#8217;.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="todos">
+<h2>ToDos<a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Write an introduction for this documentation.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in  /Users/ahagen/code/pyg/docs/index.rst, line 9.)</p>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to pyg&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#todos">ToDos</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Alex Hagen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/index.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
