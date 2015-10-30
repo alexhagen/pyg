@@ -515,22 +515,20 @@ class ah2d(object):
                customsize=None, legloc=None):
         # writing a comment here to make the following commented code not
         # docstring
-        '''
         # remove all points outside the window
-        for key in self.lines:
-            (xdata,ydata) = self.lines[key].get_data();
-            (xmin,xmax) = self.ax.get_xlim();
-            (ymin,ymax) = self.ax.get_ylim();
-            for i in range(len(xdata)):
-                if (xdata[i] < xmin) or (xdata[i] > xmax) \
-                    or (ydata[i] < ymin) or (ydata[i] > ymax):
-                    xdata[i] = np.nan;
-                    ydata[i] = np.nan;
-            self.lines[key].set_xdata(xdata);
-            self.lines[key].set_ydata(ydata);
-            print self.lines[key].get_xdata();
-            print self.lines[key].get_ydata();
-        '''
+        # for key in self.lines:
+        #    (xdata,ydata) = self.lines[key].get_data();
+        #    (xmin,xmax) = self.ax.get_xlim();
+        #    (ymin,ymax) = self.ax.get_ylim();
+        #    for i in range(len(xdata)):
+        #        if (xdata[i] < xmin) or (xdata[i] > xmax) \
+        #            or (ydata[i] < ymin) or (ydata[i] > ymax):
+        #            xdata[i] = np.nan;
+        #            ydata[i] = np.nan;
+        #    self.lines[key].set_xdata(xdata);
+        #    self.lines[key].set_ydata(ydata);
+        #    print self.lines[key].get_xdata();
+        #    print self.lines[key].get_ydata();
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
