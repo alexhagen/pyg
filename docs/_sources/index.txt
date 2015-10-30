@@ -12,15 +12,14 @@ Documentation for ``pyg``
 Modules
 -------
 
+.. automodule:: twod
+  :members:
+  :show-inheritance:
+
 .. todo::
 
   Make the actual module comply with PEP8 and write __docstrings__ for the
   whole module.
-
-
-.. automodule:: twod
-  :members:
-  :show-inheritance:
 
 
 ToDo
