@@ -66,30 +66,6 @@ for more axes later.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.export">
-<code class="descname">export</code><span class="sig-paren">(</span><em>filename, sizes=['1'], formats=['pgf'], customsize=None, legloc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.export" title="Permalink to this definition">¶</a></dt>
-<dd><p># remove all points outside the window
-for key in self.lines:</p>
-<blockquote>
-<div><p>(xdata,ydata) = self.lines[key].get_data();
-(xmin,xmax) = self.ax.get_xlim();
-(ymin,ymax) = self.ax.get_ylim();
-for i in range(len(xdata)):</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>if (xdata[i] &lt; xmin) or (xdata[i] &gt; xmax)                     or (ydata[i] &lt; ymin) or (ydata[i] &gt; ymax):</dt>
-<dd>xdata[i] = np.nan;
-ydata[i] = np.nan;</dd>
-</dl>
-</div></blockquote>
-<p>self.lines[key].set_xdata(xdata);
-self.lines[key].set_ydata(ydata);
-print self.lines[key].get_xdata();
-print self.lines[key].get_ydata();</p>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
 <dt id="twod.ah2d.xlabel">
 <code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.xlabel" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">ah2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
