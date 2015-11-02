@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alex Hagen</title>
+    <description>Welcome to my portfolio. I am currently a Ph.D. seeking student at Purdue University in Nuclear Engineering.  This portfolio shows some designs, publications, and open source codes that I&#39;ve created. Feel free to email me if you have any ideas, questions, or requests.
+</description>
+    <link>http://alexhagen.github.io/</link>
+    <atom:link href="http://alexhagen.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Mon, 02 Nov 2015 10:13:21 -0500</pubDate>
+    <lastBuildDate>Mon, 02 Nov 2015 10:13:21 -0500</lastBuildDate>
+    <generator>Jekyll v3.0.0</generator>
+    
+  </channel>
+</rss>
