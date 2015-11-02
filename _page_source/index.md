@@ -9,6 +9,10 @@ image:
 ---
 
 # pyg - A graphing library in python
+Last Updated on 11/2/15
+Written by [Alex Hagen](http://alexhagen.github.io)
+Hosted at [github.com/alexhagen/pyg](http://github.com/alexhagen/pyg)
+Documentation at [alexhagen.github.io/pyg/docs](docs/)
 
 `pyg` (pronounced <i>pig</i>) is my graphing library for `python`, building off of
 `matplotlib`.  Realistically, it only is very useful for a couple cases.
@@ -29,3 +33,13 @@ If one of those cases are something you're interested in, you can look below
 for samples and demos or take a look at the [documentation](docs/).
 
 ## Pyg Demonstrations and Screenshots
+
+### A simple pyg linegraph
+
+### Publication figures with pyg
+
+### Pyg and Pym integration
+
+### Data-pointers on plots
+
+### Dual axes
