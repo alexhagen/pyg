@@ -130,11 +130,23 @@ MathJax.Hub.Config({
 
       <article class="wrap post">
 
-        <h1>pyg</h1>
-<div class="highlight"><pre><code class="language-python" data-lang="python">
-<span class="kn">import</span> <span class="nn">pyg</span>
+        <p><code>pyg</code> (pronounce <em>pig</em>) is my graphing library for <code>python</code>, building off of
+<code>matplotlib</code>.  Realistically, it only is very useful for a couple cases.</p>
 
-</code></pre></div>
+<ul>
+<li>If you&#39;re using my <a href="http://alexhagen.github.io/pym/"><code>pym</code></a> library for
+interpolation, decimation, or other operations on data sets, <code>pyg</code> is a lazy
+and easy way to create graphs from these objects.</li>
+<li>If you&#39;ve got a specific style in mind, and you want to pass that in as an
+<code>rc.Params</code> object, <code>pyg</code> can help you keep that style consistent.</li>
+<li>If you&#39;re wanting to publish, <code>pyg</code> has some exporting features that make
+figures exported as <em>1-column</em>, <em>2-column</em>, or <em>full-page</em> look great in
+journal articles.</li>
+<li>If you want to tinker, <code>pyg</code> is a good starting point for making functions
+to consistently graph data with the same annotations, such as measurements,
+data-pointers, and other features.</li>
+</ul>
+
 
 
       </article>
