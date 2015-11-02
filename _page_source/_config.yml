@@ -1,0 +1,48 @@
+title:            Alex Hagen
+tagline:          xdsaf
+description:      >
+  Welcome to my portfolio. I am currently a Ph.D. seeking student
+  at Purdue University in Nuclear Engineering.  This portfolio
+  shows some designs, publications, and open source codes that I've
+  created. Feel free to email me if you have any ideas, questions, or requests.
+canonical: http://alexhagen.github.io
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://alexhagen.github.io" # the base hostname & protocol for your site
+github_username:  alexhagen
+
+# Owner/author information
+owner:
+  name:           Alex Hagen
+  avatar:         avatar.png
+  bio:            >
+    Welcome to my portfolio. I am currently a Ph.D. seeking student
+    at Purdue University in Nuclear Engineering.  This portfolio
+    shows some designs, publications, and open source codes that I've
+    created. Feel free to email me if you have any ideas, questions, or requests.
+  email:          alexhagen6@gmail.com
+  github:         alexhagen
+  location:       "Lafayette, IN"
+
+tools:
+  standards:      "MATLAB, Python, C++, QT, FORTRAN, PHP"
+  software:       "COMSOL, Solidworks, git, Inkscape"
+
+# Links to include in top navigation
+# For external links add external: true
+links:
+  - title: About
+    url: /about
+
+timezone:    America/New_York
+future:      true
+highlighter: pygments
+markdown:    kramdown
+
+sass:
+    style: :compressed
+
+# https://github.com/mojombo/jekyll/wiki/Permalinks
+permalink:   /:categories/:title
+
+include: [".htaccess"]
+exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp"]
