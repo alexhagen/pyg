@@ -410,24 +410,26 @@ class ah2d(object):
         self.ax2.set_xlim(mini,maxi);
         self.ax2.get_xaxis().tick_top();
 
-    def add_hist(self, y, bins, name='plot'):
+    def add_hist(self, y, bins, facecolor='gray', alpha=0.5, name='plot'):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        n, bins, patches = plt.hist(y, bins=bins, label=name, facecolor='gray',
-                                    alpha=0.5, normed=False)
+        n, bins, patches = plt.hist(y, bins=bins, label=name,
+                                    facecolor=facecolor, alpha=alpha,
+                                    normed=False)
         self.bars[name] = patches
         return n, bins
 
-    def add_bar(self, x, y, name='plot'):
+    def add_bar(self, x, y, hold=True, facecolor='gray', alpha=0.5,
+                name='plot'):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
         delta = [j - i for i, j in zip(x[:-1], x[1:])]
         delta.append(delta[-1])
         # x = [j - (i/2) for i, j in zip(delta, x)];
-        patches = plt.bar(x, y, width=delta, label=name, facecolor='gray',
-                          alpha=0.5)
+        patches = plt.bar(x, y, width=delta, label=name, facecolor=facecolor,
+                          alpha=alpha)
         self.bars[name] = patches
         return x, y, delta
 
@@ -506,10 +508,10 @@ class ah2d(object):
         elif format is 'websvg':
             add = 'web.svg';
         if format is not 'svg':
-            plt.savefig(filename+self.sizestring[size]+add,
-                bbox_extra_artists=self.artists,bbox_inches='tight');
+            plt.savefig(filename + self.sizestring[size] + add,
+                        bbox_extra_artists=self.artists, bbox_inches='tight')
         if format is 'pgf':
-            self.remove_font_sizes(filename+self.sizestring[size]+add);
+            self.remove_font_sizes(filename + self.sizestring[size] + add)
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None):
