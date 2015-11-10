@@ -5,7 +5,7 @@ description: "a graphing library in python"
 category: code
 tags: [python, visualization]
 image:
-  feature: "https://farm8.staticflickr.com/7014/6840341477_e49612bc59_o_d.jpg"
+  feature: "../assets/pyg_banner_1.png"
 ---
 
 # pyg - A graphing library in python
