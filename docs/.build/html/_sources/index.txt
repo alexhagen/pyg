@@ -3,12 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pyg's documentation!
+Pyg - a Python Graphing Library
 ===============================
 
-.. todo::
+Pyg - pronounced 'pig' is my own personal graphing library for ``python``. If
+you haven't read the short introduction
+`here <http://alexhagen.github.io/pyg/>`_, you might want to.  It will explain to
+you if you actually want to use this library for whatever you're planning to do.
+There are very few caveats to reading this documentation, but something to keep
+in mind is that I wrote very little actual graphing for this library, just
+wrapped ``matplotlib`` in a way that made things easier and more repeatable (and
+prettier, too).  Good luck and happy coding!
 
-  Write an introduction for this documentation.
 
 .. toctree::
    :maxdepth: 2

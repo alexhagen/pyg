@@ -15,8 +15,22 @@ plt.close("all")
 
 # make the line graphing class
 class ah2d(object):
-    """ Object ``ah2d`` is an object that holds a plot instance using the styles
-        defined by ``ah_py``."""
+    """ A ``pyg.ah2d`` object plots many two-dimensional data types.
+
+    The ``ah2d`` class provides an access to ``matplotlib`` charting functions
+    and some hook ins to making these functions easier to use and more
+    repeatable.  The constructor itself takes only one optional argument,
+    ``env``.
+
+    :param str env: The environement option defines where you are going to use
+        the generated plot, with the default option being plot (or printing).
+        If you are using this to generate plots for a gui, define this option
+        as ``gui`` and the class will choose a prettier parameter set for your
+        chart. Default: ``plot``.
+    :type env: ``plot``, ``gui``, or ``None``
+    :return: the ``ah2d`` object.
+    :rtype: ``ah2d``
+    """
     leg = False
     leg_col_one_col = 2
     leg_col_two_col = 3
@@ -132,23 +146,42 @@ class ah2d(object):
         matplotlib.rcParams.update(rcparamsarray)
 
     def xlabel(self, label, axes=None):
-        """ ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or
-        other axis given by kwarg ``axes``).  The label can take LaTeX arguments
-        and the ah style guide asks for labels given as 'Label ($variable$)
-        [$unit$]'."""
+        r""" ``ah2d.xlabel`` adds a label to the x-axis.
+
+        ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or
+        other axis given by kwarg ``axes``).
+
+        :param str label: The label added to the x-axis of the defined axis.
+            The label can take LaTeX arguments and the ah style guide asks for
+            labels given as 'Label ($variable$) [$unit$]'.
+        :param axes: If not ``None``, this argument will apply the x-label
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
         if axes is None:
             axes = self.ax
         xlab = axes.set_xlabel(label)
         self.artists.append(xlab)
 
     def add_subplot(self, subp=121):
-        """ ``ah2d.add_subplot`` follows Matlab's lead and allows you to plot
-        several axes on one plot.  If kwarg ``subp`` is not defined, the default
-        is to add a second plot in a 1x2 array.  When ``subp`` is defined, it
-        will follow that system (i.e. ``subp=234`` means you have two rows and
-        three columns and you are plotting in the 4th postition ``(2,1)``). The
-        newly created axes is saved as ``ah2d.ax2`` - this should be expanded
-        for more axes later."""
+        """ ``ah2d.add_subplot`` adds a grid in which you can make subplots.
+
+        ``ah2d.add_subplot`` follows Matlab's lead and allows you to plot
+        several axes on one plot. The newly created axes is saved as
+        ``ah2d.ax2`` - this should be expanded for more axes later.
+
+        .. todo::
+
+            Expand subplotting to be able to use more than two axes total.
+
+        :param int subp: If kwarg ``subp`` is not defined, the
+            default is to add a second plot in a 1x2 array.  When ``subp`` is
+            defined, it will follow that system (i.e. ``subp=234`` means you
+            have two rows and three columns and you are plotting in the 4th
+            postition ``(2,1)``).
+        :return: None
+        """
         gsstr = str(subp)
         gs1 = int(gsstr[0])
         gs2 = int(gsstr[1])
@@ -157,22 +190,72 @@ class ah2d(object):
         self.ax_subp.append(self.fig.add_subplot(subp))
 
     def title(self, title):
+        """ ``ah2d.title`` adds a title to the plot.
+
+        :param str title: the title to be added to the plot. The title can take
+            LaTeX arguments.
+        :return: None
+        """
         ttl = self.ax.set_title(title)
         self.artists.append(ttl)
 
     def ylabel(self, label, axes=None):
+        """ ``ah2d.ylabel`` adds a label to the y-axis.
+
+        ``ah2d.ylabel`` adds a label to the y-axis of the current axes (or
+        other axis given by kwarg ``axes``).  The label can take LaTeX
+        arguments and the ah style guide asks for labels given as 'Label
+        ($variable$) [$unit$]'.
+
+        :param str label: The label added to the y-axis of the defined axis.
+            The label can take LaTeX arguments and the ah style guide asks for
+            labels given as 'Label ($variable$) [$unit$]'.
+        :param axes: If not ``None``, this argument will apply the x-label
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
         if axes is None:
             axes = self.ax
         ylab = axes.set_ylabel(label)
         self.artists.append(ylab)
 
     def xlim(self, minx, maxx, axes=None):
+        """ ``ah2d.xlim`` limits the view of the x-axis to limits.
+
+        :param float minx: The minimum value of x that will be shown.
+        :param float maxx: The maximum value of x that will be shown.
+        :param axes: If not ``None``, this argument will apply the x-limit
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
         self.ax.set_xlim([minx, maxx])
 
     def ylim(self, miny, maxy, axes=None):
+        """ ``ah2d.ylim`` limits the view of the y-axis to limits.
+
+        :param float miny: The minimum value of y that will be shown.
+        :param float maxy: The maximum value of y that will be shown.
+        :param axes: If not ``None``, this argument will apply the y-limit
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
         self.ax.set_ylim([miny, maxy])
 
     def legend(self, loc=1):
+        """ ``ah2d.legend`` shows the legend on the plot.
+
+        ``ah2d.legend`` toggles the legend showing on.  This is done by getting
+        the included objects and titles from the ``matplotlib`` axis item, and
+        then checking to see if there is the word 'connector' in that title. If
+        there is that word, then the entry is discarded.
+
+        :param int loc: The location of the legend in counter-clockwise
+            notation.
+        :return: None
+        """
         self.leg = self.ax.legend(loc=loc)
         (legobjs, legtitles) = self.ax.get_legend_handles_labels()
         inc_objs = []

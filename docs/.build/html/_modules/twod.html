@@ -56,8 +56,22 @@
 
 <span class="c"># make the line graphing class</span>
 <div class="viewcode-block" id="ah2d"><a class="viewcode-back" href="../index.html#twod.ah2d">[docs]</a><span class="k">class</span> <span class="nc">ah2d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Object ``ah2d`` is an object that holds a plot instance using the styles</span>
-<span class="sd">        defined by ``ah_py``.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; A ``pyg.ah2d`` object plots many two-dimensional data types.</span>
+
+<span class="sd">    The ``ah2d`` class provides an access to ``matplotlib`` charting functions</span>
+<span class="sd">    and some hook ins to making these functions easier to use and more</span>
+<span class="sd">    repeatable.  The constructor itself takes only one optional argument,</span>
+<span class="sd">    ``env``.</span>
+
+<span class="sd">    :param str env: The environement option defines where you are going to use</span>
+<span class="sd">        the generated plot, with the default option being plot (or printing).</span>
+<span class="sd">        If you are using this to generate plots for a gui, define this option</span>
+<span class="sd">        as ``gui`` and the class will choose a prettier parameter set for your</span>
+<span class="sd">        chart. Default: ``plot``.</span>
+<span class="sd">    :type env: ``plot``, ``gui``, or ``None``</span>
+<span class="sd">    :return: the ``ah2d`` object.</span>
+<span class="sd">    :rtype: ``ah2d``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">leg</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">3</span>
@@ -173,23 +187,42 @@
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rcparamsarray</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ah2d.xlabel"><a class="viewcode-back" href="../index.html#twod.ah2d.xlabel">[docs]</a>    <span class="k">def</span> <span class="nf">xlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or</span>
-<span class="sd">        other axis given by kwarg ``axes``).  The label can take LaTeX arguments</span>
-<span class="sd">        and the ah style guide asks for labels given as &#39;Label ($variable$)</span>
-<span class="sd">        [$unit$]&#39;.&quot;&quot;&quot;</span>
+        <span class="sd">r&quot;&quot;&quot; ``ah2d.xlabel`` adds a label to the x-axis.</span>
+
+<span class="sd">        ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or</span>
+<span class="sd">        other axis given by kwarg ``axes``).</span>
+
+<span class="sd">        :param str label: The label added to the x-axis of the defined axis.</span>
+<span class="sd">            The label can take LaTeX arguments and the ah style guide asks for</span>
+<span class="sd">            labels given as &#39;Label ($variable$) [$unit$]&#39;.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the x-label</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="n">xlab</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="ah2d.add_subplot"><a class="viewcode-back" href="../index.html#twod.ah2d.add_subplot">[docs]</a>    <span class="k">def</span> <span class="nf">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subp</span><span class="o">=</span><span class="mi">121</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; ``ah2d.add_subplot`` follows Matlab&#39;s lead and allows you to plot</span>
-<span class="sd">        several axes on one plot.  If kwarg ``subp`` is not defined, the default</span>
-<span class="sd">        is to add a second plot in a 1x2 array.  When ``subp`` is defined, it</span>
-<span class="sd">        will follow that system (i.e. ``subp=234`` means you have two rows and</span>
-<span class="sd">        three columns and you are plotting in the 4th postition ``(2,1)``). The</span>
-<span class="sd">        newly created axes is saved as ``ah2d.ax2`` - this should be expanded</span>
-<span class="sd">        for more axes later.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.add_subplot`` adds a grid in which you can make subplots.</span>
+
+<span class="sd">        ``ah2d.add_subplot`` follows Matlab&#39;s lead and allows you to plot</span>
+<span class="sd">        several axes on one plot. The newly created axes is saved as</span>
+<span class="sd">        ``ah2d.ax2`` - this should be expanded for more axes later.</span>
+
+<span class="sd">        .. todo::</span>
+
+<span class="sd">            Expand subplotting to be able to use more than two axes total.</span>
+
+<span class="sd">        :param int subp: If kwarg ``subp`` is not defined, the</span>
+<span class="sd">            default is to add a second plot in a 1x2 array.  When ``subp`` is</span>
+<span class="sd">            defined, it will follow that system (i.e. ``subp=234`` means you</span>
+<span class="sd">            have two rows and three columns and you are plotting in the 4th</span>
+<span class="sd">            postition ``(2,1)``).</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">gsstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subp</span><span class="p">)</span>
         <span class="n">gs1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gsstr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">gs2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gsstr</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -197,23 +230,73 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">change_geometry</span><span class="p">(</span><span class="n">gs1</span><span class="p">,</span> <span class="n">gs2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subp</span><span class="p">))</span>
 </div>
-    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+<div class="viewcode-block" id="ah2d.title"><a class="viewcode-back" href="../index.html#twod.ah2d.title">[docs]</a>    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.title`` adds a title to the plot.</span>
+
+<span class="sd">        :param str title: the title to be added to the plot. The title can take</span>
+<span class="sd">            LaTeX arguments.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ttl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ttl</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ah2d.ylabel"><a class="viewcode-back" href="../index.html#twod.ah2d.ylabel">[docs]</a>    <span class="k">def</span> <span class="nf">ylabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.ylabel`` adds a label to the y-axis.</span>
 
-    <span class="k">def</span> <span class="nf">ylabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="sd">        ``ah2d.ylabel`` adds a label to the y-axis of the current axes (or</span>
+<span class="sd">        other axis given by kwarg ``axes``).  The label can take LaTeX</span>
+<span class="sd">        arguments and the ah style guide asks for labels given as &#39;Label</span>
+<span class="sd">        ($variable$) [$unit$]&#39;.</span>
+
+<span class="sd">        :param str label: The label added to the y-axis of the defined axis.</span>
+<span class="sd">            The label can take LaTeX arguments and the ah style guide asks for</span>
+<span class="sd">            labels given as &#39;Label ($variable$) [$unit$]&#39;.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the x-label</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="n">ylab</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ylab</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ah2d.xlim"><a class="viewcode-back" href="../index.html#twod.ah2d.xlim">[docs]</a>    <span class="k">def</span> <span class="nf">xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.xlim`` limits the view of the x-axis to limits.</span>
 
-    <span class="k">def</span> <span class="nf">xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="sd">        :param float minx: The minimum value of x that will be shown.</span>
+<span class="sd">        :param float maxx: The maximum value of x that will be shown.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the x-limit</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="ah2d.ylim"><a class="viewcode-back" href="../index.html#twod.ah2d.ylim">[docs]</a>    <span class="k">def</span> <span class="nf">ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.ylim`` limits the view of the y-axis to limits.</span>
 
-    <span class="k">def</span> <span class="nf">ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="sd">        :param float miny: The minimum value of y that will be shown.</span>
+<span class="sd">        :param float maxy: The maximum value of y that will be shown.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the y-limit</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">miny</span><span class="p">,</span> <span class="n">maxy</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="ah2d.legend"><a class="viewcode-back" href="../index.html#twod.ah2d.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``ah2d.legend`` shows the legend on the plot.</span>
 
-    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="sd">        ``ah2d.legend`` toggles the legend showing on.  This is done by getting</span>
+<span class="sd">        the included objects and titles from the ``matplotlib`` axis item, and</span>
+<span class="sd">        then checking to see if there is the word &#39;connector&#39; in that title. If</span>
+<span class="sd">        there is that word, then the entry is discarded.</span>
+
+<span class="sd">        :param int loc: The location of the legend in counter-clockwise</span>
+<span class="sd">            notation.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
         <span class="p">(</span><span class="n">legobjs</span><span class="p">,</span> <span class="n">legtitles</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
         <span class="n">inc_objs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -223,7 +306,7 @@
                 <span class="n">inc_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legobjs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">inc_titles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legtitles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">inc_objs</span><span class="p">,</span> <span class="n">inc_titles</span><span class="p">)</span>
-
+</div>
     <span class="k">def</span> <span class="nf">xticks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
@@ -583,7 +666,10 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/pyg.svg" alt="Logo"/>
+            </a></p><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
