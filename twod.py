@@ -574,17 +574,20 @@ class ah2d(object):
                 if legloc is not None:
                     self.ax.legend(loc=legloc,ncol=2);
         self.fig.set_size_inches(self.width,self.height);
-    def export_fmt(self,filename,size,sizeofsizes,format):
+    def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
-            size = 'none';
+            size = 'none'
         if format is 'png':
-            add = '.png';
+            add = '.png'
         elif format is 'pgf':
-            add = '.pgf';
+            add = '.pgf'
+        elif format is 'pdf':
+            add = '.pdf'
         elif format is 'svg':
             # save as pdf, then pdf2svg
             plt.savefig(filename+self.sizestring[size]+'.pdf',
-                bbox_extra_artists=self.artists,bbox_inches='tight');
+                        bbox_extra_artists=self.artists,bbox_inches='tight',
+                        transparent=True)
             os.system('pdf2svg '+filename+self.sizestring[size]+'.pdf '+
                 filename+self.sizestring[size]+'.svg');
             os.remove(filename+self.sizestring[size]+'.pdf');
@@ -592,7 +595,8 @@ class ah2d(object):
             add = 'web.svg';
         if format is not 'svg':
             plt.savefig(filename + self.sizestring[size] + add,
-                        bbox_extra_artists=self.artists, bbox_inches='tight')
+                        bbox_extra_artists=self.artists, bbox_inches='tight',
+                        transparent=True)
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 
