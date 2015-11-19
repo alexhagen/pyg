@@ -150,7 +150,7 @@ and easy way to create graphs from these objects.</li>
 <li>If you&#39;ve got a specific style in mind, and you want to pass that in as an
 <code>rc.Params</code> object, <code>pyg</code> can help you keep that style consistent.</li>
 <li>If you&#39;re wanting to publish, <code>pyg</code> has some exporting features that make
-figures exported as <i>1-column</i>, <i>2-column</i>, or <i>full-page</i> look
+figures exported as 1-column, 2-column, or full-page look
 great in journal articles.</li>
 <li>If you want to tinker, <code>pyg</code> is a good starting point for making functions
 to consistently graph data with the same annotations, such as measurements,
@@ -164,8 +164,93 @@ for samples and demos or take a look at the <a href="docs/">documentation</a>.</
 
 <h3>A simple pyg linegraph</h3>
 
-<h3>Publication figures with pyg</h3>
+<figure>
+    <img src="http://alexhagen.github.io/pyg/images/simple_linegraphweb.svg">
+    <figcaption>A simple linegraph plotted with pyg</figcaption>
+</figure>
 
+<p>The above figures shows the basic interface to <code>pyg</code>. In general, the function
+plot will give us what we want, and we can send a bunch of parameters to this
+function, such as x error, y error, line color, and line style.  The source for
+creating the above graph is shown below:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'HOME'</span><span class="p">]</span> <span class="o">+</span> <span class="s">'/code'</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">twod</span> <span class="k">as</span> <span class="n">pyg2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="c"># first lets make some data with a numpy gaussian function</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="mf">2.5</span>
+<span class="n">sigma1</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">sigma2</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">sigma1</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)))</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">sigma2</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)))</span>
+
+<span class="c"># create a plot object</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2</span><span class="o">.</span><span class="n">ah2d</span><span class="p">()</span>
+
+<span class="c"># add both of our lines to this object</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#285668'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sigma = 1$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#FC8D82'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-.'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sigma ='</span> <span class="o">+</span>
+              <span class="s">r'</span><span class="err">\</span><span class="s">frac{1}{2}$'</span><span class="p">)</span>
+
+<span class="c"># make it pretty with labels and a legend</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines_on</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">r'$x$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">r'$ y = </span><span class="err">\</span><span class="s">exp </span><span class="err">\</span><span class="s">left[</span><span class="err">\</span><span class="s">frac{</span><span class="err">\</span><span class="s">left( x - </span><span class="err">\</span><span class="s">mu </span><span class="err">\</span><span class="s">right)^{2}}'</span> <span class="o">+</span>
+            <span class="s">r'{2 </span><span class="err">\</span><span class="s">sigma ^ {2}}</span><span class="err">\</span><span class="s">right]$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c"># export this to file</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s">'../images/simple_linegraph'</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s">'2'</span><span class="p">],</span>
+            <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'websvg'</span><span class="p">,</span> <span class="s">'png'</span><span class="p">])</span>
+</code></pre></div>
+<h3>Publication figures with pyg</h3>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'HOME'</span><span class="p">]</span> <span class="o">+</span> <span class="s">'/code'</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">twod</span> <span class="k">as</span> <span class="n">pyg2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="c"># first lets make some cool data with trigonometric functions</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">500.</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">2.</span><span class="p">)</span>
+
+<span class="c"># create three plot objects, two for one column, and another for two column</span>
+<span class="n">plot1</span> <span class="o">=</span> <span class="n">pyg2</span><span class="o">.</span><span class="n">ah2d</span><span class="p">()</span>
+<span class="n">plot2</span> <span class="o">=</span> <span class="n">pyg2</span><span class="o">.</span><span class="n">ah2d</span><span class="p">()</span>
+<span class="n">plot3</span> <span class="o">=</span> <span class="n">pyg2</span><span class="o">.</span><span class="n">ah2d</span><span class="p">()</span>
+
+<span class="c"># add one line each to our single column plots</span>
+<span class="n">plot1</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#285668'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sin$'</span><span class="p">)</span>
+<span class="n">plot2</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#285668'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sin^{2}$'</span><span class="p">)</span>
+<span class="c"># add both of them to our double width object</span>
+<span class="n">plot3</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#285668'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sin$'</span><span class="p">)</span>
+<span class="n">plot3</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#FC8D82'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sin^{2}$'</span><span class="p">)</span>
+
+<span class="c"># make them pretty with labels and a legend</span>
+<span class="k">for</span> <span class="n">plot</span> <span class="ow">in</span> <span class="p">[</span><span class="n">plot1</span><span class="p">,</span> <span class="n">plot2</span><span class="p">,</span> <span class="n">plot3</span><span class="p">]:</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">lines_on</span><span class="p">()</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">r'$x$'</span><span class="p">)</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">r'$y$'</span><span class="p">)</span>
+
+<span class="c"># add a legend to our double width plot</span>
+<span class="n">plot3</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c"># export this to file</span>
+<span class="n">plot1</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s">'../images/publication_figure1'</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s">'1'</span><span class="p">],</span>
+             <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'websvg'</span><span class="p">])</span>
+<span class="n">plot2</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s">'../images/publication_figure2'</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s">'1'</span><span class="p">],</span>
+             <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'websvg'</span><span class="p">])</span>
+<span class="n">plot3</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s">'../images/publication_figure3'</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s">'2'</span><span class="p">],</span>
+             <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'websvg'</span><span class="p">])</span>
+
+</code></pre></div>
 <h3>Pyg and Pym integration</h3>
 
 <h3>Data-pointers on plots</h3>

@@ -33,6 +33,11 @@ links:
   - title: About
     url: /about
 
+# navigation tree to include in top navigation
+tree:
+  - title: codes
+    url: /codes
+
 timezone:    America/New_York
 future:      true
 markdown:    redcarpet
