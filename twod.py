@@ -230,7 +230,9 @@ class ah2d(object):
         :type axes: axes, or ``None``
         :return: None
         """
-        self.ax.set_xlim([minx, maxx])
+        if axes is None:
+            axes = self.ax
+        axes.set_xlim([minx, maxx])
 
     def ylim(self, miny, maxy, axes=None):
         """ ``ah2d.ylim`` limits the view of the y-axis to limits.
@@ -242,9 +244,11 @@ class ah2d(object):
         :type axes: axes, or ``None``
         :return: None
         """
-        self.ax.set_ylim([miny, maxy])
+        if axes is None:
+            axes = self.ax
+        axes.set_ylim([miny, maxy])
 
-    def legend(self, loc=1):
+    def legend(self, loc=1, axes=None):
         """ ``ah2d.legend`` shows the legend on the plot.
 
         ``ah2d.legend`` toggles the legend showing on.  This is done by getting
@@ -256,15 +260,17 @@ class ah2d(object):
             notation.
         :return: None
         """
-        self.leg = self.ax.legend(loc=loc)
-        (legobjs, legtitles) = self.ax.get_legend_handles_labels()
+        if axes is None:
+            axes = self.ax
+        self.leg = axes.legend(loc=loc)
+        (legobjs, legtitles) = axes.get_legend_handles_labels()
         inc_objs = []
         inc_titles = []
         for i in range(0, len(legtitles)):
             if 'connector' not in legtitles[i]:
                 inc_objs.append(legobjs[i])
                 inc_titles.append(legtitles[i])
-        self.ax.legend(inc_objs, inc_titles)
+        axes.legend(inc_objs, inc_titles, loc=loc)
 
     def xticks(self, ticks, labels, axes=None):
         if axes is not None:
@@ -439,7 +445,8 @@ class ah2d(object):
             name = 'plot%d' % (self.plotnum);
         axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.2,linewidth=0.0);
         patch = axes.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
-        self.bars[name]=patch;
+        self.bars[name]=patch
+        
     def fill_betweenx(self,x1,x2,y,fc='red',name='plot',ec='None',axes=None):
         if axes is None:
             axes = self.ax;
@@ -456,7 +463,9 @@ class ah2d(object):
         axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=0.5)
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
-                 linestyle=None, linecolor='black', legend=True):
+                 linestyle=None, linecolor='black', legend=True, axes=None):
+        if axes is None:
+            axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
@@ -465,10 +474,10 @@ class ah2d(object):
         else:
             _ls = linestyle
         if xerr is None and yerr is None:
-            line = self.ax.plot(x, y, label=name, color=linecolor,
-                                marker=self.marker[self.plotnum % 7],
-                                ls=_ls, lw=linewidth, solid_capstyle='butt',
-                                clip_on=True)
+            line = axes.plot(x, y, label=name, color=linecolor,
+                             marker=self.marker[self.plotnum % 7],
+                             ls=_ls, lw=linewidth, solid_capstyle='butt',
+                             clip_on=True)
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
         else:
@@ -479,22 +488,30 @@ class ah2d(object):
                 col.saturation = 0.5
                 col.luminance = 0.75
                 ecolor = col.hex
-            line, caplines, barlinecols = self.ax.errorbar(x, y, label=name,
-                                                           color=linecolor,
-                                                           xerr=xerr,
-                                                           yerr=yerr,
-                                                           marker=self.marker[self.plotnum % 7],
-                                                           ls=_ls,
-                                                           ecolor=ecolor,
-                                                           lw=linewidth,
-                                                           clip_on=True)
+            line, caplines, barlinecols = axes.errorbar(x, y, label=name,
+                                                        color=linecolor,
+                                                        xerr=xerr,
+                                                        yerr=yerr,
+                                                        marker=self.marker[self.plotnum % 7],
+                                                        ls=_ls,
+                                                        ecolor=ecolor,
+                                                        lw=linewidth,
+                                                        clip_on=True)
             self.lines[name] = (line)
         self.markers_on()
         self.lines_off()
-    def add_line_yy(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
+
+    def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
+                    linecolor='black', linewidth=0.5, linestyle=None,
+                    legend=True):
         # make new axis
         self.ax2 = self.ax.twinx()
-        self.add_line(x,y,name=name,xerr=xerr,yerr=yerr,linewidth=linewidth,linestyle=linestyle,legend=legend);
+        self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
+                      linewidth=linewidth,
+                      linecolor=linecolor,
+                      linestyle=linestyle,
+                      legend=legend, axes=self.ax2)
+
     def add_xx(self,calfunc):
         self.ax2 = self.ax.twiny();
         mini = calfunc(np.min(self.ax.get_xlim()));
