@@ -88,6 +88,16 @@ plot.export('../images/simple_linegraph', sizes=['2'],
 
 ### Publication figures with pyg
 
+<figure>
+    <img src="http://alexhagen.github.io/pyg/images/publication_figure1web.svg">
+    <img src="http://alexhagen.github.io/pyg/images/publication_figure2web.svg">
+    <figcaption>Two one column figures plotted with <code>pyg</code></figcaption>
+</figure>
+
+<figure>
+    <img src="http://alexhagen.github.io/pyg/images/publication_figure3web.svg">
+    <figcaption>One two column figure plotted with <code>pyg</code></figcaption>
+</figure>
 
 ```python
 import sys
