@@ -88,9 +88,9 @@ plot.export('../images/simple_linegraph', sizes=['2'],
 
 ### Publication figures with pyg
 
-<figure>
-    <img style="width:40%; display:inline-block;" src="http://alexhagen.github.io/pyg/images/publication_figure1web.svg">
-    <img style="width:40%; display:inline-block;" src="http://alexhagen.github.io/pyg/images/publication_figure2web.svg">
+<figure style="text-align:center;">
+    <img style="width:48%; display:inline-block;" src="http://alexhagen.github.io/pyg/images/publication_figure1web.svg">
+    <img style="width:48%; display:inline-block;" src="http://alexhagen.github.io/pyg/images/publication_figure2web.svg">
     <figcaption>Two one column figures plotted with pyg</figcaption>
 </figure>
 
