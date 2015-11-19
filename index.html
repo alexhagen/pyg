@@ -276,6 +276,57 @@ to fill spaces for even prettier plots.</p>
 
 <h3>Dual axes</h3>
 
+<figure>
+    <img src="http://alexhagen.github.io/pyg/images/dual_axesweb.svg">
+    <figcaption>Dual y axis graph plotted with pyg</figcaption>
+</figure>
+
+<p>The <code>pyg</code> library also allows for plotting on dual axes, so that you can show
+correlations between data on different scales, or on linear and log scales.
+Currently, the library only allows for one extra axis to be added, which can be
+accessed through <code>pyg_object.ax2</code>, but in the future, a third access will be
+added (only three are needed, because you can only have one extra in the y and x
+direction).  The code below shows the interface for using these axes:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'HOME'</span><span class="p">]</span> <span class="o">+</span> <span class="s">'/code'</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">twod</span> <span class="k">as</span> <span class="n">pyg2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="c"># first lets make some data which relates to each other, but is way off scale</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">500.</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c"># create three plot objects, two for one column, and another for two column</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2</span><span class="o">.</span><span class="n">ah2d</span><span class="p">()</span>
+
+<span class="c"># add one line each to our single column plots</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#285668'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">sin$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y1</span><span class="p">),</span> <span class="n">y1</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s">'#ccccff'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">int y dx$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line_yy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s">'#FC8D82'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">exp </span><span class="err">\</span><span class="s">left( </span><span class="err">\</span><span class="s">sin </span><span class="err">\</span><span class="s">right)$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y2</span><span class="p">),</span> <span class="n">y2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s">'#ffcccc'</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">r'$</span><span class="err">\</span><span class="s">int y dx$'</span><span class="p">,</span>
+                  <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+
+<span class="c"># make them pretty with labels and a legend</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines_on</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">r'$x$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">r'$y = </span><span class="err">\</span><span class="s">sin$'</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">r'$y = </span><span class="err">\</span><span class="s">exp </span><span class="err">\</span><span class="s">left( </span><span class="err">\</span><span class="s">sin </span><span class="err">\</span><span class="s">right)$'</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+
+<span class="c"># add a legend to our double width plot</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+
+<span class="c"># export this to file</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s">'../images/dual_axes'</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s">'2'</span><span class="p">],</span>
+            <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'png'</span><span class="p">,</span> <span class="s">'websvg'</span><span class="p">])</span>
+</code></pre></div>
 
 
       </article>
