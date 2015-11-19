@@ -271,14 +271,14 @@ class ah2d(object):
             plt.sca(axes)
         else:
             plt.sca(self.ax)
-        plt.xticks(ticks, labels)
+        self.ax.xticks(ticks, labels)
 
     def yticks(self, ticks, labels, axes=None):
         if axes is not None:
             plt.sca(axes)
         else:
             plt.sca(self.ax)
-        plt.yticks(ticks, labels)
+        self.ax.yticks(ticks, labels)
 
     def markers_on(self):
         for key in self.lines:
@@ -298,12 +298,12 @@ class ah2d(object):
             self.lines[key].set_linewidth(0.0)
 
     def add_vline(self, x, ymin, ymax, ls='solid', lw=1.5, color='black'):
-        return plt.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
+        return self.ax.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
                           color=color)
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
                   color='black'):
-        return plt.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls, linewidth=lw,
+        return self.ax.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls, linewidth=lw,
                           color=color)
 
     def add_label(self, x, y, string, color='black'):
@@ -453,35 +453,44 @@ class ah2d(object):
         x1 = x1[idx];
         x2 = x2[idx];
         y = y[idx];
-        axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=0.5);
-    def add_line(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,linecolor='black',legend=True):
-        self.plotnum=self.plotnum+1;
+        axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=0.5)
+
+    def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
+                 linestyle=None, linecolor='black', legend=True):
+        self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
         if linestyle is None:
-            _ls = self.linestyle[self.plotnum%4];
+            _ls = self.linestyle[self.plotnum % 4]
         else:
-            _ls = linestyle;
+            _ls = linestyle
         if xerr is None and yerr is None:
-            line=plt.plot(x,y,label=name,color=linecolor,
-                marker=self.marker[self.plotnum%7],
-                ls=_ls,lw=linewidth,solid_capstyle='butt',clip_on=True);
-            for i in range(0,len(line)):
-                self.lines[name+'%d' % (i)] = (line[i])
+            line = self.ax.plot(x, y, label=name, color=linecolor,
+                                marker=self.marker[self.plotnum % 7],
+                                ls=_ls, lw=linewidth, solid_capstyle='butt',
+                                clip_on=True)
+            for i in range(0, len(line)):
+                self.lines[name + '%d' % (i)] = (line[i])
         else:
             if linecolor == 'black':
-                ecolor = '#A7A9AC';
+                ecolor = '#A7A9AC'
             else:
-                col = Color(linecolor);
-                col.saturation = 0.5;
-                col.luminance = 0.75;
-                ecolor = col.hex;
-            line,caplines,barlinecols=plt.errorbar(x,y,label=name,color=linecolor,
-                xerr=xerr,yerr=yerr,marker=self.marker[self.plotnum%7],
-                ls=_ls,ecolor=ecolor,lw=linewidth,clip_on=True);
+                col = Color(linecolor)
+                col.saturation = 0.5
+                col.luminance = 0.75
+                ecolor = col.hex
+            line, caplines, barlinecols = self.ax.errorbar(x, y, label=name,
+                                                           color=linecolor,
+                                                           xerr=xerr,
+                                                           yerr=yerr,
+                                                           marker=self.marker[self.plotnum % 7],
+                                                           ls=_ls,
+                                                           ecolor=ecolor,
+                                                           lw=linewidth,
+                                                           clip_on=True)
             self.lines[name] = (line)
-        self.markers_on();
-        self.lines_off();
+        self.markers_on()
+        self.lines_off()
     def add_line_yy(self,x,y,name='plot',xerr=None,yerr=None,linewidth=0.5,linestyle=None,legend=True):
         # make new axis
         self.ax2 = self.ax.twinx()
@@ -497,7 +506,7 @@ class ah2d(object):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        n, bins, patches = plt.hist(y, bins=bins, label=name,
+        n, bins, patches = self.ax.hist(y, bins=bins, label=name,
                                     facecolor=facecolor, alpha=alpha,
                                     normed=False)
         self.bars[name] = patches
@@ -511,7 +520,7 @@ class ah2d(object):
         delta = [j - i for i, j in zip(x[:-1], x[1:])]
         delta.append(delta[-1])
         # x = [j - (i/2) for i, j in zip(delta, x)];
-        patches = plt.bar(x, y, width=delta, label=name, facecolor=facecolor,
+        patches = self.ax.bar(x, y, width=delta, label=name, facecolor=facecolor,
                           alpha=alpha)
         self.bars[name] = patches
         return x, y, delta
@@ -542,23 +551,23 @@ class ah2d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
-    def set_size(self,size,sizeofsizes,customsize=None,legloc=None):
+    def set_size(self, size, sizeofsizes, customsize=None, legloc=None):
         if size is '1':
-            self.width=3.25;
-            self.det_height();
-            if self.leg:
-                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                    ncol=self.leg_col_one_col, mode="expand",
-                    borderaxespad=0.);
+            self.width = 3.25
+            self.det_height()
+            # if self.leg:
+            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+            #        ncol=self.leg_col_one_col, mode="expand",
+            #        borderaxespad=0.);
         elif size is '2':
-            self.width=6.25;
-            self.det_height();
-            self.height = self.height/2.0;
-            self.fig.set_size_inches(self.width,self.height);
-            if self.leg:
-                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                               ncol=self.leg_col_two_col, mode="expand",
-                               borderaxespad=0.);
+            self.width = 6.25
+            self.det_height()
+            self.height = self.height / 2.0
+            self.fig.set_size_inches(self.width, self.height)
+            # if self.leg:
+            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+            #                   ncol=self.leg_col_two_col, mode="expand",
+            #                   borderaxespad=0.)
         elif size is 'fp':
             self.width=10;
             self.det_height();
@@ -573,7 +582,8 @@ class ah2d(object):
                 self.height=customsize[1];
                 if legloc is not None:
                     self.ax.legend(loc=legloc,ncol=2);
-        self.fig.set_size_inches(self.width,self.height);
+        self.fig.set_size_inches(self.width, self.height)
+
     def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
             size = 'none'
@@ -585,16 +595,16 @@ class ah2d(object):
             add = '.pdf'
         elif format is 'svg':
             # save as pdf, then pdf2svg
-            plt.savefig(filename+self.sizestring[size]+'.pdf',
-                        bbox_extra_artists=self.artists,bbox_inches='tight',
+            self.fig.savefig(filename + self.sizestring[size] + '.pdf',
+                        bbox_extra_artists=self.artists, bbox_inches='tight',
                         transparent=True)
-            os.system('pdf2svg '+filename+self.sizestring[size]+'.pdf '+
-                filename+self.sizestring[size]+'.svg');
-            os.remove(filename+self.sizestring[size]+'.pdf');
+            os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
+                      filename + self.sizestring[size] + '.svg')
+            os.remove(filename + self.sizestring[size] + '.pdf')
         elif format is 'websvg':
-            add = 'web.svg';
+            add = 'web.svg'
         if format is not 'svg':
-            plt.savefig(filename + self.sizestring[size] + add,
+            self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
                         transparent=True)
         if format is 'pgf':
