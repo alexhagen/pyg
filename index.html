@@ -219,6 +219,12 @@ creating the above graph is shown below:</p>
     <img src="http://alexhagen.github.io/pyg/images/publication_figure3web.svg">
     <figcaption>One two column figure plotted with pyg</figcaption>
 </figure>
+
+<p>For publishing, often you want to put things in two column format.  The <code>pyg</code>
+library has a built in interface for this, setting the width to a typical ASME
+column size and changing the height with the golden ratio.  This makes for some
+pretty beautiful figures, and shown above, you can decide whether you want the
+figure to span the whole width or not.  The source code for this follows</p>
 <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'HOME'</span><span class="p">]</span> <span class="o">+</span> <span class="s">'/code'</span><span class="p">)</span>
@@ -262,9 +268,11 @@ creating the above graph is shown below:</p>
              <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s">'websvg'</span><span class="p">])</span>
 
 </code></pre></div>
-<h3>Pyg and Pym integration</h3>
+<h3>Pyg and Pym integration, data pointers, and fill</h3>
 
-<h3>Data-pointers on plots</h3>
+<p>See the page for <a href="/pym">pym</a> for an illustration on how to use <code>pyg</code> and <code>pym</code>
+together.  This example also shows how to add data_pointers on your plots, and
+to fill spaces for even prettier plots.</p>
 
 <h3>Dual axes</h3>
 

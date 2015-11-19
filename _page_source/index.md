@@ -99,6 +99,12 @@ plot.export('../images/simple_linegraph', sizes=['2'],
     <figcaption>One two column figure plotted with pyg</figcaption>
 </figure>
 
+For publishing, often you want to put things in two column format.  The `pyg`
+library has a built in interface for this, setting the width to a typical ASME
+column size and changing the height with the golden ratio.  This makes for some
+pretty beautiful figures, and shown above, you can decide whether you want the
+figure to span the whole width or not.  The source code for this follows
+
 ```python
 import sys
 import os
@@ -144,8 +150,10 @@ plot3.export('../images/publication_figure3', sizes=['2'],
 
 ```
 
-### Pyg and Pym integration
+### Pyg and Pym integration, data pointers, and fill
 
-### Data-pointers on plots
+See the page for [pym](/pym) for an illustration on how to use `pyg` and `pym`
+together.  This example also shows how to add data_pointers on your plots, and
+to fill spaces for even prettier plots.
 
 ### Dual axes
