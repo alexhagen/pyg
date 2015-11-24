@@ -318,6 +318,16 @@ class ah2d(object):
                          xy=curve_place,
                          xytext=curve_place, color=color)
 
+    def add_arrow(self, x1, x2, y1, y2, string=None, axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.annotate(string,
+                      xy=(x2, y2),
+                      xytext=(x1, y1),
+                      arrowprops=dict(arrowstyle="-|>",
+                                      fc="0.3", ec="0.3")
+                      )
+
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', axes=None):
         if axes is None:
@@ -442,11 +452,12 @@ class ah2d(object):
             axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
-            name = 'plot%d' % (self.plotnum);
-        axes.fill_between(x,y1,y2,facecolor=fc,alpha=0.2,linewidth=0.0);
-        patch = axes.add_patch(Polygon([[0,0],[0,0],[0,0]],facecolor=fc,alpha=0.5,label=name));
-        self.bars[name]=patch
-        
+            name = 'plot%d' % (self.plotnum)
+        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.2, linewidth=0.0)
+        patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]], facecolor=fc,
+                               alpha=0.5, label=name))
+        self.bars[name] = patch
+
     def fill_betweenx(self,x1,x2,y,fc='red',name='plot',ec='None',axes=None):
         if axes is None:
             axes = self.ax;
