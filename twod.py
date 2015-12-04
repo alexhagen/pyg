@@ -324,9 +324,17 @@ class ah2d(object):
         axes.annotate(string,
                       xy=(x2, y2),
                       xytext=(x1, y1),
+                      horizontalalignment='center',
                       arrowprops=dict(arrowstyle="-|>",
                                       fc="0.3", ec="0.3")
                       )
+
+    def add_text(self, x1, y1, string=None, ha='center', axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.text(x1, y1, string,
+                  ha=ha, va='center'
+                  )
 
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', axes=None):
@@ -447,18 +455,21 @@ class ah2d(object):
             self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
-    def fill_between(self, x, y1, y2, fc='red', name='plot', axes=None):
+    def fill_between(self, x, y1, y2, fc='red', name='plot', leg=True,
+                     axes=None):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
         axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.2, linewidth=0.0)
-        patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]], facecolor=fc,
-                               alpha=0.5, label=name))
-        self.bars[name] = patch
+        if leg:
+            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                   facecolor=fc, alpha=0.5, label=name))
+            self.bars[name] = patch
 
-    def fill_betweenx(self,x1,x2,y,fc='red',name='plot',ec='None',axes=None):
+    def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
+                      leg=True, axes=None):
         if axes is None:
             axes = self.ax;
         self.plotnum=self.plotnum+1;
