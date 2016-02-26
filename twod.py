@@ -660,7 +660,7 @@ class ah2d(object):
 
     def show(self):
         if self.pdf_filename:
-            if platform.system == "Darwin":
+            if platform.system() == "Darwin":
                 os.system("open -a Preview " + self.pdf_filename)
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
