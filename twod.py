@@ -9,6 +9,7 @@ from colour import Color
 import numpy as np
 matplotlib.use('pgf')
 import matplotlib.pyplot as plt
+import platform
 
 plt.close("all")
 
@@ -336,6 +337,14 @@ class ah2d(object):
                   ha=ha, va='center'
                   )
 
+    def add_measure(self, x, y1, y2, string=None, axes=None):
+        if axes is None:
+            axes = self.ax
+        if string is None:
+            string = r"$" + str(y2 - y1) + r"$"
+        # tb_height =
+        # tb_width =
+
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', axes=None):
         if axes is None:
@@ -649,6 +658,11 @@ class ah2d(object):
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 
+    def show(self):
+        if self.pdf_filename:
+            if platform.system == "Darwin":
+                os.system("open -a Preview " + self.pdf_filename)
+
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None):
         # writing a comment here to make the following commented code not
@@ -672,3 +686,5 @@ class ah2d(object):
                 self.set_size(size, len(sizes), customsize=customsize,
                               legloc=legloc)
                 self.export_fmt(filename, size, len(sizes), format)
+                if format is 'pdf':
+                    self.pdf_filename = filename + '.pdf'
