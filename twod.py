@@ -716,6 +716,8 @@ class ah2d(object):
         if self.pdf_filename:
             if platform.system() == "Darwin":
                 os.system("open -a Preview " + self.pdf_filename)
+            if platform.system() == "Linux":
+                os.system("evince " + self.pdf_filename)
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None):
