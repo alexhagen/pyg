@@ -10,6 +10,7 @@ import numpy as np
 matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 import platform
+import mpld3
 
 plt.close("all")
 
@@ -278,7 +279,8 @@ class ah2d(object):
             plt.sca(axes)
         else:
             plt.sca(self.ax)
-        self.ax.xticks(ticks, labels)
+        self.ax.set_xticks(ticks)
+        self.ax.set_xticklabels(labels)
 
     def yticks(self, ticks, labels, axes=None):
         if axes is not None:
@@ -306,18 +308,21 @@ class ah2d(object):
 
     def add_vline(self, x, ymin, ymax, ls='solid', lw=1.5, color='black'):
         return self.ax.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
-                          color=color)
+                              color=color)
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
                   color='black'):
-        return self.ax.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls, linewidth=lw,
-                          color=color)
+        return self.ax.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls,
+                              linewidth=lw, color=color)
 
     def add_label(self, x, y, string, color='black'):
         curve_place = (x, y)
         self.ax.annotate(string,
                          xy=curve_place,
                          xytext=curve_place, color=color)
+
+    def change_style(self, rcparamsarray):
+        matplotlib.rcParams.update(rcparamsarray)
 
     def add_arrow(self, x1, x2, y1, y2, string=None, axes=None):
         if axes is None:
@@ -379,7 +384,9 @@ class ah2d(object):
                       )
 
     def add_reg_line(self, x, y, regtype='lin', name='reg', xerr=None,
-                     yerr=None):
+                     yerr=None, axes=None):
+        if axes is None:
+            axes = self.ax
         self.regnum = self.regnum + 1
         if name is 'reg':
             name = 'reg%d' % (self.regnum);
@@ -453,7 +460,8 @@ class ah2d(object):
         if x_fit is not None and y_fit is not None:
             self.x_fit = x_fit;
             self.y_fit = y_fit;
-            lines = plt.plot(x_fit,y_fit,label=name,color='#A7A9AC',ls='--');
+            lines = axes.plot(x_fit, y_fit, label=name, color='#A7A9AC',
+                              ls='--')
             self.regs[name] = lines[0];
             # make sure these are lines
             lines[0].set_markersize(0);
@@ -461,7 +469,7 @@ class ah2d(object):
         if y_err_up is not None and y_err_down is not None:
             uperrlines = plt.plot(x_fit,y_err_up,color='#D1D3D4',ls='--');
             downerrlines = plt.plot(x_fit,y_err_down,color='#D1D3D4',ls='--');
-            self.ax.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
+            axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
     def fill_between(self, x, y1, y2, fc='red', name='plot', leg=True,
@@ -595,6 +603,46 @@ class ah2d(object):
         f.write(fstring)
         f.close()
 
+    def add_math_jax(self, filename):
+        f = open(filename, 'r')
+        fstring = \
+            "<script type=\"text/x-mathjax-config\">\n" + \
+            "MathJax.Hub.Config({\n" + \
+            "  tex2jax: {\n" + \
+            "    inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],\n" + \
+            "  },\n" + \
+            "  \"HTML-CSS\": {\n" + \
+            "    linebreaks: {\n" + \
+            "      automatic: true,\n" + \
+            "      width: \"80% container\",\n" + \
+            "    }\n" + \
+            "  },\n" + \
+            "  SVG: {\n" + \
+            "    linebreaks: {\n" + \
+            "      automatic: true,\n" + \
+            "      width: \"80% container\",\n" + \
+            "    }\n" + \
+            "  },\n" + \
+            "  TeX: {\n" + \
+            "    equationNumbers: {\n" + \
+            "      autoNumber: \"all\"\n" + \
+            "    },\n" + \
+            "  },\n" + \
+            "    showMathMenu: false\n" + \
+            "});\n" + \
+            "\n" + \
+            "</script>\n" + \
+            "\n" + \
+            "<script type=\"text/javascript\"" + \
+            "     src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?" + \
+            "config=TeX-AMS-MML_HTMLorMML\">" + \
+            "</script>" + f.read()
+        f.close()
+        f = open(filename, 'w')
+        f.write(fstring)
+        f.close()
+
+
     def long_name(self):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
@@ -641,6 +689,8 @@ class ah2d(object):
             add = '.pgf'
         elif format is 'pdf':
             add = '.pdf'
+        elif format is 'html':
+            add = '.html'
         elif format is 'svg':
             # save as pdf, then pdf2svg
             self.fig.savefig(filename + self.sizestring[size] + '.pdf',
@@ -651,10 +701,14 @@ class ah2d(object):
             os.remove(filename + self.sizestring[size] + '.pdf')
         elif format is 'websvg':
             add = 'web.svg'
-        if format is not 'svg':
+        if (format is not 'svg') and (format is not 'html'):
             self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
                         transparent=True)
+        if format is 'html':
+            add = '.html'
+            mpld3.save_html(self.fig, filename + add)
+            self.add_math_jax(filename + add)
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 

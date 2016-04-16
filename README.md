@@ -1,6 +1,18 @@
 # AH Plot Library Class
 By Alex Hagen
 
+.. image:: http://img.shields.io/pypi/v/colour.svg?style=flat
+   :target: https://pypi.python.org/pypi/colour/
+   :alt: Latest PyPI version
+
+.. image:: http://img.shields.io/pypi/dm/colour.svg?style=flat
+   :target: https://pypi.python.org/pypi/colour/
+   :alt: Number of PyPI downloads
+
+.. image:: http://img.shields.io/travis/vaab/colour/master.svg?style=flat
+   :target: https://travis-ci.org/vaab/colour/
+   :alt: Travis CI build status
+
 The AH Plot library is a small and simple library that allows for creation of consitent plots in python.  This is optimized to be published in writeups and two column article format, and probably shouldn't be used for large scale visualizations.
 
 ## Contents
