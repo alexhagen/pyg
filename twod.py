@@ -114,26 +114,26 @@ class ah2d(object):
                 "pgf.texsystem": "lualatex",
                 "pgf.rcfonts": False,
                 "font.family": "sans",
-                "font.size": 8.0,
+                "font.size": 18.0,
                 "axes.linewidth": 0.5,
-                "axes.edgecolor": "#746C66",
+                "axes.edgecolor": "#FFFFFF",
                 "xtick.major.width": 0.25,
                 "xtick.major.size": 2,
                 "xtick.direction": "in",
                 "xtick.minor.width": 0.125,
-                "xtick.color": "#746C66",
+                "xtick.color": "#FFFFFF",
                 "ytick.major.width": 0.25,
                 "ytick.major.size": 2,
                 "ytick.minor.width": 0.125,
-                "ytick.color": "#746C66",
+                "ytick.color": "#FFFFFF",
                 "ytick.direction": "in",
-                "text.color": "#746C66",
-                "axes.facecolor": "none",
-                "figure.facecolor": "none",
-                "axes.labelcolor": "#746C66",
-                "xtick.labelsize": "small",
-                "ytick.labelsize": "small",
-                "axes.labelsize": "medium",
+                "text.color": "#FFFFFF",
+                "axes.facecolor": "black",
+                "figure.facecolor": "black",
+                "axes.labelcolor": "#FFFFFF",
+                "xtick.labelsize": 12.0,
+                "ytick.labelsize": 12.0,
+                "axes.labelsize": 16.0,
                 "legend.fontsize": "small",
                 "legend.frameon": False,
                 "axes.grid": False,
@@ -479,7 +479,7 @@ class ah2d(object):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.2, linewidth=0.0)
+        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.5, linewidth=0.001)
         if leg:
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    facecolor=fc, alpha=0.5, label=name))
@@ -557,6 +557,17 @@ class ah2d(object):
         maxi = calfunc(np.max(self.ax.get_xlim()));
         self.ax2.set_xlim(mini,maxi);
         self.ax2.get_xaxis().tick_top();
+
+    def add_yy(self,calfunc):
+        self.ax2 = self.ax.twinx();
+        self.calfunc = calfunc;
+        self.update_yy()
+
+    def update_yy(self):
+        mini = self.calfunc(np.min(self.ax.get_ylim()));
+        maxi = self.calfunc(np.max(self.ax.get_ylim()));
+        self.ax2.set_ylim(mini,maxi);
+        self.ax2.get_yaxis().tick_right();
 
     def add_hist(self, y, bins, facecolor='gray', alpha=0.5, name='plot'):
         self.plotnum = self.plotnum + 1
@@ -679,6 +690,7 @@ class ah2d(object):
                 if legloc is not None:
                     self.ax.legend(loc=legloc,ncol=2);
         self.fig.set_size_inches(self.width, self.height)
+        plt.tight_layout()
 
     def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
