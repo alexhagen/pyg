@@ -756,3 +756,6 @@ class ah2d(object):
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'
+
+    def close(self):
+        plt.close(self.fig)
