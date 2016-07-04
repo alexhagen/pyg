@@ -306,8 +306,11 @@ class ah2d(object):
         for key in self.lines:
             self.lines[key].set_linewidth(0.0)
 
-    def add_vline(self, x, ymin, ymax, ls='solid', lw=1.5, color='black'):
-        return self.ax.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
+    def add_vline(self, x, ymin, ymax, ls='solid', lw=1.5, color='black',
+                  axes=None):
+        if axes is None:
+            axes = self.ax
+        return axes.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
                               color=color)
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
@@ -545,6 +548,17 @@ class ah2d(object):
                     legend=True):
         # make new axis
         self.ax2 = self.ax.twinx()
+        self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
+                      linewidth=linewidth,
+                      linecolor=linecolor,
+                      linestyle=linestyle,
+                      legend=legend, axes=self.ax2)
+
+    def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
+                    linecolor='black', linewidth=0.5, linestyle=None,
+                    legend=True):
+        # make new axis
+        self.ax2 = self.ax.twiny()
         self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
                       linewidth=linewidth,
                       linecolor=linecolor,
