@@ -472,14 +472,14 @@ class ah2d(object):
             axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
-    def fill_between(self, x, y1, y2, fc='red', name='plot', leg=True,
+    def fill_between(self, x, y1, y2, fc='red', name='plot', ec='None', leg=True,
                      axes=None):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.5, linewidth=0.001)
+        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.5, edgecolor=ec, linewidth=0.001)
         if leg:
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    facecolor=fc, alpha=0.5, label=name))
@@ -729,7 +729,7 @@ class ah2d(object):
             if platform.system() == "Darwin":
                 os.system("open -a Preview " + self.pdf_filename)
             if platform.system() == "Linux":
-                os.system("evince " + self.pdf_filename)
+                os.system("evince " + self.pdf_filename + " &")
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None):
