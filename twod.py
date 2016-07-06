@@ -327,7 +327,7 @@ class ah2d(object):
     def change_style(self, rcparamsarray):
         matplotlib.rcParams.update(rcparamsarray)
 
-    def add_arrow(self, x1, x2, y1, y2, string=None, axes=None):
+    def add_arrow(self, x1, x2, y1, y2, string=None, axes=None, fc="0.5"):
         if axes is None:
             axes = self.ax
         axes.annotate(string,
@@ -335,7 +335,7 @@ class ah2d(object):
                       xytext=(x1, y1),
                       horizontalalignment='center',
                       arrowprops=dict(arrowstyle="-|>",
-                                      fc="0.3", ec="0.3")
+                                      fc=fc, ec=fc)
                       )
 
     def add_text(self, x1, y1, string=None, ha='center', axes=None):
@@ -395,8 +395,13 @@ class ah2d(object):
             name = 'reg%d' % (self.regnum);
         # set up the error bounds
         if yerr is None:
-            y_err_up = None;
-            y_err_down = None;
+            y_err_up = None
+            y_err_down = None
+        else:
+            y_err_up = yerr[0, :]
+            y_err_down = yerr[1, :]
+            print y_err_up
+            print y
         # determine the regression
         if regtype.isdigit():
             # determine the coefficients of degree regtype
@@ -476,7 +481,7 @@ class ah2d(object):
             # add the regression to the dict of regressions
 
     def fill_between(self, x, y1, y2, fc='red', name='plot', ec='None', leg=True,
-                     axes=None):
+                     axes=None, alpha=0.5):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
@@ -485,11 +490,11 @@ class ah2d(object):
         axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.5, edgecolor=ec, linewidth=0.001)
         if leg:
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
-                                   facecolor=fc, alpha=0.5, label=name))
+                                   facecolor=fc, alpha=alpha, label=name))
             self.bars[name] = patch
 
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
-                      leg=True, axes=None):
+                      leg=True, axes=None, alpha=0.5):
         if axes is None:
             axes = self.ax;
         self.plotnum=self.plotnum+1;
@@ -502,7 +507,7 @@ class ah2d(object):
         x1 = x1[idx];
         x2 = x2[idx];
         y = y[idx];
-        axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=0.5)
+        axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', legend=True, axes=None):
@@ -545,9 +550,12 @@ class ah2d(object):
 
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True):
+                    legend=True, axes=None):
         # make new axis
-        self.ax2 = self.ax.twinx()
+        if axes is None:
+            self.ax2 = self.ax.twinx()
+        else:
+            self.ax2 = axes.twinx()
         self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
                       linewidth=linewidth,
                       linecolor=linecolor,
@@ -672,7 +680,8 @@ class ah2d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
-    def set_size(self, size, sizeofsizes, customsize=None, legloc=None):
+    def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
+                 tight=True):
         if size is '1':
             self.width = 3.25
             self.det_height()
@@ -704,7 +713,8 @@ class ah2d(object):
                 if legloc is not None:
                     self.ax.legend(loc=legloc,ncol=2);
         self.fig.set_size_inches(self.width, self.height)
-        plt.tight_layout()
+        if tight:
+            plt.tight_layout()
 
     def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
@@ -746,7 +756,7 @@ class ah2d(object):
                 os.system("evince " + self.pdf_filename + " &")
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
-               customsize=None, legloc=None):
+               customsize=None, legloc=None, tight=True):
         # writing a comment here to make the following commented code not
         # docstring
         # remove all points outside the window
@@ -766,7 +776,7 @@ class ah2d(object):
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
-                              legloc=legloc)
+                              legloc=legloc, tight=tight)
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'
