@@ -4,7 +4,7 @@ from math import exp
 import matplotlib
 import string
 import os
-from matplotlib.patches import Ellipse, Polygon
+from matplotlib.patches import Ellipse, Polygon, Circle
 from colour import Color
 import numpy as np
 matplotlib.use('pgf')
@@ -191,14 +191,16 @@ class ah2d(object):
         self.ax2.change_geometry(gs1, gs2, 1)
         self.ax_subp.append(self.fig.add_subplot(subp))
 
-    def title(self, title):
+    def title(self, title, axes=None):
         """ ``ah2d.title`` adds a title to the plot.
 
         :param str title: the title to be added to the plot. The title can take
             LaTeX arguments.
         :return: None
         """
-        ttl = self.ax.set_title(title)
+        if axes is None:
+            axes = self.ax
+        ttl = axes.set_title(title)
         self.artists.append(ttl)
 
     def ylabel(self, label, axes=None):
@@ -306,16 +308,26 @@ class ah2d(object):
         for key in self.lines:
             self.lines[key].set_linewidth(0.0)
 
-    def add_vline(self, x, ymin, ymax, ls='solid', lw=1.5, color='black',
-                  axes=None):
+    def add_vline(self, x, ymin=None, ymax=None, ls='solid', lw=1.5,
+                  color='black', axes=None):
         if axes is None:
             axes = self.ax
+        if ymin == None:
+            ymin = np.min(axes.get_ylim())
+        if ymax == None:
+            ymax = np.max(axes.get_ylim())
         return axes.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
-                              color=color)
+                           color=color)
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
-                  color='black'):
-        return self.ax.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls,
+                  color='black', axes=None):
+        if axes is None:
+            axes = self.ax
+        if xmin == None:
+            xmin = np.min(axes.get_xlim())
+        if xmax == None:
+            xmax = np.max(axes.get_xlim())
+        return axes.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls,
                               linewidth=lw, color=color)
 
     def add_label(self, x, y, string, color='black'):
@@ -327,7 +339,7 @@ class ah2d(object):
     def change_style(self, rcparamsarray):
         matplotlib.rcParams.update(rcparamsarray)
 
-    def add_arrow(self, x1, x2, y1, y2, string=None, axes=None, fc="0.5"):
+    def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5"):
         if axes is None:
             axes = self.ax
         axes.annotate(string,
@@ -338,20 +350,58 @@ class ah2d(object):
                                       fc=fc, ec=fc)
                       )
 
-    def add_text(self, x1, y1, string=None, ha='center', axes=None):
+    def add_text(self, x1, y1, string=None, ha='center', color="#746C66",
+                 axes=None):
         if axes is None:
             axes = self.ax
-        axes.text(x1, y1, string,
-                  ha=ha, va='center'
+        axes.text(x1, y1, string, ha=ha, va='center', color=color
                   )
 
-    def add_measure(self, x, y1, y2, string=None, axes=None):
+    def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
+                     axes=None, units=''):
         if axes is None:
             axes = self.ax
         if string is None:
-            string = r"$" + str(y2 - y1) + r"$"
-        # tb_height =
-        # tb_width =
+            string = r"$%.0f\,\mathrm{" % np.sqrt((y2 - y1)**2.0) + units + "}$"
+        if place is None:
+            place = "left"
+        total_width = np.max(axes.get_xlim()) - np.min(axes.get_xlim())
+        length = 0.05
+        lw = 0.5
+        self.add_hline(y1, x1 - offset * total_width,
+                       x1 - offset * total_width - length * total_width,
+                       lw=lw, axes=axes)
+        self.add_hline(y2, x1 - offset * total_width,
+                       x1 - offset * total_width - length * total_width,
+                       lw=lw, axes=axes)
+        y_mid = (y2 + y1) / 2.0
+        x_mid = (x1 - offset * total_width +
+                 x1 - offset * total_width - length * total_width) / 2.0
+        self.add_arrow(x_mid, x_mid, y_mid, y1, string=string)
+        self.add_arrow(x_mid, x_mid, y_mid, y2, string=string)
+
+    def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
+                     axes=None, units=''):
+        if axes is None:
+            axes = self.ax
+        if string is None:
+            string = r"$%.0f\,\mathrm{" % np.sqrt((x2 - x1)**2.0) + units + "}$"
+        if place is None:
+            place = "up"
+        total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
+        length = 0.05
+        lw = 0.5
+        self.add_vline(x1, y1 + offset * total_width,
+                       y1 + offset * total_width + length * total_width,
+                       lw=lw, axes=axes)
+        self.add_vline(x2, y1 + offset * total_width,
+                       y1 + offset * total_width + length * total_width,
+                       lw=lw, axes=axes)
+        x_mid = (x2 + x1) / 2.0
+        y_mid = (y1 + offset * total_width +
+                 y1 + offset * total_width + length * total_width) / 2.0
+        self.add_arrow(x_mid, x1, y_mid, y_mid, string=string)
+        self.add_arrow(x_mid, x2, y_mid, y_mid, string=string)
 
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', axes=None):
@@ -487,7 +537,7 @@ class ah2d(object):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        axes.fill_between(x, y1, y2, facecolor=fc, alpha=0.5, edgecolor=ec, linewidth=0.001)
+        axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
         if leg:
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    facecolor=fc, alpha=alpha, label=name))
@@ -508,6 +558,17 @@ class ah2d(object):
         x2 = x2[idx];
         y = y[idx];
         axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
+
+    def add_circle(self, x, y, r, fc='red', ec='None', alpha=0.5, axes=None,
+                   name='plot'):
+        if axes is None:
+            axes = self.ax
+        self.plotnum = self.plotnum + 1
+        if name is 'plot':
+            name = 'plot%d' % (self.plotnum)
+        patch = axes.add_patch(Circle((x, y), r, facecolor=fc, edgecolor=ec,
+                               alpha=alpha, label=name))
+        self.bars[name] = patch
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', legend=True, axes=None):
