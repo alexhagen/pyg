@@ -680,11 +680,19 @@ class ah2d(object):
         leg = self.ax.legend()
         self.artists.append(leg)
 
-    def det_height(self):
-        if self.landscape:
-            self.height = self.width / 1.61803398875
+    def det_height(self, ratio="golden"):
+        if ratio is "golden":
+            r = (1. + np.sqrt(5.)) / 2.
+        elif ratio is "silver":
+            r = 1. + np.sqrt(2.)
+        elif ratio is "bronze":
+            r = (3. + np.sqrt(13.)) / 2.
         else:
-            self.height = self.width * 1.61803398875
+            r = float(ratio)
+        if self.landscape:
+            self.height = self.width / r
+        else:
+            self.height = self.width * r
 
     def remove_font_sizes(self,filename):
         f=open(filename,'r')
@@ -742,10 +750,10 @@ class ah2d(object):
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
-                 tight=True):
+                 tight=True, ratio="golden"):
         if size is '1':
             self.width = 3.25
-            self.det_height()
+            self.det_height(ratio=ratio)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
             #        ncol=self.leg_col_one_col, mode="expand",
@@ -817,7 +825,7 @@ class ah2d(object):
                 os.system("evince " + self.pdf_filename + " &")
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
-               customsize=None, legloc=None, tight=True):
+               customsize=None, legloc=None, tight=True, ratio="golden"):
         # writing a comment here to make the following commented code not
         # docstring
         # remove all points outside the window
@@ -837,7 +845,7 @@ class ah2d(object):
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
-                              legloc=legloc, tight=tight)
+                              legloc=legloc, tight=tight, ratio=ratio)
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'
