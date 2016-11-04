@@ -29,7 +29,11 @@ class ah2d(object):
         If you are using this to generate plots for a gui, define this option
         as ``gui`` and the class will choose a prettier parameter set for your
         chart. Default: ``plot``.
+    :param str colors: The ``colors`` option defines the color scheme which
+        will be used in the plotting.  The ability to hook in schemes will be
+        added. Default: ``purdue``.
     :type env: ``plot``, ``gui``, or ``None``
+    :type colors: ``pu``, ``purdue``, ``salabs``, or ``ah``
     :return: the ``ah2d`` object.
     :rtype: ``ah2d``
     """
@@ -54,7 +58,7 @@ class ah2d(object):
                   'cs': 'customsize',
                   'none': ''}
 
-    def __init__(self, env='plot'):
+    def __init__(self, env='plot', colors='purdue'):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
         self.ax_subp = []
@@ -73,6 +77,12 @@ class ah2d(object):
         self.bars = {}
         self.regs = {}
         self.reg_string = {}
+        if colors is 'purdue' or colors is 'pu':
+            import pyg.colors.pu as color
+            self.colors = color.pu_colors
+        else:
+            import pyg.colors.pu as color
+            self.colors = color.pu_colors
         if env is 'plot':
             rcparamsarray = {
                 "pgf.texsystem": "lualatex",
