@@ -27,7 +27,7 @@
     <link rel="top" title="pyg 0.1a1 documentation" href="#" />
    
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
   <body role="document">  
@@ -53,7 +53,7 @@ prettier, too).  Good luck and happy coding!</p>
 </div>
 <span class="target" id="module-twod"></span><dl class="class">
 <dt id="twod.ah2d">
-<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">ah2d</code><span class="sig-paren">(</span><em>env='plot'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">ah2d</code><span class="sig-paren">(</span><em>env='plot'</em>, <em>colors='purdue'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>A <code class="docutils literal"><span class="pre">pyg.ah2d</span></code> object plots many two-dimensional data types.</p>
 <p>The <code class="docutils literal"><span class="pre">ah2d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
@@ -64,15 +64,23 @@ repeatable.  The constructor itself takes only one optional argument,
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env</strong> (<code class="docutils literal"><span class="pre">plot</span></code>, <code class="docutils literal"><span class="pre">gui</span></code>, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; The environement option defines where you are going to use
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env</strong> (<code class="docutils literal"><span class="pre">plot</span></code>, <code class="docutils literal"><span class="pre">gui</span></code>, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; The environement option defines where you are going to use
 the generated plot, with the default option being plot (or printing).
 If you are using this to generate plots for a gui, define this option
 as <code class="docutils literal"><span class="pre">gui</span></code> and the class will choose a prettier parameter set for your
-chart. Default: <code class="docutils literal"><span class="pre">plot</span></code>.</td>
+chart. Default: <code class="docutils literal"><span class="pre">plot</span></code>.</li>
+<li><strong>colors</strong> (<code class="docutils literal"><span class="pre">pu</span></code>, <code class="docutils literal"><span class="pre">purdue</span></code>, <code class="docutils literal"><span class="pre">salabs</span></code>, or <code class="docutils literal"><span class="pre">ah</span></code>) &#8211; The <code class="docutils literal"><span class="pre">colors</span></code> option defines the color scheme which
+will be used in the plotting.  The ability to hook in schemes will be
+added. Default: <code class="docutils literal"><span class="pre">purdue</span></code>.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the <code class="docutils literal"><span class="pre">ah2d</span></code> object.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the <code class="docutils literal"><span class="pre">ah2d</span></code> object.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">ah2d</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">ah2d</span></code></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -105,7 +113,7 @@ postition <code class="docutils literal"><span class="pre">(2,1)</span></code>).
 
 <dl class="method">
 <dt id="twod.ah2d.legend">
-<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.legend" title="Permalink to this definition">¶</a></dt>
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.legend" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">ah2d.legend</span></code> shows the legend on the plot.</p>
 <p><code class="docutils literal"><span class="pre">ah2d.legend</span></code> toggles the legend showing on.  This is done by getting
 the included objects and titles from the <code class="docutils literal"><span class="pre">matplotlib</span></code> axis item, and
@@ -126,7 +134,7 @@ notation.</td>
 
 <dl class="method">
 <dt id="twod.ah2d.title">
-<code class="descname">title</code><span class="sig-paren">(</span><em>title</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.title" title="Permalink to this definition">¶</a></dt>
+<code class="descname">title</code><span class="sig-paren">(</span><em>title</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.title" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">ah2d.title</span></code> adds a title to the plot.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -249,7 +257,7 @@ to the provided axis.</li>
 <p class="first admonition-title">Todo</p>
 <p class="last">Expand subplotting to be able to use more than two axes total.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in  /Users/ahagen/code/pyg/twod.py:docstring of twod.ah2d.add_subplot, line 7.)</p>
+<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.ah2d.add_subplot, line 7.)</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -313,8 +321,8 @@ to the provided axis.</li>
       &copy;2015, Alex Hagen.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
       <a href="_sources/index.txt"
