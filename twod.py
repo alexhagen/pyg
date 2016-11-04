@@ -24,6 +24,11 @@ class ah2d(object):
     repeatable.  The constructor itself takes only one optional argument,
     ``env``.
 
+    .. todo::
+
+        Add more color schemes and the ability to define and hook in color
+        schemes manually.
+
     :param str env: The environement option defines where you are going to use
         the generated plot, with the default option being plot (or printing).
         If you are using this to generate plots for a gui, define this option
