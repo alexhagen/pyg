@@ -63,13 +63,15 @@ class ah2d(object):
                   'cs': 'customsize',
                   'none': ''}
 
-    def __init__(self, env='plot', colors='purdue'):
+    def __init__(self, env='plot', polar=False, colors='purdue'):
         self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111)
+        self.ax = self.fig.add_subplot(111, polar=polar)
         self.ax_subp = []
         self.ax2 = None
-        self.ax.spines['top'].set_visible(False)
-        self.ax.spines['right'].set_visible(False)
+        self.polar = polar
+        if not self.polar:
+            self.ax.spines['top'].set_visible(False)
+            self.ax.spines['right'].set_visible(False)
         self.ax.get_xaxis().tick_bottom()
         self.ax.get_yaxis().tick_left()
         self.artists = []
@@ -354,23 +356,26 @@ class ah2d(object):
     def change_style(self, rcparamsarray):
         matplotlib.rcParams.update(rcparamsarray)
 
-    def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5"):
+    def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
+                  ha='center', va='center'):
         if axes is None:
             axes = self.ax
         axes.annotate(string,
                       xy=(x2, y2),
                       xytext=(x1, y1),
-                      horizontalalignment='center',
+                      color=fc,
+                      horizontalalignment=ha,
+                      verticalalignment=va,
                       arrowprops=dict(arrowstyle="-|>",
                                       fc=fc, ec=fc)
                       )
 
-    def add_text(self, x1, y1, string=None, ha='center', color="#746C66",
-                 axes=None):
+    def add_text(self, x1, y1, string=None, ha='center', va='center',
+                 color="#746C66", rotation=0, axes=None):
         if axes is None:
             axes = self.ax
-        axes.text(x1, y1, string, ha=ha, va='center', color=color
-                  )
+        axes.text(x1, y1, string, ha=ha, va=va, color=color,
+                  rotation=rotation)
 
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
                      axes=None, units=''):

@@ -27,6 +27,7 @@ pu_colors = {'black': '#000000',
              'browngray': '#4d4038',
              'tan': '#baa892',
              'brown': '#6b4536'}
+black = pu_colors['black']
 gray = pu_colors['gray']
 gray_dark = pu_colors['darkgray']
 gray_darker = pu_colors['browngray']
