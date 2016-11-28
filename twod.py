@@ -350,15 +350,42 @@ class pyg2d(object):
             self.lines[key].set_markersize(0)
 
     def lines_on(self):
+        """ ``pyg2d.lines_on`` turns on the connector lines for all data sets.
+
+        :return: None
+        """
         for key in self.lines:
             self.lines[key].set_linewidth(1.0)
 
     def lines_off(self):
+        """ ``pyg2d.lines_off`` turns off the connector lines for all data sets.
+
+        :return: None
+        """
         for key in self.lines:
             self.lines[key].set_linewidth(0.0)
 
     def add_vline(self, x, ymin=None, ymax=None, ls='solid', lw=1.5,
                   color='black', axes=None):
+        """ ``pyg2d.add_vline`` draws a vertical line.
+
+        ``pyg2d.add_vline`` draws a vertical line from either the bottom axis
+        to the top axis if ``ymin`` and ``ymax`` are not provided, otherwise
+        it is drawn from ``ymin`` to ``ymax`` at ``x``.  Be careful not to
+        change from linear to log scale AFTER using this function, as
+
+        .. math::
+
+            \log\left( 0 \right) = -\infty
+
+        and this means the line will extend past the extents of the latex page.
+
+        .. todo::
+
+            Fix the latex page extents problem with :math:`-\infty`
+
+        :return: None
+        """
         if axes is None:
             axes = self.ax
         if ymin == None:

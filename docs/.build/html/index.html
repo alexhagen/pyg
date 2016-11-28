@@ -52,11 +52,11 @@ prettier, too).  Good luck and happy coding!</p>
 </ul>
 </div>
 <span class="target" id="module-twod"></span><dl class="class">
-<dt id="twod.ah2d">
-<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">ah2d</code><span class="sig-paren">(</span><em>env='plot'</em>, <em>colors='purdue'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d" title="Permalink to this definition">¶</a></dt>
+<dt id="twod.pyg2d">
+<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">pyg2d</code><span class="sig-paren">(</span><em>env='plot'</em>, <em>polar=False</em>, <em>colors='purdue'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>A <code class="docutils literal"><span class="pre">pyg.ah2d</span></code> object plots many two-dimensional data types.</p>
-<p>The <code class="docutils literal"><span class="pre">ah2d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
+<p>A <code class="docutils literal"><span class="pre">pyg.pyg2d</span></code> object plots many two-dimensional data types.</p>
+<p>The <code class="docutils literal"><span class="pre">pyg2d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
 and some hook ins to making these functions easier to use and more
 repeatable.  The constructor itself takes only one optional argument,
 <code class="docutils literal"><span class="pre">env</span></code>.</p>
@@ -81,21 +81,21 @@ added. Default: <code class="docutils literal"><span class="pre">purdue</span></
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the <code class="docutils literal"><span class="pre">ah2d</span></code> object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the <code class="docutils literal"><span class="pre">pyg2d</span></code> object.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">ah2d</span></code></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">pyg2d</span></code></p>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="twod.ah2d.add_subplot">
-<code class="descname">add_subplot</code><span class="sig-paren">(</span><em>subp=121</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.add_subplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.add_subplot" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.add_subplot</span></code> adds a grid in which you can make subplots.</p>
-<p><code class="docutils literal"><span class="pre">ah2d.add_subplot</span></code> follows Matlab&#8217;s lead and allows you to plot
+<dt id="twod.pyg2d.add_subplot">
+<code class="descname">add_subplot</code><span class="sig-paren">(</span><em>subp=121</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.add_subplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.add_subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> adds a grid in which you can make subplots.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> follows Matlab&#8217;s lead and allows you to plot
 several axes on one plot. The newly created axes is saved as
-<code class="docutils literal"><span class="pre">ah2d.ax2</span></code> - this should be expanded for more axes later.</p>
+<code class="docutils literal"><span class="pre">pyg2d.ax2</span></code> - this should be expanded for more axes later.</p>
 <div class="admonition-todo admonition" id="index-1">
 <p class="first admonition-title">Todo</p>
 <p class="last">Expand subplotting to be able to use more than two axes total.</p>
@@ -117,10 +117,10 @@ postition <code class="docutils literal"><span class="pre">(2,1)</span></code>).
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.legend">
-<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.legend" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.legend</span></code> shows the legend on the plot.</p>
-<p><code class="docutils literal"><span class="pre">ah2d.legend</span></code> toggles the legend showing on.  This is done by getting
+<dt id="twod.pyg2d.legend">
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> shows the legend on the plot.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> toggles the legend showing on.  This is done by getting
 the included objects and titles from the <code class="docutils literal"><span class="pre">matplotlib</span></code> axis item, and
 then checking to see if there is the word &#8216;connector&#8217; in that title. If
 there is that word, then the entry is discarded.</p>
@@ -138,9 +138,37 @@ notation.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.title">
-<code class="descname">title</code><span class="sig-paren">(</span><em>title</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.title" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.title</span></code> adds a title to the plot.</p>
+<dt id="twod.pyg2d.markers_off">
+<code class="descname">markers_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.markers_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.markers_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_off</span></code> turns off the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.markers_on">
+<code class="descname">markers_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.markers_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.markers_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_on</span></code> turns on the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.title">
+<code class="descname">title</code><span class="sig-paren">(</span><em>title</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.title</span></code> adds a title to the plot.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -155,10 +183,10 @@ LaTeX arguments.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.xlabel">
-<code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.xlabel" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.xlabel</span></code> adds a label to the x-axis.</p>
-<p><code class="docutils literal"><span class="pre">ah2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+<dt id="twod.pyg2d.xlabel">
+<code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
 other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -181,9 +209,9 @@ to the provided axis.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.xlim">
-<code class="descname">xlim</code><span class="sig-paren">(</span><em>minx</em>, <em>maxx</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.xlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.xlim" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.xlim</span></code> limits the view of the x-axis to limits.</p>
+<dt id="twod.pyg2d.xlim">
+<code class="descname">xlim</code><span class="sig-paren">(</span><em>minx</em>, <em>maxx</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlim</span></code> limits the view of the x-axis to limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -204,10 +232,36 @@ to the provided axis.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.ylabel">
-<code class="descname">ylabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.ylabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.ylabel" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.ylabel</span></code> adds a label to the y-axis.</p>
-<p><code class="docutils literal"><span class="pre">ah2d.ylabel</span></code> adds a label to the y-axis of the current axes (or
+<dt id="twod.pyg2d.xticks">
+<code class="descname">xticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> will move the ticks on the abscissa to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The values where the new tick labels will be placed
+on the x-axis.</li>
+<li><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.ylabel">
+<code class="descname">ylabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.ylabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.ylabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis of the current axes (or
 other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).  The label can take LaTeX
 arguments and the ah style guide asks for labels given as &#8216;Label
 ($variable$) [$unit$]&#8217;.</p>
@@ -232,9 +286,9 @@ to the provided axis.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="twod.ah2d.ylim">
-<code class="descname">ylim</code><span class="sig-paren">(</span><em>miny</em>, <em>maxy</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#ah2d.ylim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.ah2d.ylim" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">ah2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<dt id="twod.pyg2d.ylim">
+<code class="descname">ylim</code><span class="sig-paren">(</span><em>miny</em>, <em>maxy</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.ylim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.ylim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -254,6 +308,32 @@ to the provided axis.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="twod.pyg2d.yticks">
+<code class="descname">yticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.yticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.yticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> will move the ticks on the ordinate axis to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The values where the new tick labels will be placed
+on the y-axis.</li>
+<li><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <div class="section" id="todos">
@@ -263,12 +343,12 @@ to the provided axis.</li>
 <p class="last">Add more color schemes and the ability to define and hook in color
 schemes manually.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.ah2d, line 8.)</p>
+<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.pyg2d, line 8.)</p>
 <div class="admonition-todo admonition">
 <p class="first admonition-title">Todo</p>
 <p class="last">Expand subplotting to be able to use more than two axes total.</p>
 </div>
-<p class="todo-source">(The <a class="reference internal" href="#index-1"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.ah2d.add_subplot, line 7.)</p>
+<p class="todo-source">(The <a class="reference internal" href="#index-1"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.pyg2d.add_subplot, line 7.)</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
