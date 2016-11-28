@@ -12,7 +12,7 @@ docs: FORCE
 	cp -r .build/html/* ~/pages/pyg/docs/; \
 	cd ~/pages/pyg/docs; \
 	git add *; \
-	git commit -am "$(MSG)"; \
+	git commit -am "$(shell git log -1 --pretty=%B | tr -d '\n')"; \
 	git push origin gh-pages; \
 	cd ~/code/pyg
 

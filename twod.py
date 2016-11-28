@@ -376,7 +376,7 @@ class pyg2d(object):
 
         .. math::
 
-            \log\left(0\right)=-\infty
+            \log\left(0\\right)=-\infty
 
         and this means the line will extend past the extents of the latex page.
 
