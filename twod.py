@@ -384,6 +384,14 @@ class pyg2d(object):
 
             Fix the latex page extents problem with :math:`-\infty`
 
+        :param float x:  The abscissa coordinate of the line.
+        :param float ymin: The lower extent of the line.
+        :param float ymax: The upper extent of the line.
+        :param string ls: The style of the line, i.e. '-', '--', ':', etc.
+        :param float lw: The width of the line in pt.
+        :param string color: The color of the line.
+        :param axes axes: The axes object the line should be added to, if not
+            current.
         :return: None
         """
         if axes is None:
@@ -397,6 +405,29 @@ class pyg2d(object):
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
                   color='black', axes=None):
+        """ ``pyg2d.add_hline`` draws a horizontal line.
+
+        ``pyg2d.add_hline`` draws a horizontal line from either the left axis
+        to the right axis if ``xmin`` and ``xmax`` are not provided, otherwise
+        it is drawn from ``xmin`` to ``xmax`` at ``y``.  Be careful not to
+        change from linear to log scale AFTER using this function, as
+
+        .. math::
+
+            \log\left(0\\right)=-\infty
+
+        and this means the line will extend past the extents of the latex page.
+
+        :param float y:  The ordinate axis coordinate of the line.
+        :param float xmin: The left extent of the line.
+        :param float xmax: The right extent of the line.
+        :param string ls: The style of the line, i.e. '-', '--', ':', etc.
+        :param float lw: The width of the line in pt.
+        :param string color: The color of the line.
+        :param axes axes: The axes object the line should be added to, if not
+            current.
+        :return: None
+        """
         if axes is None:
             axes = self.ax
         if xmin == None:
