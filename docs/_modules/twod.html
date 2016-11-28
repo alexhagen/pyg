@@ -425,6 +425,14 @@
 
 <span class="sd">            Fix the latex page extents problem with :math:`-\infty`</span>
 
+<span class="sd">        :param float x:  The abscissa coordinate of the line.</span>
+<span class="sd">        :param float ymin: The lower extent of the line.</span>
+<span class="sd">        :param float ymax: The upper extent of the line.</span>
+<span class="sd">        :param string ls: The style of the line, i.e. &#39;-&#39;, &#39;--&#39;, &#39;:&#39;, etc.</span>
+<span class="sd">        :param float lw: The width of the line in pt.</span>
+<span class="sd">        :param string color: The color of the line.</span>
+<span class="sd">        :param axes axes: The axes object the line should be added to, if not</span>
+<span class="sd">            current.</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -436,8 +444,31 @@
         <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">linestyles</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
                            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">add_hline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+<div class="viewcode-block" id="pyg2d.add_hline"><a class="viewcode-back" href="../index.html#twod.pyg2d.add_hline">[docs]</a>    <span class="k">def</span> <span class="nf">add_hline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
                   <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``pyg2d.add_hline`` draws a horizontal line.</span>
+
+<span class="sd">        ``pyg2d.add_hline`` draws a horizontal line from either the left axis</span>
+<span class="sd">        to the right axis if ``xmin`` and ``xmax`` are not provided, otherwise</span>
+<span class="sd">        it is drawn from ``xmin`` to ``xmax`` at ``y``.  Be careful not to</span>
+<span class="sd">        change from linear to log scale AFTER using this function, as</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \log\left(0\\right)=-\infty</span>
+
+<span class="sd">        and this means the line will extend past the extents of the latex page.</span>
+
+<span class="sd">        :param float y:  The ordinate axis coordinate of the line.</span>
+<span class="sd">        :param float xmin: The left extent of the line.</span>
+<span class="sd">        :param float xmax: The right extent of the line.</span>
+<span class="sd">        :param string ls: The style of the line, i.e. &#39;-&#39;, &#39;--&#39;, &#39;:&#39;, etc.</span>
+<span class="sd">        :param float lw: The width of the line in pt.</span>
+<span class="sd">        :param string color: The color of the line.</span>
+<span class="sd">        :param axes axes: The axes object the line should be added to, if not</span>
+<span class="sd">            current.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="k">if</span> <span class="n">xmin</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
@@ -445,7 +476,7 @@
         <span class="k">if</span> <span class="n">xmax</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">axes</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">xmax</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span>
-                              <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+                              <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">add_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">):</span>
         <span class="n">curve_place</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
