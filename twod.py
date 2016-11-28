@@ -16,10 +16,10 @@ plt.close("all")
 
 
 # make the line graphing class
-class ah2d(object):
-    """ A ``pyg.ah2d`` object plots many two-dimensional data types.
+class pyg2d(object):
+    """ A ``pyg.pyg2d`` object plots many two-dimensional data types.
 
-    The ``ah2d`` class provides an access to ``matplotlib`` charting functions
+    The ``pyg2d`` class provides an access to ``matplotlib`` charting functions
     and some hook ins to making these functions easier to use and more
     repeatable.  The constructor itself takes only one optional argument,
     ``env``.
@@ -39,8 +39,8 @@ class ah2d(object):
         added. Default: ``purdue``.
     :type env: ``plot``, ``gui``, or ``None``
     :type colors: ``pu``, ``purdue``, ``salabs``, or ``ah``
-    :return: the ``ah2d`` object.
-    :rtype: ``ah2d``
+    :return: the ``pyg2d`` object.
+    :rtype: ``pyg2d``
     """
     leg = False
     leg_col_one_col = 2
@@ -165,9 +165,9 @@ class ah2d(object):
         matplotlib.rcParams.update(rcparamsarray)
 
     def xlabel(self, label, axes=None):
-        r""" ``ah2d.xlabel`` adds a label to the x-axis.
+        r""" ``pyg2d.xlabel`` adds a label to the x-axis.
 
-        ``ah2d.xlabel`` adds a label to the x-axis of the current axes (or
+        ``pyg2d.xlabel`` adds a label to the x-axis of the current axes (or
         other axis given by kwarg ``axes``).
 
         :param str label: The label added to the x-axis of the defined axis.
@@ -184,11 +184,11 @@ class ah2d(object):
         self.artists.append(xlab)
 
     def add_subplot(self, subp=121):
-        """ ``ah2d.add_subplot`` adds a grid in which you can make subplots.
+        """ ``pyg2d.add_subplot`` adds a grid in which you can make subplots.
 
-        ``ah2d.add_subplot`` follows Matlab's lead and allows you to plot
+        ``pyg2d.add_subplot`` follows Matlab's lead and allows you to plot
         several axes on one plot. The newly created axes is saved as
-        ``ah2d.ax2`` - this should be expanded for more axes later.
+        ``pyg2d.ax2`` - this should be expanded for more axes later.
 
         .. todo::
 
@@ -209,7 +209,7 @@ class ah2d(object):
         self.ax_subp.append(self.fig.add_subplot(subp))
 
     def title(self, title, axes=None):
-        """ ``ah2d.title`` adds a title to the plot.
+        """ ``pyg2d.title`` adds a title to the plot.
 
         :param str title: the title to be added to the plot. The title can take
             LaTeX arguments.
@@ -221,9 +221,9 @@ class ah2d(object):
         self.artists.append(ttl)
 
     def ylabel(self, label, axes=None):
-        """ ``ah2d.ylabel`` adds a label to the y-axis.
+        """ ``pyg2d.ylabel`` adds a label to the y-axis.
 
-        ``ah2d.ylabel`` adds a label to the y-axis of the current axes (or
+        ``pyg2d.ylabel`` adds a label to the y-axis of the current axes (or
         other axis given by kwarg ``axes``).  The label can take LaTeX
         arguments and the ah style guide asks for labels given as 'Label
         ($variable$) [$unit$]'.
@@ -242,7 +242,7 @@ class ah2d(object):
         self.artists.append(ylab)
 
     def xlim(self, minx, maxx, axes=None):
-        """ ``ah2d.xlim`` limits the view of the x-axis to limits.
+        """ ``pyg2d.xlim`` limits the view of the x-axis to limits.
 
         :param float minx: The minimum value of x that will be shown.
         :param float maxx: The maximum value of x that will be shown.
@@ -256,7 +256,7 @@ class ah2d(object):
         axes.set_xlim([minx, maxx])
 
     def ylim(self, miny, maxy, axes=None):
-        """ ``ah2d.ylim`` limits the view of the y-axis to limits.
+        """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
 
         :param float miny: The minimum value of y that will be shown.
         :param float maxy: The maximum value of y that will be shown.
@@ -270,9 +270,9 @@ class ah2d(object):
         axes.set_ylim([miny, maxy])
 
     def legend(self, loc=1, axes=None):
-        """ ``ah2d.legend`` shows the legend on the plot.
+        """ ``pyg2d.legend`` shows the legend on the plot.
 
-        ``ah2d.legend`` toggles the legend showing on.  This is done by getting
+        ``pyg2d.legend`` toggles the legend showing on.  This is done by getting
         the included objects and titles from the ``matplotlib`` axis item, and
         then checking to see if there is the word 'connector' in that title. If
         there is that word, then the entry is discarded.
@@ -294,6 +294,18 @@ class ah2d(object):
         axes.legend(inc_objs, inc_titles, loc=loc)
 
     def xticks(self, ticks, labels, axes=None):
+        """ ``pyg2d.xticks`` changes the ticks and labels to provided values.
+
+        ``pyg2d.xticks`` will move the ticks on the abscissa to the
+        locations given in ``ticks`` and place the labels in list ``labels`` at
+        those locations, repsectively.
+
+        :param list ticks: The values where the new tick labels will be placed
+            on the x-axis.
+        :param list labels: The string labels for each tick.
+        :param axes axes: An axes to append these ticks to, if not current.
+        :return: None
+        """
         if axes is not None:
             plt.sca(axes)
         else:
@@ -302,6 +314,18 @@ class ah2d(object):
         self.ax.set_xticklabels(labels)
 
     def yticks(self, ticks, labels, axes=None):
+        """ ``pyg2d.yticks`` changes the ticks and labels to provided values.
+
+        ``pyg2d.yticks`` will move the ticks on the ordinate axis to the
+        locations given in ``ticks`` and place the labels in list ``labels`` at
+        those locations, repsectively.
+
+        :param list ticks: The values where the new tick labels will be placed
+            on the y-axis.
+        :param list labels: The string labels for each tick.
+        :param axes axes: An axes to append these ticks to, if not current.
+        :return: None
+        """
         if axes is not None:
             plt.sca(axes)
         else:
@@ -309,11 +333,19 @@ class ah2d(object):
         self.ax.yticks(ticks, labels)
 
     def markers_on(self):
+        """ ``pyg2d.markers_on`` turns on the data markers for all data sets.
+
+        :return: None
+        """
         for key in self.lines:
             self.lines[key].set_alpha(1.0)
             self.lines[key].set_markersize(6)
 
     def markers_off(self):
+        """ ``pyg2d.markers_off`` turns off the data markers for all data sets.
+
+        :return: None
+        """
         for key in self.lines:
             self.lines[key].set_markersize(0)
 
@@ -550,6 +582,15 @@ class ah2d(object):
             axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
+    def fill_under_curve(self, curve, scale=0., *args, **kwargs):
+        if curve.data == 'binned':
+            self.fill_between(curve.binned_data_x,
+                              scale * np.ones_like(curve.binned_data_y),
+                              curve.binned_data_y, **kwargs)
+        else:
+            self.fill_between(curve.x, scale * np.ones_like(curve.y), curve.y,
+                              **kwargs)
+
     def fill_between(self, x, y1, y2, fc='red', name='plot', ec='None', leg=True,
                      axes=None, alpha=0.5):
         if axes is None:
@@ -578,6 +619,16 @@ class ah2d(object):
         x2 = x2[idx];
         y = y[idx];
         axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
+
+    def semi_log_y(self):
+        self.ax.set_yscale('log')
+
+    def semi_log_x(self):
+        self.ax.set_xscale('log')
+
+    def log_log(self):
+        self.semi_log_x()
+        self.semi_log_y()
 
     def add_circle(self, x, y, r, fc='red', ec='None', alpha=0.5, axes=None,
                    name='plot'):

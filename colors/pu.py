@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 12 15:33:21 2014
-
-@author: inokadm
-"""
-
 pu_colors = {'black': '#000000',
              'white': '#ffffff',
              'oldgold': '#a3792c',
@@ -37,4 +30,5 @@ brand_primary = pu_colors['newgold']
 brand_success = pu_colors['green']
 brand_info = pu_colors['teal']
 brand_warning = pu_colors['yellow']
-brand_warning = pu_colors['red']
+brand_error = pu_colors['red']
+brand_off = pu_colors['purple']
