@@ -1,7 +1,8 @@
 all: docs
 
 docs: FORCE
-	MSG = $(shell git log -1 --pretty=%B | tr -d '\n')
+	MSG="$(shell git log -1 --pretty=%B | tr -d '\n')"
+	@echo $(MSG)
 	mkdir -p ~/pages/pyg/docs; \
 	cd ~/pages/pyg/docs/; \
 	git rm -r *; \
