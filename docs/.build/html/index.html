@@ -117,6 +117,36 @@ postition <code class="docutils literal"><span class="pre">(2,1)</span></code>).
 </dd></dl>
 
 <dl class="method">
+<dt id="twod.pyg2d.add_vline">
+<code class="descname">add_vline</code><span class="sig-paren">(</span><em>x</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>ls='solid'</em>, <em>lw=1.5</em>, <em>color='black'</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.add_vline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.add_vline" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line.</p>
+<blockquote>
+<div><p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line from either the bottom axis
+to the top axis if <code class="docutils literal"><span class="pre">ymin</span></code> and <code class="docutils literal"><span class="pre">ymax</span></code> are not provided, otherwise
+it is drawn from <code class="docutils literal"><span class="pre">ymin</span></code> to <code class="docutils literal"><span class="pre">ymax</span></code> at <code class="docutils literal"><span class="pre">x</span></code>.  Be careful not to
+change from linear to log scale AFTER using this function, as</p>
+<div class="math">
+\[\log\left( 0 \]</div>
+</div></blockquote>
+<p>ight) = -infty</p>
+<blockquote>
+<div><p>and this means the line will extend past the extents of the latex page.</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">return:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
 <dt id="twod.pyg2d.legend">
 <code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> shows the legend on the plot.</p>
@@ -132,6 +162,34 @@ there is that word, then the entry is discarded.</p>
 notation.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.lines_off">
+<code class="descname">lines_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.lines_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.lines_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_off</span></code> turns off the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.lines_on">
+<code class="descname">lines_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.lines_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.lines_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_on</span></code> turns on the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
 </tbody>
 </table>
@@ -349,6 +407,11 @@ schemes manually.</p>
 <p class="last">Expand subplotting to be able to use more than two axes total.</p>
 </div>
 <p class="todo-source">(The <a class="reference internal" href="#index-1"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.pyg2d.add_subplot, line 7.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="#index-2"><em>original entry</em></a> is located in  /home/ahagen/code/pyg/twod.py:docstring of twod.pyg2d.add_vline, line 15.)</p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
