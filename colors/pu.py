@@ -1,3 +1,5 @@
+from colour import Color as c
+
 pu_colors = {'black': '#000000',
              'white': '#ffffff',
              'oldgold': '#a3792c',
@@ -32,3 +34,17 @@ brand_info = pu_colors['teal']
 brand_warning = pu_colors['yellow']
 brand_error = pu_colors['red']
 brand_off = pu_colors['purple']
+
+
+desat = c(pu_colors["blue"])
+desat.saturation = 0.0
+desat.luminance = desat.luminance / 5.
+flow_cmap = list(desat.range_to(c(pu_colors["blue"]), 256))
+desat = c(pu_colors["newgold"])
+desat.saturation = 0.0
+desat.luminance = desat.luminance / 5.
+brand_cmap = list(desat.range_to(c(pu_colors["newgold"]), 256))
+desat = c(pu_colors["tan"])
+#desat.saturation = 0.0
+#desat.luminance = desat.luminance / 5.
+flame_cmap = list(desat.range_to(c(pu_colors["red"]), 256))

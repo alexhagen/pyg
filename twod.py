@@ -42,7 +42,6 @@ class pyg2d(object):
     :return: the ``pyg2d`` object.
     :rtype: ``pyg2d``
     """
-    leg = False
     leg_col_one_col = 2
     leg_col_two_col = 3
     leg_col_full_page = 4
@@ -67,6 +66,7 @@ class pyg2d(object):
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, polar=polar)
         self.ax_subp = []
+        self.leg = False
         self.ax2 = None
         self.polar = polar
         if not self.polar:
