@@ -10,6 +10,7 @@ matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon
 from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import proj3d
 from matplotlib.colors import LinearSegmentedColormap
 import platform
 
@@ -151,8 +152,20 @@ class pyg3d(object):
                 "pgf.preamble": "\usepackage{nicefrac}"
             }
         matplotlib.rcParams.update(rcparamsarray)
+        self.annotations = []
+        self.ax.xaxis._axinfo['tick']['outward_factor'] = 0
+        self.ax.yaxis._axinfo['tick']['outward_factor'] = 0
+        self.ax.zaxis._axinfo['tick']['outward_factor'] = 0
+        self.ax.view_init(30, 240)
+        self.ax.w_xaxis.gridlines.set_lw(0.1)
+        self.ax.w_yaxis.gridlines.set_lw(0.1)
+        self.ax.w_zaxis.gridlines.set_lw(0.1)
+        self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        self.ax.set_aspect('equal')
 
-    def cylinder(self, center, h, r, color, alpha=0.5, axes=None):
+    def cylinder(self, center, h, r, color, alpha=0.5, lines=False, axes=None):
         try:
             self.c_data
         except AttributeError:
@@ -165,6 +178,10 @@ class pyg3d(object):
             axes = self.ax
         else:
             axes = axes.ax
+        if lines:
+            linewidth = 0.01
+        else:
+            linewidth = 0.0
         # draw the cylindrical surface
         t = np.linspace(0, 2.0 * np.pi, 100)
         x = center[0] + r * np.cos(t)
@@ -178,7 +195,7 @@ class pyg3d(object):
         cylsurface = axes.plot_surface(Xc, Yc, Zc, alpha=alpha,
                                        rstride=rstride, cstride=cstride,
                                        color=color, shade=False,
-                                       linewidth=0.0)
+                                       linewidth=linewidth)
         t = np.linspace(0.0, 2.0 * np.pi, 100)
         radius = np.linspace(0.0, r, 100)
         R, Theta = np.meshgrid(radius, t)
@@ -186,11 +203,11 @@ class pyg3d(object):
         Zc = center[2] + h / 2.0
         top = axes.plot_surface(Xc, Yc, Zc, alpha=alpha, rstride=100,
                                 cstride=100, color=color, shade=False,
-                                linewidth=0.0)
+                                linewidth=linewidth)
         Zc = center[2] - h / 2.0
         bottom = axes.plot_surface(Xc, Yc, Zc, alpha=alpha, rstride=100,
                                    cstride=100, color=color,
-                                   shade=False, linewidth=0.0)
+                                   shade=False, linewidth=linewidth)
 
     def sphere(self, center, r, color='gray', planes=True, lines=False,
              axes=None):
@@ -271,6 +288,44 @@ class pyg3d(object):
                                    rstride=cstride, cstride=rstride,
                                    color=color, alpha=planes_alpha, shade=False,
                                    linewidth=linewidth)
+
+    def add_data_pointer(self, x, y, z, string=None,
+                         place='up-right', axes=None):
+        if axes is None:
+            axes = self.ax
+        _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
+        if string is None:
+            string = '$\left( %f,%f \\right)$' % (x, y, z)
+        if place == 'up-right':
+            curve_place = (20, 20)
+        elif place == 'up-left':
+            curve_place = (-20, 20)
+        elif place == 'down-right':
+            curve_place = (20, -20)
+        elif place == 'down-left':
+            curve_place = (-20, -20)
+        elif type(place) is tuple:
+            curve_place = place
+
+        self.annotations.extend([[x, y, z, \
+            axes.annotate(string,
+                      xy=(_x, _y), zorder=100,
+                      xytext=curve_place,
+                      textcoords = 'offset points',
+                      arrowprops=dict(arrowstyle="fancy",
+                                      fc="0.3", ec="none",
+                                      patchB=Ellipse((2, -1), 0.5, 0.5),
+                                      connectionstyle=
+                                      "angle3,angleA=0,angleB=-90")
+                      )]])
+
+    def update_data_pointers(self):
+        for ann in self.annotations:
+            x = ann[0]
+            y = ann[1]
+            z = ann[2]
+            _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
+            ann[3].xy = (_x, _y)
 
     def colorbar(self, cmap, cmap_name='Color Map'):
         if cmap.__class__.__name__ == "list" and \
@@ -447,6 +502,7 @@ class pyg3d(object):
         self.fig.set_size_inches(self.width, self.height)
         if tight:
             plt.tight_layout()
+        self.update_data_pointers()
 
     def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
@@ -499,22 +555,6 @@ class pyg3d(object):
                          tmp_planes[4], tmp_planes[5])
         zaxis._PLANES = tmp_planes
         zaxis.axes._draw_grid = draw_grid_old
-
-        self.ax.xaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.yaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.zaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.view_init(30, 240)
-        self.ax.w_xaxis.gridlines.set_lw(0.1)
-        self.ax.w_yaxis.gridlines.set_lw(0.1)
-        self.ax.w_zaxis.gridlines.set_lw(0.1)
-        self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.set_aspect('equal')
-        self.ax.set_xlim([-60, 60])
-        self.ax.set_ylim([-60, 60])
-        self.ax.set_zlim([-60, 60])
-        # self.ax.set_position([0.0, 0.0, 1.5, 1.0])
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
