@@ -15,15 +15,10 @@ By Alex Hagen
 
 The AH Plot library is a small and simple library that allows for creation of consitent plots in python.  This is optimized to be published in writeups and two column article format, and probably shouldn't be used for large scale visualizations.
 
-## Contents
-1. Installation
-2. Usage
-3. To Do
-
-## 1. Installation
+## Installation
 Obviously, python (2.7) must be installed, but also, because the library depends on matplotlib, this must also be installed.  Then, just put the file `ah_plot.py` into whatever directory you're using.
 
-## 2. Usage
+## Usage
 Follow the steps below to use the ah_plot class.
 
 * Lets say we want to create some data, plot it, and then use it in a latex file.  Here's a quick line plot demo program:
@@ -93,6 +88,6 @@ $ pdflatex plot_line.tex
 
 * and viewed!
 
-## 3. To Do
+## To Do
 - [ ] Absolute value support (added 10/16/14)
 - [ ] "Smart" change, indicating if value was changed and is still at speed (added 10/16/14)

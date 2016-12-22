@@ -83,7 +83,6 @@
 <span class="sd">    :return: the ``pyg2d`` object.</span>
 <span class="sd">    :rtype: ``pyg2d``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">leg</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">4</span>
@@ -108,6 +107,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leg</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">polar</span> <span class="o">=</span> <span class="n">polar</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">:</span>
@@ -488,7 +488,9 @@
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rcparamsarray</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_arrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-                  <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">):</span>
+                  <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">arrowprops</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">arrowprops</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">arrowprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;-|&gt;&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="n">fc</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">string</span><span class="p">,</span>
@@ -497,9 +499,7 @@
                       <span class="n">color</span><span class="o">=</span><span class="n">fc</span><span class="p">,</span>
                       <span class="n">horizontalalignment</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span>
                       <span class="n">verticalalignment</span><span class="o">=</span><span class="n">va</span><span class="p">,</span>
-                      <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;-|&gt;&quot;</span><span class="p">,</span>
-                                      <span class="n">fc</span><span class="o">=</span><span class="n">fc</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="n">fc</span><span class="p">)</span>
-                      <span class="p">)</span>
+                      <span class="n">arrowprops</span><span class="o">=</span><span class="n">arrowprops</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
                  <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#746C66&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -555,7 +555,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_arrow</span><span class="p">(</span><span class="n">x_mid</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_data_pointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">curve</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                         <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                         <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="k">if</span> <span class="n">curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -580,6 +580,7 @@
         <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">string</span><span class="p">,</span>
                       <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
                       <span class="n">xytext</span><span class="o">=</span><span class="n">curve_place</span><span class="p">,</span>
+                      <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span>
                       <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;fancy&quot;</span><span class="p">,</span>
                                       <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;0.3&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
                                       <span class="n">patchB</span><span class="o">=</span><span class="n">Ellipse</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
@@ -920,17 +921,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sizeofsizes</span><span class="p">,</span> <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">):</span>
+                 <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">size</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">width</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">3.25</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
             <span class="c1"># if self.leg:</span>
             <span class="c1">#    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,</span>
             <span class="c1">#        ncol=self.leg_col_one_col, mode=&quot;expand&quot;,</span>
             <span class="c1">#        borderaxespad=0.);</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">6.25</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
             <span class="c1"># if self.leg:</span>
@@ -995,7 +1001,8 @@
                 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;evince &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="o">+</span> <span class="s2">&quot; &amp;&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span> <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pgf&#39;</span><span class="p">],</span>
-               <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">):</span>
+               <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="c1"># writing a comment here to make the following commented code not</span>
         <span class="c1"># docstring</span>
         <span class="c1"># remove all points outside the window</span>
@@ -1015,7 +1022,8 @@
         <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">format</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="n">customsize</span><span class="o">=</span><span class="n">customsize</span><span class="p">,</span>
-                              <span class="n">legloc</span><span class="o">=</span><span class="n">legloc</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="n">tight</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
+                              <span class="n">legloc</span><span class="o">=</span><span class="n">legloc</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="n">tight</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">,</span>
+                              <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">export_fmt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="n">format</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">format</span> <span class="ow">is</span> <span class="s1">&#39;pdf&#39;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span>
