@@ -447,7 +447,9 @@ class pyg2d(object):
         matplotlib.rcParams.update(rcparamsarray)
 
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
-                  ha='center', va='center'):
+                  ha='center', va='center', arrowprops=None):
+        if arrowprops is None:
+            arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc)
         if axes is None:
             axes = self.ax
         axes.annotate(string,
@@ -456,9 +458,7 @@ class pyg2d(object):
                       color=fc,
                       horizontalalignment=ha,
                       verticalalignment=va,
-                      arrowprops=dict(arrowstyle="-|>",
-                                      fc=fc, ec=fc)
-                      )
+                      arrowprops=arrowprops)
 
     def add_text(self, x1, y1, string=None, ha='center', va='center',
                  color="#746C66", rotation=0, axes=None):
@@ -514,7 +514,7 @@ class pyg2d(object):
         self.add_arrow(x_mid, x2, y_mid, y_mid, string=string)
 
     def add_data_pointer(self, x, curve=None, point=None, string=None,
-                         place='up-right', axes=None):
+                         place='up-right', ha='left', axes=None):
         if axes is None:
             axes = self.ax
         if curve is not None:
@@ -539,6 +539,7 @@ class pyg2d(object):
         axes.annotate(string,
                       xy=(x, y),
                       xytext=curve_place,
+                      ha=ha,
                       arrowprops=dict(arrowstyle="fancy",
                                       fc="0.3", ec="none",
                                       patchB=Ellipse((2, -1), 0.5, 0.5),
@@ -879,17 +880,22 @@ class pyg2d(object):
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
-                 tight=True, ratio="golden"):
+                 tight=True, ratio="golden", width=None):
+        widths = {"1": 3.25, "2": 6.25, "fp": 10.0, "cs": 0.0}
+        if width is None:
+            self.width = widths[size]
+        elif isinstance(width, basestring):
+            self.width = widths[width]
+        else:
+            self.width = width
         if size is '1':
-            self.width = 3.25
             self.det_height(ratio=ratio)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
             #        ncol=self.leg_col_one_col, mode="expand",
             #        borderaxespad=0.);
         elif size is '2':
-            self.width = 6.25
-            self.det_height()
+            self.det_height(ratio=ratio)
             self.height = self.height / 2.0
             self.fig.set_size_inches(self.width, self.height)
             # if self.leg:
@@ -954,7 +960,8 @@ class pyg2d(object):
                 os.system("evince " + self.pdf_filename + " &")
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
-               customsize=None, legloc=None, tight=True, ratio="golden"):
+               customsize=None, legloc=None, tight=True, ratio="golden",
+               width=None):
         # writing a comment here to make the following commented code not
         # docstring
         # remove all points outside the window
@@ -974,7 +981,8 @@ class pyg2d(object):
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
-                              legloc=legloc, tight=tight, ratio=ratio)
+                              legloc=legloc, tight=tight, ratio=ratio,
+                              width=width)
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'

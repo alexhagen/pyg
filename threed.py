@@ -156,24 +156,44 @@ class pyg3d(object):
         self.ax.xaxis._axinfo['tick']['outward_factor'] = 0
         self.ax.yaxis._axinfo['tick']['outward_factor'] = 0
         self.ax.zaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.view_init(30, 240)
+        self.ax.view_init(30, 245)
         self.ax.w_xaxis.gridlines.set_lw(0.1)
         self.ax.w_yaxis.gridlines.set_lw(0.1)
         self.ax.w_zaxis.gridlines.set_lw(0.1)
         self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.set_aspect('equal')
 
-    def cylinder(self, center, h, r, color, alpha=0.5, lines=False, axes=None):
+    def orthogonal_proj(self, zfront, zback):
+        a = (zfront+zback)/(zfront-zback)
+        b = -2*(zfront*zback)/(zfront-zback)
+        return np.array([[1,0,0,0],
+                         [0,1,0,0],
+                         [0,0,a,b],
+                         [0,0,-1.0e-9,zback]])
+
+    def view(self, phi, theta, perspective=False):
+        if not perspective:
+            proj3d.persp_transformation = self.orthogonal_proj
+        self.ax.view_init(phi, theta)
+        return self
+
+    def cylinder(self, center, h, r, color, planes=True, lines=False,
+                 axes=None):
         try:
             self.c_data
         except AttributeError:
             self.c_data = []
         try:
-            self.c_data.extend([center[3]])
+            self.c_data.extend([center[2]])
         except AttributeError:
             pass
+        if isinstance(planes, float):
+            planes_alpha = planes
+        elif planes:
+            planes_alpha = 0.1
+        else:
+            planes_alpha = 0.0
         if axes is None:
             axes = self.ax
         else:
@@ -184,30 +204,56 @@ class pyg3d(object):
             linewidth = 0.0
         # draw the cylindrical surface
         t = np.linspace(0, 2.0 * np.pi, 100)
-        x = center[0] + r * np.cos(t)
-        y = center[1] + r * np.sin(t)
-        z = center[2] + np.linspace(- h / 2, h / 2, 100)
+        if h[0] > h[1] and h[0] > h[2]:
+            cz = center[0]
+            cx = center[2]
+            cy = center[1]
+        elif h[2] > h[1] and h[2] > h[0]:
+            cz = center[2]
+            cx = center[0]
+            cy = center[1]
+        x = cx + r * np.cos(t)
+        y = cy + r * np.sin(t)
+        z = cz + np.linspace(- np.max(h) / 2, np.max(h) / 2, 100)
         Tc, Zc =np.meshgrid(t, z)
-        Xc = center[0] + r * np.cos(Tc)
-        Yc = center[1] + r * np.sin(Tc)
+        Xc = cx + r * np.cos(Tc)
+        Yc = cy + r * np.sin(Tc)
         rstride = 20
         cstride = 10
-        cylsurface = axes.plot_surface(Xc, Yc, Zc, alpha=alpha,
-                                       rstride=rstride, cstride=cstride,
-                                       color=color, shade=False,
-                                       linewidth=linewidth)
+        if h[0] > h[1] and h[0] > h[2]:
+            cylsurface = axes.plot_surface(Zc, Yc, Xc, alpha=planes_alpha,
+                                           rstride=rstride, cstride=cstride,
+                                           color=color, shade=False,
+                                           linewidth=linewidth)
+        elif h[2] > h[1] and h[2] > h[0]:
+            cylsurface = axes.plot_surface(Xc, Yc, Zc, alpha=planes_alpha,
+                                           rstride=rstride, cstride=cstride,
+                                           color=color, shade=False,
+                                           linewidth=linewidth)
+
         t = np.linspace(0.0, 2.0 * np.pi, 100)
         radius = np.linspace(0.0, r, 100)
         R, Theta = np.meshgrid(radius, t)
-        Xc, Yc = center[0] + R * np.cos(Theta), center[1] + R * np.sin(Theta)
-        Zc = center[2] + h / 2.0
-        top = axes.plot_surface(Xc, Yc, Zc, alpha=alpha, rstride=100,
-                                cstride=100, color=color, shade=False,
-                                linewidth=linewidth)
-        Zc = center[2] - h / 2.0
-        bottom = axes.plot_surface(Xc, Yc, Zc, alpha=alpha, rstride=100,
-                                   cstride=100, color=color,
-                                   shade=False, linewidth=linewidth)
+        Xc, Yc = cx + R * np.cos(Theta), cy + R * np.sin(Theta)
+        Zc = cz + np.max(h) / 2.0
+        if h[0] > h[1] and h[0] > h[2]:
+            top = axes.plot_surface(Zc, Yc, Xc, alpha=planes_alpha, rstride=100,
+                                    cstride=100, color=color, shade=False,
+                                    linewidth=linewidth)
+        elif h[2] > h[1] and h[2] > h[0]:
+            top = axes.plot_surface(Xc, Yc, Zc, alpha=planes_alpha, rstride=100,
+                                    cstride=100, color=color, shade=False,
+                                    linewidth=linewidth)
+        Zc = cz - np.max(h) / 2.0
+        if h[0] > h[1] and h[0] > h[2]:
+            bottom = axes.plot_surface(Zc, Yc, Xc, alpha=planes_alpha, rstride=100,
+                                    cstride=100, color=color, shade=False,
+                                    linewidth=linewidth)
+        elif h[2] > h[1] and h[2] > h[0]:
+            bottom = axes.plot_surface(Xc, Yc, Zc, alpha=planes_alpha, rstride=100,
+                                    cstride=100, color=color, shade=False,
+                                    linewidth=linewidth)
+        return self
 
     def sphere(self, center, r, color='gray', planes=True, lines=False,
              axes=None):
@@ -215,8 +261,10 @@ class pyg3d(object):
             axes = self.ax
         else:
             axes = axes.ax
-        if planes:
-            planes_alpha = 0.5
+        if isinstance(planes, float):
+            planes_alpha = planes
+        elif planes:
+            planes_alpha = 0.1
         else:
             planes_alpha = 0.0
         if lines:
@@ -235,6 +283,69 @@ class pyg3d(object):
                                 rstride=cstride, cstride=rstride,
                                 color=color, alpha=planes_alpha, shade=False,
                                 linewidth=linewidth)
+        return self
+
+    def box(self, corner, d1, d2, d3, color='gray', planes=True, lines=False,
+            axes=None):
+        if axes is None:
+            axes = self.ax
+        else:
+            axes = axes.ax
+        if isinstance(planes, float):
+            planes_alpha = planes
+        elif planes:
+            planes_alpha = 0.1
+        else:
+            planes_alpha = 0.0
+        if lines:
+            linewidth = 0.5
+        else:
+            linewidth = 0.0
+        rstride = 10
+        cstride = 10
+        l1 = np.sqrt(d1[0]**2 + d1[1]**2 + d1[2]**2)
+        l2 = np.sqrt(d2[0]**2 + d2[1]**2 + d2[2]**2)
+        l3 = np.sqrt(d3[0]**2 + d3[1]**2 + d3[2]**2)
+        numpts = 10
+        planes = []
+        top_corner = np.array(corner) + np.array(d1) + np.array(d2) + \
+            np.array(d3)
+        for ds in [(d1, d2), (d2, d3), (d1, d3)]:
+            a1 = ds[0]
+            a2 = ds[1]
+            xx = np.zeros((numpts, numpts))
+            yy = np.zeros((numpts, numpts))
+            zz = np.zeros((numpts, numpts))
+            for i in range(0, numpts):
+                for j in range(0, numpts):
+                    xx[i, j] = corner[0] + a1[0] * float(i) / float(numpts - 1) + \
+                        a2[0] * float(j) / float(numpts - 1)
+                    yy[i, j] = corner[1] + a1[1] * float(i) / float(numpts - 1) + \
+                        a2[1] * float(j) / float(numpts - 1)
+                    zz[i, j] = corner[2] + a1[2] * float(i) / float(numpts - 1) + \
+                        a2[2] * float(j) / float(numpts - 1)
+            planes.extend([axes.plot_surface(xx, yy, zz,
+                                       rstride=cstride, cstride=rstride,
+                                       color=color, alpha=planes_alpha, shade=False,
+                                       linewidth=linewidth)])
+            for i in range(0, numpts):
+                for j in range(0, numpts):
+                    xx[i, j] = top_corner[0] - \
+                        a1[0] * float(i) / float(numpts - 1) - \
+                        a2[0] * float(j) / float(numpts - 1)
+                    yy[i, j] = top_corner[1] - \
+                        a1[1] * float(i) / float(numpts - 1) - \
+                        a2[1] * float(j) / float(numpts - 1)
+                    zz[i, j] = top_corner[2] - \
+                        a1[2] * float(i) / float(numpts - 1) - \
+                        a2[2] * float(j) / float(numpts - 1)
+            planes.extend([axes.plot_surface(xx, yy, zz,
+                                       rstride=cstride, cstride=rstride,
+                                       color=color, alpha=planes_alpha, shade=False,
+                                       linewidth=linewidth)])
+        #top = axes.plot_surface(Xc, Yc, )
+        return self
+
 
     def cube(self, center, dx, dy, dz, color='gray', planes=True, lines=False,
              axes=None):
@@ -242,7 +353,9 @@ class pyg3d(object):
             axes = self.ax
         else:
             axes = axes.ax
-        if planes:
+        if isinstance(planes, float):
+            planes_alpha = planes
+        elif planes:
             planes_alpha = 0.1
         else:
             planes_alpha = 0.0
@@ -288,6 +401,7 @@ class pyg3d(object):
                                    rstride=cstride, cstride=rstride,
                                    color=color, alpha=planes_alpha, shade=False,
                                    linewidth=linewidth)
+        return self
 
     def add_data_pointer(self, x, y, z, string=None,
                          place='up-right', axes=None):
@@ -543,6 +657,16 @@ class pyg3d(object):
             if platform.system() == "Linux":
                 os.system("evince " + self.pdf_filename + " &")
 
+    def aspect_equal(self):
+        ax = self.ax
+        extents = np.array([getattr(ax, 'get_{}lim'.format(dim))() for dim in 'xyz'])
+        sz = extents[:,1] - extents[:,0]
+        centers = np.mean(extents, axis=1)
+        maxsize = max(abs(sz))
+        r = maxsize/2
+        for ctr, dim in zip(centers, 'xyz'):
+            getattr(ax, 'set_{}lim'.format(dim))(ctr - r, ctr + r)
+
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None, tight=True, ratio="golden"):
         zaxis = self.ax.zaxis
@@ -551,14 +675,15 @@ class pyg3d(object):
         zaxis.axes._draw_grid = False
         tmp_planes = zaxis._PLANES
         zaxis._PLANES = (tmp_planes[2], tmp_planes[3],
-                         tmp_planes[0], tmp_planes[1],
-                         tmp_planes[4], tmp_planes[5])
+                      tmp_planes[0], tmp_planes[1],
+                      tmp_planes[4], tmp_planes[5])
         zaxis._PLANES = tmp_planes
         zaxis.axes._draw_grid = draw_grid_old
         for size in sizes:
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
                               legloc=legloc, tight=tight, ratio=ratio)
+                self.aspect_equal()
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'
