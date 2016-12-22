@@ -18,22 +18,15 @@ creation of consitent plots in python. This is optimized to be published
 in writeups and two column article format, and probably shouldn't be
 used for large scale visualizations.
 
-Contents
---------
-
-1. Installation
-2. Usage
-3. To Do
-
-1. Installation
----------------
+Installation
+------------
 
 Obviously, python (2.7) must be installed, but also, because the library
 depends on matplotlib, this must also be installed. Then, just put the
 file ``ah_plot.py`` into whatever directory you're using.
 
-2. Usage
---------
+Usage
+-----
 
 Follow the steps below to use the ah\_plot class.
 
@@ -106,8 +99,8 @@ Follow the steps below to use the ah\_plot class.
 
 -  and viewed!
 
-3. To Do
---------
+To Do
+-----
 
 -  [ ] Absolute value support (added 10/16/14)
 -  [ ] "Smart" change, indicating if value was changed and is still at
