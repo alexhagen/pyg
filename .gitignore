@@ -1,8 +1,11 @@
+
+
 # mac files
 .DS_Store
 
 #documentation
 .build
+README.rst
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
