@@ -1,0 +1,681 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyg.twod module &mdash; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="pyg 0.1a1 documentation" href="index.html" />
+    <link rel="prev" title="pyg.threed module" href="pyg.threed.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyg.twod">
+<span id="pyg-twod-module"></span><h1>pyg.twod module<a class="headerlink" href="#module-pyg.twod" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyg.twod.pyg2d">
+<em class="property">class </em><code class="descclassname">pyg.twod.</code><code class="descname">pyg2d</code><span class="sig-paren">(</span><em>env='plot'</em>, <em>polar=False</em>, <em>colors='purdue'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A <code class="docutils literal"><span class="pre">pyg.pyg2d</span></code> object plots many two-dimensional data types.</p>
+<p>The <code class="docutils literal"><span class="pre">pyg2d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
+and some hook ins to making these functions easier to use and more
+repeatable.  The constructor itself takes only one optional argument,
+<code class="docutils literal"><span class="pre">env</span></code>.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add more color schemes and the ability to define and hook in color
+schemes manually.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env</strong> (<code class="docutils literal"><span class="pre">plot</span></code>, <code class="docutils literal"><span class="pre">gui</span></code>, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; The environement option defines where you are going to use
+the generated plot, with the default option being plot (or printing).
+If you are using this to generate plots for a gui, define this option
+as <code class="docutils literal"><span class="pre">gui</span></code> and the class will choose a prettier parameter set for your
+chart. Default: <code class="docutils literal"><span class="pre">plot</span></code>.</li>
+<li><strong>colors</strong> (<code class="docutils literal"><span class="pre">pu</span></code>, <code class="docutils literal"><span class="pre">purdue</span></code>, <code class="docutils literal"><span class="pre">salabs</span></code>, or <code class="docutils literal"><span class="pre">ah</span></code>) &#8211; The <code class="docutils literal"><span class="pre">colors</span></code> option defines the color scheme which
+will be used in the plotting.  The ability to hook in schemes will be
+added. Default: <code class="docutils literal"><span class="pre">purdue</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the <code class="docutils literal"><span class="pre">pyg2d</span></code> object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">pyg2d</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_arrow">
+<code class="descname">add_arrow</code><span class="sig-paren">(</span><em>x1</em>, <em>x2</em>, <em>y1</em>, <em>y2</em>, <em>string=''</em>, <em>axes=None</em>, <em>fc='0.5'</em>, <em>ha='center'</em>, <em>va='center'</em>, <em>arrowprops=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_arrow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_arrow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_bar">
+<code class="descname">add_bar</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>hold=True</em>, <em>facecolor='gray'</em>, <em>alpha=0.5</em>, <em>name='plot'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_bar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_circle">
+<code class="descname">add_circle</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>r</em>, <em>fc='red'</em>, <em>ec='None'</em>, <em>alpha=0.5</em>, <em>axes=None</em>, <em>name='plot'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_circle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_data_pointer">
+<code class="descname">add_data_pointer</code><span class="sig-paren">(</span><em>x</em>, <em>curve=None</em>, <em>point=None</em>, <em>string=None</em>, <em>place='up-right'</em>, <em>ha='left'</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_data_pointer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_data_pointer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_hist">
+<code class="descname">add_hist</code><span class="sig-paren">(</span><em>y</em>, <em>bins</em>, <em>facecolor='gray'</em>, <em>alpha=0.5</em>, <em>name='plot'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_hist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_hline">
+<code class="descname">add_hline</code><span class="sig-paren">(</span><em>y</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ls='solid'</em>, <em>lw=1.5</em>, <em>color='black'</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_hline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_hline" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_hline</span></code> draws a horizontal line.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_hline</span></code> draws a horizontal line from either the left axis
+to the right axis if <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are not provided, otherwise
+it is drawn from <code class="docutils literal"><span class="pre">xmin</span></code> to <code class="docutils literal"><span class="pre">xmax</span></code> at <code class="docutils literal"><span class="pre">y</span></code>.  Be careful not to
+change from linear to log scale AFTER using this function, as</p>
+<div class="math">
+\[\log\left(0\right)=-\infty\]</div>
+<p>and this means the line will extend past the extents of the latex page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The ordinate axis coordinate of the line.</li>
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The left extent of the line.</li>
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The right extent of the line.</li>
+<li><strong>ls</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The style of the line, i.e. &#8216;-&#8216;, &#8216;&#8211;&#8217;, &#8216;:&#8217;, etc.</li>
+<li><strong>lw</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The width of the line in pt.</li>
+<li><strong>color</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The color of the line.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; The axes object the line should be added to, if not
+current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_hmeasure">
+<code class="descname">add_hmeasure</code><span class="sig-paren">(</span><em>x1</em>, <em>x2</em>, <em>y1</em>, <em>string=None</em>, <em>place=None</em>, <em>offset=0.01</em>, <em>axes=None</em>, <em>units=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_hmeasure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_hmeasure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_label">
+<code class="descname">add_label</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>string</em>, <em>color='black'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_legend">
+<code class="descname">add_legend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_legend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_line">
+<code class="descname">add_line</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>name='plot'</em>, <em>xerr=None</em>, <em>yerr=None</em>, <em>linewidth=0.5</em>, <em>linestyle=None</em>, <em>linecolor='black'</em>, <em>legend=True</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_line_xx">
+<code class="descname">add_line_xx</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>name='plot'</em>, <em>xerr=None</em>, <em>yerr=None</em>, <em>linecolor='black'</em>, <em>linewidth=0.5</em>, <em>linestyle=None</em>, <em>legend=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_line_xx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_line_xx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_line_yy">
+<code class="descname">add_line_yy</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>name='plot'</em>, <em>xerr=None</em>, <em>yerr=None</em>, <em>linecolor='black'</em>, <em>linewidth=0.5</em>, <em>linestyle=None</em>, <em>legend=True</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_line_yy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_line_yy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_math_jax">
+<code class="descname">add_math_jax</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_math_jax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_math_jax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_reg_line">
+<code class="descname">add_reg_line</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>regtype='lin'</em>, <em>name='reg'</em>, <em>xerr=None</em>, <em>yerr=None</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_reg_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_reg_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_subplot">
+<code class="descname">add_subplot</code><span class="sig-paren">(</span><em>subp=121</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_subplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> adds a grid in which you can make subplots.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> follows Matlab&#8217;s lead and allows you to plot
+several axes on one plot. The newly created axes is saved as
+<code class="docutils literal"><span class="pre">pyg2d.ax2</span></code> - this should be expanded for more axes later.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Expand subplotting to be able to use more than two axes total.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>subp</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; If kwarg <code class="docutils literal"><span class="pre">subp</span></code> is not defined, the
+default is to add a second plot in a 1x2 array.  When <code class="docutils literal"><span class="pre">subp</span></code> is
+defined, it will follow that system (i.e. <code class="docutils literal"><span class="pre">subp=234</span></code> means you
+have two rows and three columns and you are plotting in the 4th
+postition <code class="docutils literal"><span class="pre">(2,1)</span></code>).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_text">
+<code class="descname">add_text</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>string=None</em>, <em>ha='center'</em>, <em>va='center'</em>, <em>color='#746C66'</em>, <em>rotation=0</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_vline">
+<code class="descname">add_vline</code><span class="sig-paren">(</span><em>x</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>ls='solid'</em>, <em>lw=1.5</em>, <em>color='black'</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_vline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_vline" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line from either the bottom axis
+to the top axis if <code class="docutils literal"><span class="pre">ymin</span></code> and <code class="docutils literal"><span class="pre">ymax</span></code> are not provided, otherwise
+it is drawn from <code class="docutils literal"><span class="pre">ymin</span></code> to <code class="docutils literal"><span class="pre">ymax</span></code> at <code class="docutils literal"><span class="pre">x</span></code>.  Be careful not to
+change from linear to log scale AFTER using this function, as</p>
+<div class="math">
+\[\log\left(0\right)=-\infty\]</div>
+<p>and this means the line will extend past the extents of the latex page.</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The abscissa coordinate of the line.</li>
+<li><strong>ymin</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The lower extent of the line.</li>
+<li><strong>ymax</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The upper extent of the line.</li>
+<li><strong>ls</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The style of the line, i.e. &#8216;-&#8216;, &#8216;&#8211;&#8217;, &#8216;:&#8217;, etc.</li>
+<li><strong>lw</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The width of the line in pt.</li>
+<li><strong>color</strong> (<a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The color of the line.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; The axes object the line should be added to, if not
+current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_vmeasure">
+<code class="descname">add_vmeasure</code><span class="sig-paren">(</span><em>x1</em>, <em>y1</em>, <em>y2</em>, <em>string=None</em>, <em>place=None</em>, <em>offset=0.01</em>, <em>axes=None</em>, <em>units=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_vmeasure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_vmeasure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_xx">
+<code class="descname">add_xx</code><span class="sig-paren">(</span><em>calfunc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_xx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_xx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.add_yy">
+<code class="descname">add_yy</code><span class="sig-paren">(</span><em>calfunc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_yy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_yy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.change_style">
+<code class="descname">change_style</code><span class="sig-paren">(</span><em>rcparamsarray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.change_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.change_style" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.det_height">
+<code class="descname">det_height</code><span class="sig-paren">(</span><em>ratio='golden'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.det_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.det_height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.export">
+<code class="descname">export</code><span class="sig-paren">(</span><em>filename, sizes=['1'], formats=['pgf'], customsize=None, legloc=None, tight=True, ratio='golden', width=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.export" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.export_fmt">
+<code class="descname">export_fmt</code><span class="sig-paren">(</span><em>filename</em>, <em>size</em>, <em>sizeofsizes</em>, <em>format</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.export_fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.export_fmt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.fill_between">
+<code class="descname">fill_between</code><span class="sig-paren">(</span><em>x</em>, <em>y1</em>, <em>y2</em>, <em>fc='red'</em>, <em>name='plot'</em>, <em>ec='None'</em>, <em>leg=True</em>, <em>axes=None</em>, <em>alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fill_between"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fill_between" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.fill_betweenx">
+<code class="descname">fill_betweenx</code><span class="sig-paren">(</span><em>x1</em>, <em>x2</em>, <em>y</em>, <em>fc='red'</em>, <em>name='plot'</em>, <em>ec='None'</em>, <em>leg=True</em>, <em>axes=None</em>, <em>alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fill_betweenx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fill_betweenx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.fill_under_curve">
+<code class="descname">fill_under_curve</code><span class="sig-paren">(</span><em>curve</em>, <em>scale=0.0</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fill_under_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fill_under_curve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.leg_col_full_page">
+<code class="descname">leg_col_full_page</code><em class="property"> = 4</em><a class="headerlink" href="#pyg.twod.pyg2d.leg_col_full_page" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.leg_col_one_col">
+<code class="descname">leg_col_one_col</code><em class="property"> = 2</em><a class="headerlink" href="#pyg.twod.pyg2d.leg_col_one_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.leg_col_two_col">
+<code class="descname">leg_col_two_col</code><em class="property"> = 3</em><a class="headerlink" href="#pyg.twod.pyg2d.leg_col_two_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.legend">
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> shows the legend on the plot.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> toggles the legend showing on.  This is done by getting
+the included objects and titles from the <code class="docutils literal"><span class="pre">matplotlib</span></code> axis item, and
+then checking to see if there is the word &#8216;connector&#8217; in that title. If
+there is that word, then the entry is discarded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>loc</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The location of the legend in counter-clockwise
+notation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.lines_off">
+<code class="descname">lines_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.lines_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.lines_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_off</span></code> turns off the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.lines_on">
+<code class="descname">lines_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.lines_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.lines_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_on</span></code> turns on the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.linestyle">
+<code class="descname">linestyle</code><em class="property"> = {0: '-', 1: '--', 2: '-.', 3: ':'}</em><a class="headerlink" href="#pyg.twod.pyg2d.linestyle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.log_log">
+<code class="descname">log_log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.log_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.log_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.long_name">
+<code class="descname">long_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.long_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.long_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.marker">
+<code class="descname">marker</code><em class="property"> = {0: '+', 1: '.', 2: '1', 3: '1', 4: '2', 5: '3', 6: '4'}</em><a class="headerlink" href="#pyg.twod.pyg2d.marker" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.markers_off">
+<code class="descname">markers_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.markers_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.markers_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_off</span></code> turns off the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.markers_on">
+<code class="descname">markers_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.markers_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.markers_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_on</span></code> turns on the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.remove_font_sizes">
+<code class="descname">remove_font_sizes</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.remove_font_sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.remove_font_sizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.semi_log_x">
+<code class="descname">semi_log_x</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.semi_log_y">
+<code class="descname">semi_log_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.set_size">
+<code class="descname">set_size</code><span class="sig-paren">(</span><em>size</em>, <em>sizeofsizes</em>, <em>customsize=None</em>, <em>legloc=None</em>, <em>tight=True</em>, <em>ratio='golden'</em>, <em>width=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.set_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.sizestring">
+<code class="descname">sizestring</code><em class="property"> = {'1': 'onecolumn', 'fp': 'fullpage', 'none': '', '2': 'twocolumn', 'cs': 'customsize'}</em><a class="headerlink" href="#pyg.twod.pyg2d.sizestring" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.title">
+<code class="descname">title</code><span class="sig-paren">(</span><em>title</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.title</span></code> adds a title to the plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>title</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; the title to be added to the plot. The title can take
+LaTeX arguments.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.update_yy">
+<code class="descname">update_yy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.update_yy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.update_yy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.xlabel">
+<code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.xlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The label added to the x-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as &#8216;Label ($variable$) [$unit$]&#8217;.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.xlim">
+<code class="descname">xlim</code><span class="sig-paren">(</span><em>minx</em>, <em>maxx</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.xlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.xlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlim</span></code> limits the view of the x-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>minx</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The minimum value of x that will be shown.</li>
+<li><strong>maxx</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The maximum value of x that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.xticks">
+<code class="descname">xticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.xticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.xticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> will move the ticks on the abscissa to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The values where the new tick labels will be placed
+on the x-axis.</li>
+<li><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.ylabel">
+<code class="descname">ylabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.ylabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.ylabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).  The label can take LaTeX
+arguments and the ah style guide asks for labels given as &#8216;Label
+($variable$) [$unit$]&#8217;.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The label added to the y-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as &#8216;Label ($variable$) [$unit$]&#8217;.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.ylim">
+<code class="descname">ylim</code><span class="sig-paren">(</span><em>miny</em>, <em>maxy</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.ylim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.ylim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>miny</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The minimum value of y that will be shown.</li>
+<li><strong>maxy</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The maximum value of y that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the y-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.yticks">
+<code class="descname">yticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.yticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.yticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> will move the ticks on the ordinate axis to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The values where the new tick labels will be placed
+on the y-axis.</li>
+<li><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#list" title="(in Python v2.7)"><em>list</em></a>) &#8211; The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) &#8211; An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyg.svg" alt="Logo"/>
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pyg.threed.html" title="previous chapter">pyg.threed module</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pyg.twod.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Alex Hagen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/pyg.twod.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
