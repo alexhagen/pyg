@@ -6,22 +6,7 @@
 .. include:: README.rst
 
 
-Class Documentation
--------------------
-
-pyg.twod
-~~~~~~~~
-
-.. automodule:: twod
-  :members:
-  :show-inheritance:
-
-pyg.threed
-~~~~~~~~~~
-
-.. automodule:: threed
-  :members:
-  :show-inheritance:
+.. include:: pyg.rst
 
 Indices and tables
 ==================

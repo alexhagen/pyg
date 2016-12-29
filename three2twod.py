@@ -35,6 +35,11 @@ class ann_im(twod.pyg2d):
         super(ann_im, self).add_data_pointer(x, point=y, string=string,
                                              place=place)
 
+    def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
+        x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
+        x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
+        super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+
     def add_legend_entry(self, color=None, alpha=1.0, name=''):
         patch = self.ax.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                facecolor=color, alpha=alpha, label=name))

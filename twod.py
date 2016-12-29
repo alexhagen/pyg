@@ -447,15 +447,15 @@ class pyg2d(object):
         matplotlib.rcParams.update(rcparamsarray)
 
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
-                  ha='center', va='center', arrowprops=None):
+                  alpha=1.0, ha='center', va='center', arrowprops=None):
         if arrowprops is None:
-            arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc)
+            arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc, alpha=alpha)
         if axes is None:
             axes = self.ax
         axes.annotate(string,
                       xy=(x2, y2),
                       xytext=(x1, y1),
-                      color=fc,
+                      color=fc, alpha=alpha,
                       horizontalalignment=ha,
                       verticalalignment=va,
                       arrowprops=arrowprops)
@@ -896,7 +896,7 @@ class pyg2d(object):
             #        borderaxespad=0.);
         elif size is '2':
             self.det_height(ratio=ratio)
-            self.height = self.height / 2.0
+            # self.height = self.height / 2.0
             self.fig.set_size_inches(self.width, self.height)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
