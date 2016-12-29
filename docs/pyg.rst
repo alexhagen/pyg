@@ -1,6 +1,11 @@
 pyg package
 ===========
 
+.. automodule:: pyg
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -17,10 +22,3 @@ Submodules
    pyg.threed
    pyg.twod
 
-Module contents
----------------
-
-.. automodule:: pyg
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,6 +1,11 @@
 pyg.colors package
 ==================
 
+.. automodule:: pyg.colors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -8,10 +13,3 @@ Submodules
 
    pyg.colors.pu
 
-Module contents
----------------
-
-.. automodule:: pyg.colors
-    :members:
-    :undoc-members:
-    :show-inheritance:
