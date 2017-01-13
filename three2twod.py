@@ -17,14 +17,14 @@ class ann_im(twod.pyg2d):
         mat = np.array(self.proj_matrix).T
         pcam = np.matmul(arr, mat)
         pcam /= pcam[2]
-        print pcam
+        # print pcam
         x = pcam[0]
         y = pcam[1]
         return x, y
 
     def add_data_pointer(self, x, y, z, string='', place='down-right'):
         x,y = self.convert_3d_to_2d(x, y, z)
-        print x,y
+        # print x,y
         if isinstance(place, tuple):
             place = (x + place[0], y - place[1])
         elif 'up' in place:

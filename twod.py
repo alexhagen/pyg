@@ -13,6 +13,12 @@ import platform
 import mpld3
 
 plt.close("all")
+preamble = '\usepackage{nicefrac}\n' + \
+    '\usepackage{xcolor}\n' + \
+    '\definecolor{grey60}{HTML}{746C66}\n' + \
+    '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
+    '\\newcommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
+    '{\mathrm{#1}}}}\n'
 
 
 # make the line graphing class
@@ -124,7 +130,7 @@ class pyg2d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": "\usepackage{nicefrac}"
+                "pgf.preamble": preamble
             }
         elif env is 'gui':
             rcparamsarray = {
@@ -160,7 +166,7 @@ class pyg2d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": "\usepackage{nicefrac}"
+                "pgf.preamble": preamble
             }
         matplotlib.rcParams.update(rcparamsarray)
 
@@ -468,7 +474,7 @@ class pyg2d(object):
                   rotation=rotation)
 
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
-                     axes=None, units=''):
+                     axes=None, units='', log=False):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -484,7 +490,10 @@ class pyg2d(object):
         self.add_hline(y2, x1 - offset * total_width,
                        x1 - offset * total_width - length * total_width,
                        lw=lw, axes=axes)
-        y_mid = (y2 + y1) / 2.0
+        if log:
+            y_mid = np.power(10., (np.log10(y2) + np.log10(y1)) / 2.)
+        else:
+            y_mid = (y2 + y1) / 2.0
         x_mid = (x1 - offset * total_width +
                  x1 - offset * total_width - length * total_width) / 2.0
         self.add_arrow(x_mid, x_mid, y_mid, y1, string=string)
