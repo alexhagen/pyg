@@ -8,9 +8,15 @@ from matplotlib.patches import Ellipse, Polygon, Circle
 from colour import Color
 import numpy as np
 matplotlib.use('pgf')
+# matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 import platform
 import mpld3
+from mpld3 import plugins
+import plotly.plotly as py
+import plotly.tools as tls
+import plotly.offline as offline
+from plotly.offline.offline import _plot_html
 
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
@@ -90,6 +96,8 @@ class pyg2d(object):
         self.bars = {}
         self.regs = {}
         self.reg_string = {}
+        self.pdf_filename = None
+        self.html_filename = None
         if colors is 'purdue' or colors is 'pu':
             import pyg.colors.pu as color
             self.colors = color.pu_colors
@@ -97,7 +105,7 @@ class pyg2d(object):
             import pyg.colors.pu as color
             self.colors = color.pu_colors
         if env is 'plot':
-            rcparamsarray = {
+            self.rcparamsarray = {
                 "pgf.texsystem": "lualatex",
                 "pgf.rcfonts": False,
                 "font.family": "sans",
@@ -133,7 +141,7 @@ class pyg2d(object):
                 "pgf.preamble": preamble
             }
         elif env is 'gui':
-            rcparamsarray = {
+            self.rcparamsarray = {
                 "pgf.texsystem": "lualatex",
                 "pgf.rcfonts": False,
                 "font.family": "sans",
@@ -168,7 +176,7 @@ class pyg2d(object):
                 "path.simplify": True,
                 "pgf.preamble": preamble
             }
-        matplotlib.rcParams.update(rcparamsarray)
+        matplotlib.rcParams.update(self.rcparamsarray)
 
     def xlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -659,8 +667,8 @@ class pyg2d(object):
             self.fill_between(curve.x, scale * np.ones_like(curve.y), curve.y,
                               **kwargs)
 
-    def fill_between(self, x, y1, y2, fc='red', name='plot', ec='None', leg=True,
-                     axes=None, alpha=0.5):
+    def fill_between(self, x, y1, y2=None, fc='red', name='plot', ec='None', leg=True,
+                     axes=None, alpha=0.5, xmin=None, xmax=None, log=False):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
@@ -723,8 +731,7 @@ class pyg2d(object):
         if xerr is None and yerr is None:
             line = axes.plot(x, y, label=name, color=linecolor,
                              marker=self.marker[self.plotnum % 7],
-                             ls=_ls, lw=linewidth, solid_capstyle='butt',
-                             clip_on=True)
+                             ls=_ls, lw=linewidth, solid_capstyle='butt')
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
         else:
@@ -938,13 +945,11 @@ class pyg2d(object):
             add = '.pgf'
         elif format is 'pdf':
             add = '.pdf'
-        elif format is 'html':
-            add = '.html'
         elif format is 'svg':
             # save as pdf, then pdf2svg
             self.fig.savefig(filename + self.sizestring[size] + '.pdf',
                         bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True)
+                        transparent=True, dpi=1200)
             os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
                       filename + self.sizestring[size] + '.svg')
             os.remove(filename + self.sizestring[size] + '.pdf')
@@ -953,20 +958,51 @@ class pyg2d(object):
         if (format is not 'svg') and (format is not 'html'):
             self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True)
+                        transparent=True, dpi=1200)
         if format is 'html':
             add = '.html'
-            mpld3.save_html(self.fig, filename + add)
-            self.add_math_jax(filename + add)
+            plotly_fig = tls.mpl_to_plotly(self.fig)
+            plot_file = offline.plot(plotly_fig)
+            js_string = '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"></script>'
+            self.html_filename = filename + add
+            os.system('cp temp-plot.html ' + filename + add)
+            scriptstring = \
+                "MathJax.Hub.Config({\n" + \
+                "  tex2jax: {\n" + \
+                r"    inlineMath: [ ['$','$'], ['\\(','\\)'] ]," + "\n" + \
+                "  }\n" + \
+                "});\n"
+            from bs4 import BeautifulSoup as bs
+            with open(filename + add, 'r') as f:
+                soup = bs(f.read(), "lxml")
+                title = soup.find('meta')
+                script = soup.new_tag('script')
+                script2 = soup.new_tag('script')
+                script['type'] = "text/javascript"
+                script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
+                script2['type'] = "text/x-mathjax-config"
+                script2.append(scriptstring)
+                # script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
+                title.insert_after(script2)
+                script2.insert_after(script)
+            with open(filename + '2' + add, 'wb') as f:
+                f.write(soup.prettify('utf-8'))
+            os.system("cp " + filename + "2" + add + " " + filename + add)
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 
-    def show(self):
-        if self.pdf_filename:
-            if platform.system() == "Darwin":
-                os.system("open -a Preview " + self.pdf_filename)
-            if platform.system() == "Linux":
-                os.system("evince " + self.pdf_filename + " &")
+    def show(self, interactive=False):
+        if interactive:
+            plt.ion()
+            plt.show(block=True)
+        else:
+            if self.pdf_filename is not None:
+                if platform.system() == "Darwin":
+                    os.system("open -a Preview " + self.pdf_filename)
+                if platform.system() == "Linux":
+                    os.system("evince " + self.pdf_filename + " &")
+            if self.html_filename is not None:
+                os.system("google-chrome " + self.html_filename + " &")
 
     def export(self, filename, sizes=['1'], formats=['pgf'],
                customsize=None, legloc=None, tight=True, ratio="golden",
@@ -987,13 +1023,16 @@ class pyg2d(object):
         #    self.lines[key].set_ydata(ydata);
         #    print self.lines[key].get_xdata();
         #    print self.lines[key].get_ydata();
+        # plt.switch_backend('pgf')
         for size in sizes:
             for format in formats:
+                if format == 'html':
+                    tight = False
                 self.set_size(size, len(sizes), customsize=customsize,
                               legloc=legloc, tight=tight, ratio=ratio,
                               width=width)
                 self.export_fmt(filename, size, len(sizes), format)
-                if format is 'pdf':
+                if format == 'pdf':
                     self.pdf_filename = filename + '.pdf'
 
     def close(self):
