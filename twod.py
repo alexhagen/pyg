@@ -11,12 +11,8 @@ matplotlib.use('pgf')
 # matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 import platform
-import mpld3
-from mpld3 import plugins
-import plotly.plotly as py
-import plotly.tools as tls
-import plotly.offline as offline
-from plotly.offline.offline import _plot_html
+import shutil
+import time
 
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
@@ -958,9 +954,15 @@ class pyg2d(object):
         if (format is not 'svg') and (format is not 'html'):
             self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True, dpi=1200)
+                        transparent=True)
         if format is 'html':
             add = '.html'
+            import mpld3
+            from mpld3 import plugins
+            import plotly.plotly as py
+            import plotly.tools as tls
+            import plotly.offline as offline
+            from plotly.offline.offline import _plot_html
             plotly_fig = tls.mpl_to_plotly(self.fig)
             plot_file = offline.plot(plotly_fig)
             js_string = '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"></script>'
@@ -990,6 +992,7 @@ class pyg2d(object):
             os.system("cp " + filename + "2" + add + " " + filename + add)
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
+            self.pgf_filename = filename + self.sizestring[size] + add
 
     def show(self, interactive=False):
         if interactive:
@@ -1034,6 +1037,25 @@ class pyg2d(object):
                 self.export_fmt(filename, size, len(sizes), format)
                 if format == 'pdf':
                     self.pdf_filename = filename + '.pdf'
+                elif format == 'pgf':
+                    self.pgf_filename = filename + '.pgf'
+                elif format == 'png':
+                    self.png_filename = filename + '.png'
 
     def close(self):
         plt.close(self.fig)
+
+    def add_metadata(self, filename):
+        os.system("setfattr -n user.creation_script -v \'%s\' %s" % (__file__, filename))
+        os.system("setfattr -n user.creation_date -v \'%s\' %s" % (time.strftime("%d/%m/%Y"), filename))
+
+    def publish_to(self, directory):
+        if hasattr(self, 'pgf_filename'):
+            self.add_metadata(self.pgf_filename)
+            shutil.copy(self.pgf_filename, directory)
+        if hasattr(self, 'pdf_filename'):
+            self.add_metadata(self.pdf_filename)
+            shutil.copy(self.pdf_filename, directory)
+        if hasattr(self, 'png_filename'):
+            self.add_metadata(self.png_filename)
+            shutil.copy(self.png_filename, directory)
