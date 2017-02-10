@@ -19,7 +19,7 @@ preamble = '\usepackage{nicefrac}\n' + \
     '\usepackage{xcolor}\n' + \
     '\definecolor{grey60}{HTML}{746C66}\n' + \
     '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
-    '\\newcommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
+    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
     '{\mathrm{#1}}}}\n'
 
 

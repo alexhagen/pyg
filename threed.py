@@ -13,8 +13,15 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.colors import LinearSegmentedColormap
 import platform
+from matplotlib import cm
 
 plt.close("all")
+preamble = '\usepackage{nicefrac}\n' + \
+    '\usepackage{xcolor}\n' + \
+    '\definecolor{grey60}{HTML}{746C66}\n' + \
+    '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
+    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
+    '{\mathrm{#1}}}}\n'
 
 
 # make the line graphing class
@@ -57,7 +64,8 @@ class pyg3d(object):
 
     def __init__(self, env='plot', colors='purdue'):
         self.fig = plt.figure()
-        self.ax = self.fig.add_subplot(111, projection='3d')
+        matplotlib.rcParams['_internal.classic_mode'] = True
+        self.ax = self.fig.gca(projection='3d')
         self.ax_subp = []
         self.leg = False
         self.ax2 = None
@@ -113,7 +121,8 @@ class pyg3d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": "\usepackage{nicefrac}"
+                "_internal.classic_mode": True,
+                "pgf.preamble": preamble
             }
         elif env is 'gui':
             rcparamsarray = {
@@ -149,7 +158,8 @@ class pyg3d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": "\usepackage{nicefrac}"
+                "_internal.classic_mode": True,
+                "pgf.preamble": preamble
             }
         matplotlib.rcParams.update(rcparamsarray)
         self.annotations = []
@@ -172,9 +182,27 @@ class pyg3d(object):
                          [0,0,a,b],
                          [0,0,-1.0e-9,zback]])
 
-    def view(self, phi, theta, perspective=False):
+    def upright_orthogonal_proj(self, zfront, zback):
+        a = (zfront+zback)/(zfront-zback)
+        b = -2*(zfront*zback)/(zfront-zback)
+        return np.array([[1,0,0,0],
+                         [0,1,0,0],
+                         [0,0,a,b],
+                         [0,0,1.0e-9,zback]])
+
+    def surf(self, x, y, z):
+        X, Y = np.meshgrid(x, y)
+        surf = self.ax.plot_surface(X, Y, z, cmap=cm.coolwarm,
+                                    linewidth=0, antialiased=False,
+                                    rstride=1, cstride=1)
+        return self
+
+    def view(self, phi, theta, perspective=False, upright=False):
         if not perspective:
-            proj3d.persp_transformation = self.orthogonal_proj
+            if upright:
+                proj3d.persp_transformation = self.upright_orthogonal_proj
+            else:
+                proj3d.persp_transformation = self.orthogonal_proj
         self.ax.view_init(phi, theta)
         return self
 
@@ -683,7 +711,7 @@ class pyg3d(object):
             for format in formats:
                 self.set_size(size, len(sizes), customsize=customsize,
                               legloc=legloc, tight=tight, ratio=ratio)
-                self.aspect_equal()
+                #self.aspect_equal()
                 self.export_fmt(filename, size, len(sizes), format)
                 if format is 'pdf':
                     self.pdf_filename = filename + '.pdf'
