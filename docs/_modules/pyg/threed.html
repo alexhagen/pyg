@@ -54,8 +54,15 @@
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">proj3d</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
 <span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">preamble</span> <span class="o">=</span> <span class="s1">&#39;\usepackage{nicefrac}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+    <span class="s1">&#39;\usepackage{xcolor}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+    <span class="s1">&#39;\definecolor{grey60}{HTML}{746C66}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+    <span class="s1">&#39;\definecolor{grey40}{HTML}{A7A9AC}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+    <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor{grey60}&#39;</span> <span class="o">+</span> \
+    <span class="s1">&#39;{\mathrm{#1}}}}</span><span class="se">\n</span><span class="s1">&#39;</span>
 
 
 <span class="c1"># make the line graphing class</span>
@@ -98,7 +105,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;purdue&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;_internal.classic_mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="bp">None</span>
@@ -154,7 +162,8 @@
                 <span class="s2">&quot;grid.alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># transparency, between 0.0 and 1.0</span>
                 <span class="s2">&quot;savefig.transparent&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s2">&quot;path.simplify&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="s2">&quot;\usepackage{nicefrac}&quot;</span>
+                <span class="s2">&quot;_internal.classic_mode&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
             <span class="p">}</span>
         <span class="k">elif</span> <span class="n">env</span> <span class="ow">is</span> <span class="s1">&#39;gui&#39;</span><span class="p">:</span>
             <span class="n">rcparamsarray</span> <span class="o">=</span> <span class="p">{</span>
@@ -190,7 +199,8 @@
                 <span class="s2">&quot;grid.alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># transparency, between 0.0 and 1.0</span>
                 <span class="s2">&quot;savefig.transparent&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s2">&quot;path.simplify&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="s2">&quot;\usepackage{nicefrac}&quot;</span>
+                <span class="s2">&quot;_internal.classic_mode&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
             <span class="p">}</span>
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rcparamsarray</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">[]</span>
@@ -213,9 +223,27 @@
                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span>
                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0e-9</span><span class="p">,</span><span class="n">zback</span><span class="p">]])</span></div>
 
-<div class="viewcode-block" id="pyg3d.view"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.view">[docs]</a>    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">perspective</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="pyg3d.upright_orthogonal_proj"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.upright_orthogonal_proj">[docs]</a>    <span class="k">def</span> <span class="nf">upright_orthogonal_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zfront</span><span class="p">,</span> <span class="n">zback</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">zfront</span><span class="o">+</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">zfront</span><span class="o">*</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0e-9</span><span class="p">,</span><span class="n">zback</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="pyg3d.surf"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.surf">[docs]</a>    <span class="k">def</span> <span class="nf">surf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span>
+                                    <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                    <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.view"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.view">[docs]</a>    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">perspective</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">perspective</span><span class="p">:</span>
-            <span class="n">proj3d</span><span class="o">.</span><span class="n">persp_transformation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orthogonal_proj</span>
+            <span class="k">if</span> <span class="n">upright</span><span class="p">:</span>
+                <span class="n">proj3d</span><span class="o">.</span><span class="n">persp_transformation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upright_orthogonal_proj</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">proj3d</span><span class="o">.</span><span class="n">persp_transformation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orthogonal_proj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -724,7 +752,7 @@
             <span class="k">for</span> <span class="n">format</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="n">customsize</span><span class="o">=</span><span class="n">customsize</span><span class="p">,</span>
                               <span class="n">legloc</span><span class="o">=</span><span class="n">legloc</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="n">tight</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">aspect_equal</span><span class="p">()</span>
+                <span class="c1">#self.aspect_equal()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">export_fmt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="n">format</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">format</span> <span class="ow">is</span> <span class="s1">&#39;pdf&#39;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span></div>
