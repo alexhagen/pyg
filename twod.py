@@ -14,6 +14,9 @@ import platform
 import shutil
 import time
 
+context = 'writeup'
+exported_files = {}
+
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
     '\usepackage{xcolor}\n' + \
@@ -340,7 +343,8 @@ class pyg2d(object):
             plt.sca(axes)
         else:
             plt.sca(self.ax)
-        self.ax.yticks(ticks, labels)
+        self.ax.set_yticks(ticks)
+        self.ax.set_yticklabels(labels)
 
     def markers_on(self):
         """ ``pyg2d.markers_on`` turns on the data markers for all data sets.
@@ -891,9 +895,13 @@ class pyg2d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
+
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
                  tight=True, ratio="golden", width=None):
-        widths = {"1": 3.25, "2": 6.25, "fp": 10.0, "cs": 0.0}
+        if context == "writeup":
+            widths = {"1": 3.25, "2": 6.25, "fp": 10.0, "cs": 0.0}
+        elif context == "thesis":
+            widths = {"1": 3.0, "2": 6.0, "fp": 9.0, "cs": 0.0}
         if width is None:
             self.width = widths[size]
         elif isinstance(width, basestring):
@@ -1007,26 +1015,14 @@ class pyg2d(object):
             if self.html_filename is not None:
                 os.system("google-chrome " + self.html_filename + " &")
 
-    def export(self, filename, sizes=['1'], formats=['pgf'],
+    def export(self, filename, sizes=None, formats=['pgf'],
                customsize=None, legloc=None, tight=True, ratio="golden",
                width=None):
-        # writing a comment here to make the following commented code not
-        # docstring
-        # remove all points outside the window
-        # for key in self.lines:
-        #    (xdata,ydata) = self.lines[key].get_data();
-        #    (xmin,xmax) = self.ax.get_xlim();
-        #    (ymin,ymax) = self.ax.get_ylim();
-        #    for i in range(len(xdata)):
-        #        if (xdata[i] < xmin) or (xdata[i] > xmax) \
-        #            or (ydata[i] < ymin) or (ydata[i] > ymax):
-        #            xdata[i] = np.nan;
-        #            ydata[i] = np.nan;
-        #    self.lines[key].set_xdata(xdata);
-        #    self.lines[key].set_ydata(ydata);
-        #    print self.lines[key].get_xdata();
-        #    print self.lines[key].get_ydata();
-        # plt.switch_backend('pgf')
+        if sizes is None:
+            if context == "writeup":
+                sizes = ['1']
+            elif context == "thesis":
+                sizes = ['2']
         for size in sizes:
             for format in formats:
                 if format == 'html':
@@ -1050,12 +1046,24 @@ class pyg2d(object):
         os.system("setfattr -n user.creation_date -v \'%s\' %s" % (time.strftime("%d/%m/%Y"), filename))
 
     def publish_to(self, directory):
+        if directory not in exported_files:
+            exported_files[directory] = []
         if hasattr(self, 'pgf_filename'):
             self.add_metadata(self.pgf_filename)
             shutil.copy(self.pgf_filename, directory)
+            exported_files[directory].extend([os.path.basename(self.pgf_filename)])
         if hasattr(self, 'pdf_filename'):
             self.add_metadata(self.pdf_filename)
             shutil.copy(self.pdf_filename, directory)
+            exported_files[directory].extend([os.path.basename(self.pdf_filename)])
         if hasattr(self, 'png_filename'):
             self.add_metadata(self.png_filename)
             shutil.copy(self.png_filename, directory)
+            exported_files[directory].extend([os.path.basename(self.png_filename)])
+
+def commit_publications(message='automated commit'):
+    for key, val in exported_files.iteritems():
+        os.chdir(key)
+        for filename in val:
+            os.system('git add %s' % filename)
+        os.system('git commit -am "%s"' % message)

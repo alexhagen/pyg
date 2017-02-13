@@ -46,11 +46,11 @@ desat.luminance = 0.1
 brand_cmap = list(desat.range_to(c(pu_colors["newgold"]), 256))
 desat = c(pu_colors["red"])
 desat.saturation = 0.0
-desat.luminance = 0.1
+desat.luminance = 0.75
 flame_cmap = list(desat.range_to(c(pu_colors["red"]), 256))
 desat = c(pu_colors["teal"])
 desat.saturation = 0.0
-desat.luminance = 0.1
+desat.luminance = 0.75
 teal_cmap = list(desat.range_to(c(pu_colors["teal"]), 256))
 
 start_c = c(pu_colors["darkgray"])
