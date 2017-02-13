@@ -55,6 +55,9 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
+<span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;writeup&#39;</span>
+<span class="n">exported_files</span> <span class="o">=</span> <span class="p">{}</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
 <span class="n">preamble</span> <span class="o">=</span> <span class="s1">&#39;\usepackage{nicefrac}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
     <span class="s1">&#39;\usepackage{xcolor}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
@@ -381,7 +384,8 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg2d.markers_on"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.markers_on">[docs]</a>    <span class="k">def</span> <span class="nf">markers_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; ``pyg2d.markers_on`` turns on the data markers for all data sets.</span>
@@ -932,9 +936,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">1</span></div>
+
 <div class="viewcode-block" id="pyg2d.set_size"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sizeofsizes</span><span class="p">,</span> <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;thesis&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">size</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
@@ -1048,26 +1056,14 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;google-chrome &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_filename</span> <span class="o">+</span> <span class="s2">&quot; &amp;&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyg2d.export"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span> <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pgf&#39;</span><span class="p">],</span>
+<div class="viewcode-block" id="pyg2d.export"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pgf&#39;</span><span class="p">],</span>
                <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span>
                <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="c1"># writing a comment here to make the following commented code not</span>
-        <span class="c1"># docstring</span>
-        <span class="c1"># remove all points outside the window</span>
-        <span class="c1"># for key in self.lines:</span>
-        <span class="c1">#    (xdata,ydata) = self.lines[key].get_data();</span>
-        <span class="c1">#    (xmin,xmax) = self.ax.get_xlim();</span>
-        <span class="c1">#    (ymin,ymax) = self.ax.get_ylim();</span>
-        <span class="c1">#    for i in range(len(xdata)):</span>
-        <span class="c1">#        if (xdata[i] &lt; xmin) or (xdata[i] &gt; xmax) \</span>
-        <span class="c1">#            or (ydata[i] &lt; ymin) or (ydata[i] &gt; ymax):</span>
-        <span class="c1">#            xdata[i] = np.nan;</span>
-        <span class="c1">#            ydata[i] = np.nan;</span>
-        <span class="c1">#    self.lines[key].set_xdata(xdata);</span>
-        <span class="c1">#    self.lines[key].set_ydata(ydata);</span>
-        <span class="c1">#    print self.lines[key].get_xdata();</span>
-        <span class="c1">#    print self.lines[key].get_ydata();</span>
-        <span class="c1"># plt.switch_backend(&#39;pgf&#39;)</span>
+        <span class="k">if</span> <span class="n">sizes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
+                <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;thesis&quot;</span><span class="p">:</span>
+                <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">format</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;html&#39;</span><span class="p">:</span>
@@ -1091,15 +1087,27 @@
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;setfattr -n user.creation_date -v </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">),</span> <span class="n">filename</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="pyg2d.publish_to"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.publish_to">[docs]</a>    <span class="k">def</span> <span class="nf">publish_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">directory</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exported_files</span><span class="p">:</span>
+            <span class="n">exported_files</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;pgf_filename&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">exported_files</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">)])</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;pdf_filename&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">)</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">exported_files</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">)])</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;png_filename&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">png_filename</span><span class="p">)</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">png_filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span></div></div>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">png_filename</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">exported_files</span><span class="p">[</span><span class="n">directory</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">png_filename</span><span class="p">)])</span></div></div>
+
+<div class="viewcode-block" id="commit_publications"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.commit_publications">[docs]</a><span class="k">def</span> <span class="nf">commit_publications</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;automated commit&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">exported_files</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;git add </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;git commit -am &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
