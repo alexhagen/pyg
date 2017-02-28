@@ -312,6 +312,40 @@ current.</li>
 <code class="descname">fill_under_curve</code><span class="sig-paren">(</span><em>curve</em>, <em>scale=0.0</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fill_under_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fill_under_curve" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="pyg.twod.pyg2d.fit_lines_on">
+<code class="descname">fit_lines_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fit_lines_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fit_lines_on" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyg2d.fit_lines_on</span></code> turns on the connector lines for any</dt>
+<dd>regression fits that are plotted</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.pyg2d.fit_markers_off">
+<code class="descname">fit_markers_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.fit_markers_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.fit_markers_off" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyg2d.fit_markers_off</span></code> turns off the data markers for any</dt>
+<dd>fit lines that are plotted</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="pyg.twod.pyg2d.leg_col_full_page">
 <code class="descname">leg_col_full_page</code><em class="property"> = 4</em><a class="headerlink" href="#pyg.twod.pyg2d.leg_col_full_page" title="Permalink to this definition">¶</a></dt>
@@ -329,7 +363,7 @@ current.</li>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.legend">
-<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>exclude=None</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> shows the legend on the plot.</p>
 <p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> toggles the legend showing on.  This is done by getting
 the included objects and titles from the <code class="docutils literal"><span class="pre">matplotlib</span></code> axis item, and
@@ -339,10 +373,15 @@ there is that word, then the entry is discarded.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>loc</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The location of the legend in counter-clockwise
-notation.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>loc</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; The location of the legend in counter-clockwise
+notation.</li>
+<li><strong>exclude</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Partial key string of legend entries to exclude</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
 </tr>
 </tbody>
 </table>
