@@ -19,6 +19,7 @@ exported_files = {}
 
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
+    '\usepackage{gensymb}\n' + \
     '\usepackage{xcolor}\n' + \
     '\definecolor{grey60}{HTML}{746C66}\n' + \
     '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
@@ -282,7 +283,7 @@ class pyg2d(object):
             axes = self.ax
         axes.set_ylim([miny, maxy])
 
-    def legend(self, loc=1, axes=None):
+    def legend(self, loc=1, exclude=None, axes=None):
         """ ``pyg2d.legend`` shows the legend on the plot.
 
         ``pyg2d.legend`` toggles the legend showing on.  This is done by getting
@@ -292,6 +293,7 @@ class pyg2d(object):
 
         :param int loc: The location of the legend in counter-clockwise
             notation.
+        :param str exclude: Partial key string of legend entries to exclude
         :return: None
         """
         if axes is None:
@@ -301,7 +303,7 @@ class pyg2d(object):
         inc_objs = []
         inc_titles = []
         for i in range(0, len(legtitles)):
-            if 'connector' not in legtitles[i]:
+            if 'connector' not in legtitles[i] and exclude not in legtitles[i]:
                 inc_objs.append(legobjs[i])
                 inc_titles.append(legtitles[i])
         axes.legend(inc_objs, inc_titles, loc=loc)
@@ -362,6 +364,26 @@ class pyg2d(object):
         """
         for key in self.lines:
             self.lines[key].set_markersize(0)
+
+    def fit_markers_off(self):
+        """ ``pyg2d.fit_markers_off`` turns off the data markers for any
+            fit lines that are plotted
+
+        :return: None
+        """
+        for key in self.lines:
+            if "fit" in key:
+                self.lines[key].set_markersize(0)
+
+    def fit_lines_on(self):
+        """ ``pyg2d.fit_lines_on`` turns on the connector lines for any
+            regression fits that are plotted
+
+        :return: None
+        """
+        for key in self.lines:
+            if "fit" in key:
+                self.lines[key].set_linewidth(1.0)
 
     def lines_on(self):
         """ ``pyg2d.lines_on`` turns on the connector lines for all data sets.

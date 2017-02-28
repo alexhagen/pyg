@@ -11,9 +11,10 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d import proj3d
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 import platform
 from matplotlib import cm
+from pyg.colors import pu as color
 
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
@@ -82,10 +83,10 @@ class pyg3d(object):
         self.regs = {}
         self.reg_string = {}
         if colors is 'purdue' or colors is 'pu':
-            import pyg.colors.pu as color
+            from pyg.colors import pu as color
             self.colors = color.pu_colors
         else:
-            import pyg.colors.pu as color
+            from pyg.colors import pu as color
             self.colors = color.pu_colors
         if env is 'plot':
             rcparamsarray = {
@@ -190,11 +191,17 @@ class pyg3d(object):
                          [0,0,a,b],
                          [0,0,1.0e-9,zback]])
 
-    def surf(self, x, y, z):
+    def surf(self, x, y, z, cmap=color.brand_cmap, **kwargs):
         X, Y = np.meshgrid(x, y)
-        surf = self.ax.plot_surface(X, Y, z, cmap=cm.coolwarm,
+        m = np.ma.masked_where(np.isnan(z),z)
+        cmaplist = [c.rgb for c in cmap]
+        cmap = matplotlib.colors.ListedColormap(cmaplist,
+                                                name='brand_cmap')
+        surf = self.ax.plot_surface(X, Y, z, cmap=cmap,
                                     linewidth=0, antialiased=False,
-                                    rstride=1, cstride=1)
+                                    rstride=1, cstride=1,
+                                    vmin=np.nanmin(z), vmax=np.nanmax(z),
+                                    **kwargs)
         return self
 
     def view(self, phi, theta, perspective=False, upright=False):
@@ -621,7 +628,7 @@ class pyg3d(object):
         elif size is '2':
             self.width = 6.25
             self.det_height()
-            self.height = self.height / 2.0
+            # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
