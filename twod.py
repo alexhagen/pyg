@@ -60,10 +60,9 @@ class pyg2d(object):
     marker = {0: '+',
               1: '.',
               2: '1',
-              3: '1',
-              4: '2',
-              5: '3',
-              6: '4'}
+              3: '2',
+              4: '3',
+              5: '4'}
     linestyle = {0: '-',
                  1: '--',
                  2: '-.',
@@ -283,7 +282,7 @@ class pyg2d(object):
             axes = self.ax
         axes.set_ylim([miny, maxy])
 
-    def legend(self, loc=1, exclude=None, axes=None):
+    def legend(self, loc=1, exclude='saljfdaljdfaslkjfd', axes=None):
         """ ``pyg2d.legend`` shows the legend on the plot.
 
         ``pyg2d.legend`` toggles the legend showing on.  This is done by getting
@@ -752,7 +751,7 @@ class pyg2d(object):
             _ls = linestyle
         if xerr is None and yerr is None:
             line = axes.plot(x, y, label=name, color=linecolor,
-                             marker=self.marker[self.plotnum % 7],
+                             marker=self.marker[self.plotnum % 5],
                              ls=_ls, lw=linewidth, solid_capstyle='butt')
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
@@ -768,7 +767,7 @@ class pyg2d(object):
                                                         color=linecolor,
                                                         xerr=xerr,
                                                         yerr=yerr,
-                                                        marker=self.marker[self.plotnum % 7],
+                                                        marker=self.marker[self.plotnum % 5],
                                                         ls=_ls,
                                                         ecolor=ecolor,
                                                         lw=linewidth,

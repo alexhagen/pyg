@@ -81,6 +81,7 @@ class pyg3d(object):
         self.lines = {}
         self.bars = {}
         self.regs = {}
+        self.surfs = {}
         self.reg_string = {}
         if colors is 'purdue' or colors is 'pu':
             from pyg.colors import pu as color
@@ -191,18 +192,32 @@ class pyg3d(object):
                          [0,0,a,b],
                          [0,0,1.0e-9,zback]])
 
-    def surf(self, x, y, z, cmap=color.brand_cmap, **kwargs):
+    def surf(self, x, y, z, cmap=color.brand_cmap, addto=None, name='plot',
+             **kwargs):
+        if addto is None:
+            axes = self.ax
+        else:
+            axes = addto.ax
         X, Y = np.meshgrid(x, y)
         m = np.ma.masked_where(np.isnan(z),z)
         cmaplist = [c.rgb for c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
-        surf = self.ax.plot_surface(X, Y, z, cmap=cmap,
+        surf = axes.plot_surface(X, Y, z, cmap=cmap,
                                     linewidth=0, antialiased=False,
                                     rstride=1, cstride=1,
                                     vmin=np.nanmin(z), vmax=np.nanmax(z),
                                     **kwargs)
+        self.surfs[name] = surf
         return self
+
+    def legend(self):
+        surfs = []
+        labels = []
+        for key, val in self.surfs.iteritems():
+            labels.extend([key])
+            surfs.extend([val])
+        self.ax.legend(surfs, labels, numpoints=1)
 
     def view(self, phi, theta, perspective=False, upright=False):
         if not perspective:
