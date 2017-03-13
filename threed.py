@@ -192,7 +192,7 @@ class pyg3d(object):
                          [0,0,a,b],
                          [0,0,1.0e-9,zback]])
 
-    def surf(self, x, y, z, cmap=color.brand_cmap, addto=None, name='plot',
+    def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None, name='plot',
              **kwargs):
         if addto is None:
             axes = self.ax
@@ -203,11 +203,18 @@ class pyg3d(object):
         cmaplist = [c.rgb for c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
-        surf = axes.plot_surface(X, Y, z, cmap=cmap,
-                                    linewidth=0, antialiased=False,
-                                    rstride=1, cstride=1,
-                                    vmin=np.nanmin(z), vmax=np.nanmax(z),
-                                    **kwargs)
+        if c is None:
+            surf = axes.plot_surface(X, Y, z, cmap=cmap,
+                                        linewidth=0, antialiased=False,
+                                        rstride=1, cstride=1,
+                                        vmin=np.nanmin(z), vmax=np.nanmax(z),
+                                        **kwargs)
+        else:
+            surf = axes.plot_surface(X, Y, z, facecolors=cmap(c),
+                                        linewidth=0, antialiased=False,
+                                        rstride=1, cstride=1,
+                                        vmin=np.nanmin(z), vmax=np.nanmax(z),
+                                        **kwargs)
         self.surfs[name] = surf
         return self
 

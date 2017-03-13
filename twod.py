@@ -7,12 +7,21 @@ import os
 from matplotlib.patches import Ellipse, Polygon, Circle
 from colour import Color
 import numpy as np
-matplotlib.use('pgf')
-# matplotlib.use('Qt5Agg')
-import matplotlib.pyplot as plt
 import platform
 import shutil
 import time
+
+def run_from_ipython():
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False
+
+if not run_from_ipython():
+    matplotlib.use('pgf')
+
+import matplotlib.pyplot as plt
 
 context = 'writeup'
 exported_files = {}
@@ -1036,7 +1045,7 @@ class pyg2d(object):
             if self.html_filename is not None:
                 os.system("google-chrome " + self.html_filename + " &")
 
-    def export(self, filename, sizes=None, formats=['pgf'],
+    def export(self, filename, sizes=None, formats=['pdf'],
                customsize=None, legloc=None, tight=True, ratio="golden",
                width=None):
         if sizes is None:
