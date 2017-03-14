@@ -192,6 +192,36 @@ class pyg3d(object):
                          [0,0,a,b],
                          [0,0,1.0e-9,zback]])
 
+    def surf2d(self, x, y, z, c, cmap=color.brand_cmap, addto=None, name='plot',
+               **kwargs):
+        from matplotlib.collections import PolyCollection
+        if addto is None:
+            axes = self.ax
+        else:
+            axes = addto.ax
+        cmaplist = [_c.rgb for _c in cmap]
+        cmap = matplotlib.colors.ListedColormap(cmaplist,
+                                                name='brand_cmap')
+        if len(x) == 1:
+            X, Y = np.meshgrid(y, z)
+            zdir = 'x'
+            zs = x[0]
+            extents = (np.min(y), np.max(y), np.min(z), np.max(z))
+        elif len(y) == 1:
+            print 'y'
+            Z, X = np.meshgrid(z, x)
+            zdir = 'y'
+            zs = y[0]
+            extents = (np.min(z), np.max(z), np.min(x), np.max(x))
+            axes.contourf(X, c, Z, cmap=cmap, offset=zs, zdir='y', **kwargs)
+        elif len(z) == 1:
+            X, Y = np.meshgrid(x, y)
+            zdir = 'z'
+            zs = z[0]
+            extents = (np.min(x), np.max(x), np.min(y), np.max(y))
+            axes.contourf(X, Y, c, cmap=cmap, offset=zs, zdir='z', **kwargs)
+
+
     def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None, name='plot',
              **kwargs):
         if addto is None:
@@ -200,21 +230,14 @@ class pyg3d(object):
             axes = addto.ax
         X, Y = np.meshgrid(x, y)
         m = np.ma.masked_where(np.isnan(z),z)
-        cmaplist = [c.rgb for c in cmap]
+        cmaplist = [_c.rgb for _c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
-        if c is None:
-            surf = axes.plot_surface(X, Y, z, cmap=cmap,
-                                        linewidth=0, antialiased=False,
-                                        rstride=1, cstride=1,
-                                        vmin=np.nanmin(z), vmax=np.nanmax(z),
-                                        **kwargs)
-        else:
-            surf = axes.plot_surface(X, Y, z, facecolors=cmap(c),
-                                        linewidth=0, antialiased=False,
-                                        rstride=1, cstride=1,
-                                        vmin=np.nanmin(z), vmax=np.nanmax(z),
-                                        **kwargs)
+        surf = axes.plot_surface(X, Y, z, cmap=cmap,
+                                 linewidth=0, antialiased=False,
+                                 rstride=1, cstride=1,
+                                 vmin=np.nanmin(z), vmax=np.nanmax(z),
+                                 **kwargs)
         self.surfs[name] = surf
         return self
 
