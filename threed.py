@@ -6,7 +6,7 @@ import string
 import os
 from colour import Color
 import numpy as np
-matplotlib.use('pgf')
+#matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon
 from mpl_toolkits.mplot3d import Axes3D
