@@ -202,24 +202,32 @@ class pyg3d(object):
         cmaplist = [_c.rgb for _c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
+        m = np.ma.masked_where(np.isnan(c), c)
+        levels = np.linspace(np.min(c), np.max(c), 20)
         if len(x) == 1:
-            X, Y = np.meshgrid(y, z)
+            print 'x'
+            Y, Z = np.meshgrid(y, z)
             zdir = 'x'
             zs = x[0]
-            extents = (np.min(y), np.max(y), np.min(z), np.max(z))
+            self.cax = axes.contourf(c, Y, Z, cmap=cmap, offset=zs, zdir='x',
+                                     levels=levels, **kwargs)
         elif len(y) == 1:
             print 'y'
             Z, X = np.meshgrid(z, x)
             zdir = 'y'
             zs = y[0]
-            extents = (np.min(z), np.max(z), np.min(x), np.max(x))
-            axes.contourf(X, c, Z, cmap=cmap, offset=zs, zdir='y', **kwargs)
+            self.cax = axes.contourf(X, c.T, Z, cmap=cmap, offset=zs, zdir='y',
+                                     levels=levels, **kwargs)
         elif len(z) == 1:
+            print 'z'
             X, Y = np.meshgrid(x, y)
             zdir = 'z'
             zs = z[0]
-            extents = (np.min(x), np.max(x), np.min(y), np.max(y))
-            axes.contourf(X, Y, c, cmap=cmap, offset=zs, zdir='z', **kwargs)
+            self.cax = axes.contourf(X, Y, c, cmap=cmap, offset=zs, zdir='z',
+                                     levels=levels, **kwargs)
+
+    def colorbar(self):
+        self.cbar = self.fig.colorbar(self.cax)
 
 
     def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None, name='plot',
@@ -440,7 +448,7 @@ class pyg3d(object):
         else:
             planes_alpha = 0.0
         if lines:
-            linewidth = 0.5
+            linewidth = 1.0
         else:
             linewidth = 0.0
         rstride = 100
@@ -520,7 +528,7 @@ class pyg3d(object):
             z = ann[2]
             _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
             ann[3].xy = (_x, _y)
-
+    '''
     def colorbar(self, cmap, cmap_name='Color Map'):
         if cmap.__class__.__name__ == "list" and \
             cmap[0].__class__.__name__ == "Color":
@@ -534,6 +542,7 @@ class pyg3d(object):
             cb1 = matplotlib.colorbar \
                 .ColorbarBase(ax1, cmap=cm, norm=norm)
             ax1.set_ylabel(cmap_name)
+    '''
 
     def xlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -591,6 +600,25 @@ class pyg3d(object):
             axes = self.ax
         zlab = axes.set_zlabel(label)
         self.artists.append(zlab)
+
+    def clabel(self, label, axes=None):
+        r""" ``pyg2d.xlabel`` adds a label to the x-axis.
+
+        ``pyg2d.xlabel`` adds a label to the x-axis of the current axes (or
+        other axis given by kwarg ``axes``).
+
+        :param str label: The label added to the x-axis of the defined axis.
+            The label can take LaTeX arguments and the ah style guide asks for
+            labels given as 'Label ($variable$) [$unit$]'.
+        :param axes: If not ``None``, this argument will apply the x-label
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
+        if axes is None:
+            axes = self.ax
+        self.clab = self.cbar.set_label(label)
+        #self.artists.append(self.clab)
 
     def det_height(self, ratio="golden"):
         if ratio is "golden":
