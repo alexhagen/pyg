@@ -241,7 +241,7 @@ class pyg3d(object):
         cmaplist = [_c.rgb for _c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
-        surf = axes.plot_surface(X, Y, z, cmap=cmap,
+        surf = axes.plot_surface(X, Y, m, cmap=cmap,
                                  linewidth=0, antialiased=False,
                                  rstride=1, cstride=1,
                                  vmin=np.nanmin(z), vmax=np.nanmax(z),
