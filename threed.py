@@ -237,6 +237,7 @@ class pyg3d(object):
         else:
             axes = addto.ax
         X, Y = np.meshgrid(x, y)
+        # z = np.nan_to_num(z)
         m = np.ma.masked_where(np.isnan(z),z)
         cmaplist = [_c.rgb for _c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
