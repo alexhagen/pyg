@@ -16,6 +16,13 @@ import platform
 from matplotlib import cm
 from pyg.colors import pu as color
 
+def run_from_ipython():
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False
+
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
     '\usepackage{xcolor}\n' + \
@@ -760,7 +767,9 @@ class pyg3d(object):
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 
     def show(self):
-        if self.pdf_filename:
+        if run_from_ipython():
+            self.fig.show()
+        elif self.pdf_filename:
             if platform.system() == "Darwin":
                 os.system("open -a Preview " + self.pdf_filename)
             if platform.system() == "Linux":

@@ -9,7 +9,7 @@ class ann_im(twod.pyg2d):
         super(ann_im, self).__init__()
         img = mpimg.imread(im_filename)
         self.ax.set_axis_off()
-        self.ax.set_axis_bgcolor('white')
+        self.ax.set_facecolor('white')
         self.ax.imshow(img, interpolation='gaussian')
         self.proj_matrix = proj_matrix
 

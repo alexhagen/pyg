@@ -18,8 +18,8 @@ def run_from_ipython():
     except NameError:
         return False
 
-if not run_from_ipython():
-    matplotlib.use('pgf')
+#if not run_from_ipython():
+#    matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
 
@@ -1036,6 +1036,8 @@ class pyg2d(object):
         if interactive:
             plt.ion()
             plt.show(block=True)
+        elif run_from_ipython():
+            self.fig.show()
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
