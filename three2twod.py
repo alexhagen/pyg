@@ -3,19 +3,33 @@ import matplotlib.image as mpimg
 import numpy as np
 from matplotlib.patches import Ellipse, Polygon, Circle
 from colour import Color
+import os
 
 class ann_im(twod.pyg2d):
-    def __init__(self, im_filename, proj_matrix):
+    def __init__(self, im_filename, proj_matrix=None):
         super(ann_im, self).__init__()
         img = mpimg.imread(im_filename)
+        self.im_filename = im_filename
         self.ax.set_axis_off()
         self.ax.set_facecolor('white')
         self.ax.imshow(img, interpolation='gaussian')
+        if proj_matrix is None:
+            self.get_proj_matrix()
+        else:
+            self.proj_matrix = proj_matrix
+
+    def get_proj_matrix(self):
+        proj_matrix = os.popen("identify -verbose %s | grep proj_matrix" % self.im_filename).read()
+        exec(proj_matrix.replace(" ", "").replace(":", "="))
         self.proj_matrix = proj_matrix
 
     def convert_3d_to_2d(self, x, y, z):
         arr = np.array([x, y, z, 1.])
         mat = np.array(self.proj_matrix).T
+        #print "array"
+        #print arr
+        #print "projection matrix"
+        #print mat
         pcam = np.matmul(arr, mat)
         pcam /= pcam[2]
         # print pcam

@@ -72,6 +72,7 @@ class pyg3d(object):
 
     def __init__(self, env='plot', colors='purdue'):
         self.fig = plt.figure()
+        self.cax = []
         matplotlib.rcParams['_internal.classic_mode'] = True
         self.ax = self.fig.gca(projection='3d')
         self.ax_subp = []
@@ -207,34 +208,45 @@ class pyg3d(object):
         else:
             axes = addto.ax
         cmaplist = [_c.rgb for _c in cmap]
-        cmap = matplotlib.colors.ListedColormap(cmaplist,
+        self.cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
         m = np.ma.masked_where(np.isnan(c), c)
-        levels = np.linspace(np.min(c), np.max(c), 20)
+        levels = np.linspace(np.min(c), np.max(c), 50)
         if len(x) == 1:
             print 'x'
             Y, Z = np.meshgrid(y, z)
             zdir = 'x'
             zs = x[0]
-            self.cax = axes.contourf(c, Y, Z, cmap=cmap, offset=zs, zdir='x',
-                                     levels=levels, **kwargs)
+            self.cax.extend([axes.contourf(c, Y, Z, cmap=self.cmap, offset=zs, zdir='x',
+                                     levels=levels, linestyle='-', **kwargs)])
         elif len(y) == 1:
             print 'y'
             Z, X = np.meshgrid(z, x)
             zdir = 'y'
             zs = y[0]
-            self.cax = axes.contourf(X, c.T, Z, cmap=cmap, offset=zs, zdir='y',
-                                     levels=levels, **kwargs)
+            self.cax.extend([axes.contourf(X, c.T, Z, cmap=self.cmap, offset=zs, zdir='y',
+                                     levels=levels, linestyle='-', **kwargs)])
         elif len(z) == 1:
             print 'z'
             X, Y = np.meshgrid(x, y)
             zdir = 'z'
             zs = z[0]
-            self.cax = axes.contourf(X, Y, c, cmap=cmap, offset=zs, zdir='z',
-                                     levels=levels, **kwargs)
+            self.cax.extend([axes.contourf(X, Y, c, cmap=self.cmap, offset=zs, zdir='z',
+                                     levels=levels, linestyle='-', **kwargs)])
 
     def colorbar(self):
-        self.cbar = self.fig.colorbar(self.cax)
+        self.norm = self.cax[0].norm
+        maxes = []
+        mins = []
+        for c in self.cax[1:]:
+            c.set_norm = self.norm
+            maxes.extend([c.levels[-1]])
+            mins.extend([c.levels[0]])
+        levels = np.linspace(np.min(mins), np.max(maxes))
+        for c in self.cax:
+            c.vmin = np.min(mins)
+            c.vmax = np.max(maxes)
+        self.cbar = self.fig.colorbar(self.cax[0])
 
 
     def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None, name='plot',
@@ -808,3 +820,45 @@ class pyg3d(object):
 
     def close(self):
         plt.close(self.fig)
+
+    def xlim(self, minx, maxx, axes=None):
+        """ ``pyg2d.xlim`` limits the view of the x-axis to limits.
+
+        :param float minx: The minimum value of x that will be shown.
+        :param float maxx: The maximum value of x that will be shown.
+        :param axes: If not ``None``, this argument will apply the x-limit
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
+        if axes is None:
+            axes = self.ax
+        axes.set_xlim([minx, maxx])
+
+    def ylim(self, miny, maxy, axes=None):
+        """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
+
+        :param float miny: The minimum value of y that will be shown.
+        :param float maxy: The maximum value of y that will be shown.
+        :param axes: If not ``None``, this argument will apply the y-limit
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
+        if axes is None:
+            axes = self.ax
+        axes.set_ylim([miny, maxy])
+
+    def zlim(self, minz, maxz, axes=None):
+        """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
+
+        :param float miny: The minimum value of y that will be shown.
+        :param float maxy: The maximum value of y that will be shown.
+        :param axes: If not ``None``, this argument will apply the y-limit
+            to the provided axis.
+        :type axes: axes, or ``None``
+        :return: None
+        """
+        if axes is None:
+            axes = self.ax
+        axes.set_zlim([minz, maxz])

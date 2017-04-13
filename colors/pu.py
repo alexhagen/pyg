@@ -37,9 +37,9 @@ brand_error = pu_colors['red']
 brand_off = pu_colors['purple']
 
 
-desat = c(pu_colors["green"])
-#desat.saturation = 0.0
-#desat.luminance = 0.1
+desat = c(pu_colors["blue"])
+desat.saturation = 0.0
+desat.luminance = 0.1
 flow_cmap = list(desat.range_to(c(pu_colors["blue"]), 256))
 desat = c(pu_colors["newgold"])
 desat.saturation = 0.0
@@ -51,8 +51,10 @@ desat.luminance = 0.75
 flame_cmap = list(desat.range_to(c(pu_colors["red"]), 256))
 desat = c(pu_colors["teal"])
 desat.saturation = 0.0
-desat.luminance = 0.75
+desat.luminance = 0.9
 teal_cmap = list(desat.range_to(c(pu_colors["teal"]), 256))
+desat = c(pu_colors["white"])
+bw_cmap = list(desat.range_to(c(pu_colors["black"]), 256))
 
 start_c = c(pu_colors["darkgray"])
 brand_cmap = list(start_c.range_to(c(pu_colors["newgold"]), 256))
