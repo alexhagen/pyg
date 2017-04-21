@@ -23,6 +23,14 @@ def run_from_ipython():
     except NameError:
         return False
 
+import os
+
+if "DISPLAY" not in os.environ.keys():
+	import matplotlib
+	matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+
 plt.close("all")
 preamble = '\usepackage{nicefrac}\n' + \
     '\usepackage{xcolor}\n' + \
@@ -31,6 +39,7 @@ preamble = '\usepackage{nicefrac}\n' + \
     '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
     '{\mathrm{#1}}}}\n'
 
+context = "writeup"
 
 # make the line graphing class
 class pyg3d(object):
@@ -709,18 +718,40 @@ class pyg3d(object):
         self.leg_col_one_col = 1
         self.leg_col_two_col = 1
         self.leg_col_full_page = 1
+
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
-                 tight=True, ratio="golden"):
+                 tight=True, ratio="golden", width=None):
+        if context == "writeup":
+            widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+        elif context == "thesis":
+            widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+        if width is None:
+            self.width = widths[size]
+        elif isinstance(width, basestring):
+            self.width = widths[width]
+        elif isinstance(width, str):
+            self.width = widths[width]
+        else:
+            self.width = width
         if size is '1':
-            self.width = 3.25
+            #self.width = 3.25
             self.det_height(ratio=ratio)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
             #        ncol=self.leg_col_one_col, mode="expand",
             #        borderaxespad=0.);
         elif size is '2':
-            self.width = 6.25
-            self.det_height()
+            #self.width = 6.25
+            self.det_height(ratio=ratio)
+            # self.height = self.height / 2
+            self.fig.set_size_inches(self.width, self.height)
+            # if self.leg:
+            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+            #                   ncol=self.leg_col_two_col, mode="expand",
+            #                   borderaxespad=0.)
+        elif size is '4':
+            #self.width = 6.25
+            self.det_height(ratio=ratio)
             # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
             # if self.leg:
@@ -728,8 +759,8 @@ class pyg3d(object):
             #                   ncol=self.leg_col_two_col, mode="expand",
             #                   borderaxespad=0.)
         elif size is 'fp':
-            self.width=10;
-            self.det_height();
+            #self.width=10;
+            self.det_height(ratio=ratio);
             self.fig.set_size_inches(self.width,self.height);
             if self.leg:
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
@@ -778,14 +809,21 @@ class pyg3d(object):
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
 
-    def show(self):
-        if run_from_ipython():
+    def show(self, interactive=False):
+        if interactive:
+            plt.ion()
+            plt.show(block=True)
+        elif run_from_ipython():
+            plt.ion()
             self.fig.show()
-        elif self.pdf_filename:
-            if platform.system() == "Darwin":
-                os.system("open -a Preview " + self.pdf_filename)
-            if platform.system() == "Linux":
-                os.system("evince " + self.pdf_filename + " &")
+        else:
+            if self.pdf_filename is not None:
+                if platform.system() == "Darwin":
+                    os.system("open -a Preview " + self.pdf_filename)
+                if platform.system() == "Linux":
+                    os.system("evince " + self.pdf_filename + " &")
+            if self.html_filename is not None:
+                os.system("google-chrome " + self.html_filename + " &")
 
     def aspect_equal(self):
         ax = self.ax

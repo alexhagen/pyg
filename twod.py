@@ -18,9 +18,6 @@ def run_from_ipython():
     except NameError:
         return False
 
-#if not run_from_ipython():
-#    matplotlib.use('pgf')
-
 import os
 
 if "DISPLAY" not in os.environ.keys():
@@ -935,9 +932,9 @@ class pyg2d(object):
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
                  tight=True, ratio="golden", width=None):
         if context == "writeup":
-            widths = {"1": 3.25, "2": 6.25, "fp": 10.0, "cs": 0.0}
+            widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
         elif context == "thesis":
-            widths = {"1": 3.0, "2": 6.0, "fp": 9.0, "cs": 0.0}
+            widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
         if width is None:
             self.width = widths[size]
         elif isinstance(width, basestring):
@@ -953,6 +950,15 @@ class pyg2d(object):
         elif size is '2':
             self.det_height(ratio=ratio)
             # self.height = self.height / 2.0
+            self.fig.set_size_inches(self.width, self.height)
+            # if self.leg:
+            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+            #                   ncol=self.leg_col_two_col, mode="expand",
+            #                   borderaxespad=0.)
+        elif size is '4':
+            #self.width = 6.25
+            self.det_height(ratio=ratio)
+            # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
             # if self.leg:
             #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
@@ -1043,6 +1049,7 @@ class pyg2d(object):
             plt.ion()
             plt.show(block=True)
         elif run_from_ipython():
+            plt.ion()
             self.fig.show()
         else:
             if self.pdf_filename is not None:
