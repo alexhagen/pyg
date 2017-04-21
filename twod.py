@@ -21,6 +21,12 @@ def run_from_ipython():
 #if not run_from_ipython():
 #    matplotlib.use('pgf')
 
+import os
+
+if "DISPLAY" not in os.environ.keys():
+	import matplotlib
+	matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 
 context = 'writeup'
