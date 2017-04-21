@@ -264,6 +264,29 @@ to the provided axis.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="pyg.threed.pyg3d.xlim">
+<code class="descname">xlim</code><span class="sig-paren">(</span><em>minx</em>, <em>maxx</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/threed.html#pyg3d.xlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.threed.pyg3d.xlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlim</span></code> limits the view of the x-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>minx</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The minimum value of x that will be shown.</li>
+<li><strong>maxx</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The maximum value of x that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyg.threed.pyg3d.ylabel">
 <code class="descname">ylabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/threed.html#pyg3d.ylabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.threed.pyg3d.ylabel" title="Permalink to this definition">¶</a></dt>
 <dd><p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the x-axis.</p>
@@ -278,6 +301,29 @@ other axis given by kwarg <code class="docutils literal"><span class="pre">axes<
 The label can take LaTeX arguments and the ah style guide asks for
 labels given as &#8216;Label ($variable$) [$unit$]&#8217;.</li>
 <li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.threed.pyg3d.ylim">
+<code class="descname">ylim</code><span class="sig-paren">(</span><em>miny</em>, <em>maxy</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/threed.html#pyg3d.ylim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.threed.pyg3d.ylim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>miny</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The minimum value of y that will be shown.</li>
+<li><strong>maxy</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The maximum value of y that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the y-limit
 to the provided axis.</li>
 </ul>
 </td>
@@ -315,7 +361,35 @@ to the provided axis.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="pyg.threed.pyg3d.zlim">
+<code class="descname">zlim</code><span class="sig-paren">(</span><em>minz</em>, <em>maxz</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/threed.html#pyg3d.zlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.threed.pyg3d.zlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>miny</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The minimum value of y that will be shown.</li>
+<li><strong>maxy</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; The maximum value of y that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) &#8211; If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the y-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyg.threed.run_from_ipython">
+<code class="descclassname">pyg.threed.</code><code class="descname">run_from_ipython</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/threed.html#run_from_ipython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.threed.run_from_ipython" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

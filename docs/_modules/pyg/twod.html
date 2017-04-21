@@ -59,8 +59,14 @@
     <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">run_from_ipython</span><span class="p">():</span>
-    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;pgf&#39;</span><span class="p">)</span>
+<span class="c1">#if not run_from_ipython():</span>
+<span class="c1">#    matplotlib.use(&#39;pgf&#39;)</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">if</span> <span class="s2">&quot;DISPLAY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+	<span class="kn">import</span> <span class="nn">matplotlib</span>
+	<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
@@ -1077,6 +1083,8 @@
         <span class="k">if</span> <span class="n">interactive</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>

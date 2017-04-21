@@ -44,19 +44,33 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Circle</span>
 <span class="kn">from</span> <span class="nn">colour</span> <span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="ann_im"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im">[docs]</a><span class="k">class</span> <span class="nc">ann_im</span><span class="p">(</span><span class="n">twod</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_filename</span><span class="p">,</span> <span class="n">proj_matrix</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_filename</span><span class="p">,</span> <span class="n">proj_matrix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ann_im</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">im_filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">im_filename</span> <span class="o">=</span> <span class="n">im_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_bgcolor</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">proj_matrix</span>
+        <span class="k">if</span> <span class="n">proj_matrix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_proj_matrix</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">proj_matrix</span>
+
+<div class="viewcode-block" id="ann_im.get_proj_matrix"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.get_proj_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_proj_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="s2">&quot;identify -verbose </span><span class="si">%s</span><span class="s2"> | grep proj_matrix&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">exec</span><span class="p">(</span><span class="n">proj_matrix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">proj_matrix</span></div>
 
 <div class="viewcode-block" id="ann_im.convert_3d_to_2d"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.convert_3d_to_2d">[docs]</a>    <span class="k">def</span> <span class="nf">convert_3d_to_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
         <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
         <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1">#print &quot;array&quot;</span>
+        <span class="c1">#print arr</span>
+        <span class="c1">#print &quot;projection matrix&quot;</span>
+        <span class="c1">#print mat</span>
         <span class="n">pcam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
         <span class="n">pcam</span> <span class="o">/=</span> <span class="n">pcam</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="c1"># print pcam</span>
