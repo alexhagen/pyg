@@ -10,6 +10,7 @@ import numpy as np
 import platform
 import shutil
 import time
+from IPython.display import SVG, display, Latex, HTML
 
 def run_from_ipython():
     try:
@@ -17,6 +18,9 @@ def run_from_ipython():
         return True
     except NameError:
         return False
+
+def run_from_nbconvert():
+    return False
 
 import os
 
@@ -943,27 +947,12 @@ class pyg2d(object):
             self.width = width
         if size is '1':
             self.det_height(ratio=ratio)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #        ncol=self.leg_col_one_col, mode="expand",
-            #        borderaxespad=0.);
         elif size is '2':
             self.det_height(ratio=ratio)
-            # self.height = self.height / 2.0
             self.fig.set_size_inches(self.width, self.height)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #                   ncol=self.leg_col_two_col, mode="expand",
-            #                   borderaxespad=0.)
         elif size is '4':
-            #self.width = 6.25
             self.det_height(ratio=ratio)
-            # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #                   ncol=self.leg_col_two_col, mode="expand",
-            #                   borderaxespad=0.)
         elif size is 'fp':
             self.width=10;
             self.det_height();
@@ -999,8 +988,10 @@ class pyg2d(object):
             os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
                       filename + self.sizestring[size] + '.svg')
             os.remove(filename + self.sizestring[size] + '.pdf')
+            self.svg_filename = filename + self.sizestring[size] + '.svg'
         elif format is 'websvg':
             add = 'web.svg'
+            self.svg_filename = filename + self.sizestring[size] + add
         if (format is not 'svg') and (format is not 'html'):
             self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
@@ -1044,13 +1035,36 @@ class pyg2d(object):
             self.remove_font_sizes(filename + self.sizestring[size] + add)
             self.pgf_filename = filename + self.sizestring[size] + add
 
-    def show(self, interactive=False):
+    def show(self, scale=None, interactive=False, caption=None):
+        if scale is None and run_from_ipython() and not run_from_nbconvert():
+            scale = 2.0
+        elif scale is None:
+            scale = 1.0
+        if caption is not None:
+            self.caption = caption
         if interactive:
             plt.ion()
             plt.show(block=True)
-        elif run_from_ipython():
-            plt.ion()
-            self.fig.show()
+        elif run_from_ipython() and not run_from_nbconvert():
+            fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
+            fig_html = r"""
+                <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
+                </div>
+            """ % (fig_width, self.svg_filename, 1, self.caption)
+            display(HTML(fig_html))
+            self.close()
+        elif run_from_ipython() and run_from_nbconvert():
+            strlatex = r"""
+            \begin{figure}
+                \centering
+                \input{%s}
+                \caption{%s}
+                \label{fig:%s}
+            \end{figure}""" % (self.pgf_filename, self.caption, self.caption)
+            display(Latex(strlatex))
+            self.close()
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
@@ -1060,15 +1074,23 @@ class pyg2d(object):
             if self.html_filename is not None:
                 os.system("google-chrome " + self.html_filename + " &")
 
-    def export(self, filename, sizes=None, formats=['pdf'],
+    def export(self, filename, sizes=None, formats=None,
                customsize=None, legloc=None, tight=True, ratio="golden",
-               width=None):
+               width=None, caption=''):
+        self.caption = caption
         if sizes is None:
             if context == "writeup":
                 sizes = ['1']
             elif context == "thesis":
                 sizes = ['2']
+            if run_from_ipython():
+                sizes = ['2']
         for size in sizes:
+            if formats is None:
+                if run_from_ipython():
+                    formats = ['svg', 'pgf']
+                else:
+                    formats = ['pdf']
             for format in formats:
                 if format == 'html':
                     tight = False
