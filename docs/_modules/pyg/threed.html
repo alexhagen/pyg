@@ -64,6 +64,14 @@
     <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">if</span> <span class="s2">&quot;DISPLAY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+	<span class="kn">import</span> <span class="nn">matplotlib</span>
+	<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
 <span class="n">preamble</span> <span class="o">=</span> <span class="s1">&#39;\usepackage{nicefrac}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
     <span class="s1">&#39;\usepackage{xcolor}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
@@ -72,6 +80,7 @@
     <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor{grey60}&#39;</span> <span class="o">+</span> \
     <span class="s1">&#39;{\mathrm{#1}}}}</span><span class="se">\n</span><span class="s1">&#39;</span>
 
+<span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;writeup&quot;</span>
 
 <span class="c1"># make the line graphing class</span>
 <div class="viewcode-block" id="pyg3d"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d">[docs]</a><span class="k">class</span> <span class="nc">pyg3d</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -750,18 +759,40 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">1</span></div>
+
 <div class="viewcode-block" id="pyg3d.set_size"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sizeofsizes</span><span class="p">,</span> <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">):</span>
+                 <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.50</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;thesis&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.00</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">size</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">width</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">width</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">3.25</span>
+            <span class="c1">#self.width = 3.25</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
             <span class="c1"># if self.leg:</span>
             <span class="c1">#    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,</span>
             <span class="c1">#        ncol=self.leg_col_one_col, mode=&quot;expand&quot;,</span>
             <span class="c1">#        borderaxespad=0.);</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">6.25</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">()</span>
+            <span class="c1">#self.width = 6.25</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
+            <span class="c1"># self.height = self.height / 2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+            <span class="c1"># if self.leg:</span>
+            <span class="c1">#    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,</span>
+            <span class="c1">#                   ncol=self.leg_col_two_col, mode=&quot;expand&quot;,</span>
+            <span class="c1">#                   borderaxespad=0.)</span>
+        <span class="k">elif</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+            <span class="c1">#self.width = 6.25</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">)</span>
             <span class="c1"># self.height = self.height / 2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
             <span class="c1"># if self.leg:</span>
@@ -769,8 +800,8 @@
             <span class="c1">#                   ncol=self.leg_col_two_col, mode=&quot;expand&quot;,</span>
             <span class="c1">#                   borderaxespad=0.)</span>
         <span class="k">elif</span> <span class="n">size</span> <span class="ow">is</span> <span class="s1">&#39;fp&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">();</span>
+            <span class="c1">#self.width=10;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">det_height</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">);</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">leg</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.02</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">.</span><span class="mi">102</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
@@ -819,14 +850,21 @@
         <span class="k">if</span> <span class="n">format</span> <span class="ow">is</span> <span class="s1">&#39;pgf&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_font_sizes</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyg3d.show"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">run_from_ipython</span><span class="p">():</span>
+<div class="viewcode-block" id="pyg3d.show"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">interactive</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">():</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;open -a Preview &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;evince &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="o">+</span> <span class="s2">&quot; &amp;&quot;</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;open -a Preview &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;evince &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="o">+</span> <span class="s2">&quot; &amp;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;google-chrome &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">html_filename</span> <span class="o">+</span> <span class="s2">&quot; &amp;&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg3d.aspect_equal"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.aspect_equal">[docs]</a>    <span class="k">def</span> <span class="nf">aspect_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
