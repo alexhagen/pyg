@@ -43,6 +43,9 @@ def need_latex():
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
 	matplotlib.use('Agg')
+else:
+    import matplotlib
+    matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
 
@@ -50,13 +53,15 @@ context = 'writeup'
 exported_files = {}
 
 plt.close("all")
-preamble = '\usepackage{nicefrac}\n' + \
-    '\usepackage{gensymb}\n' + \
-    '\usepackage{xcolor}\n' + \
-    '\definecolor{grey60}{HTML}{746C66}\n' + \
-    '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
-    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
-    '{\mathrm{#1}}}}\n'
+preamble = ['\usepackage{nicefrac}',
+    '\usepackage{gensymb}',
+    '\usepackage{xcolor}',
+    '\definecolor{grey60}{HTML}{746C66}',
+    '\definecolor{grey40}{HTML}{A7A9AC}',
+    r'\usepackage{amsmath, amssymb}',
+    r'\usepackage{stackrel}',
+    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
+    '{\mathrm{#1}}}}']
 
 # make the line graphing class
 class pyg2d(object):
@@ -171,7 +176,9 @@ class pyg2d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": preamble
+                "text.usetex": True,
+                "pgf.preamble": preamble,
+                "text.latex.preamble": preamble
             }
         elif env is 'gui':
             self.rcparamsarray = {
@@ -207,7 +214,8 @@ class pyg2d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": preamble
+                "pgf.preamble": preamble,
+                "text.latex.preamble": preamble
             }
         matplotlib.rcParams.update(self.rcparamsarray)
 
