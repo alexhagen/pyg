@@ -51,7 +51,14 @@
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Latex</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Latex</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_latex</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="get_pname"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.get_pname">[docs]</a><span class="k">def</span> <span class="nf">get_pname</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;ps -o cmd= {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">)],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="run_from_ipython"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.run_from_ipython">[docs]</a><span class="k">def</span> <span class="nf">run_from_ipython</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
@@ -60,10 +67,16 @@
     <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
-<div class="viewcode-block" id="run_from_nbconvert"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.run_from_nbconvert">[docs]</a><span class="k">def</span> <span class="nf">run_from_nbconvert</span><span class="p">():</span>
-    <span class="k">return</span> <span class="bp">False</span></div>
-
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="viewcode-block" id="need_latex"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.need_latex">[docs]</a><span class="k">def</span> <span class="nf">need_latex</span><span class="p">():</span>
+    <span class="n">cmds</span> <span class="o">=</span> <span class="n">get_pname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+    <span class="n">cmds</span> <span class="o">+=</span> <span class="n">get_pname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getppid</span><span class="p">())</span>
+    <span class="k">if</span> <span class="s1">&#39;jupyter-nbconvert&#39;</span> <span class="ow">in</span> <span class="n">cmds</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;to pdf&#39;</span> <span class="ow">in</span> <span class="n">cmds</span> <span class="ow">or</span> <span class="s1">&#39;to latex&#39;</span> <span class="ow">in</span> <span class="n">cmds</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">IPython</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="n">IPython</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">getipython</span><span class="o">.</span><span class="n">get_ipython</span><span class="p">()</span>
+        <span class="n">ip</span><span class="o">.</span><span class="n">display_formatter</span><span class="o">.</span><span class="n">formatters</span><span class="p">[</span><span class="s1">&#39;text/latex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
 
 <span class="k">if</span> <span class="s2">&quot;DISPLAY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 	<span class="kn">import</span> <span class="nn">matplotlib</span>
@@ -1077,7 +1090,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span></div>
 
 <div class="viewcode-block" id="pyg2d.show"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">run_from_nbconvert</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="mf">2.0</span>
         <span class="k">elif</span> <span class="n">scale</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -1086,7 +1099,7 @@
         <span class="k">if</span> <span class="n">interactive</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">run_from_nbconvert</span><span class="p">():</span>
+        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
             <span class="n">fig_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">get_figwidth</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi</span> <span class="o">*</span> <span class="n">scale</span>
             <span class="n">fig_html</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
 <span class="s2">                &lt;div class=&#39;figure&#39; style=&#39;align: center; margin-left: auto; margin-right: auto;&#39;&gt;</span>
@@ -1096,7 +1109,7 @@
 <span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
             <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">fig_html</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="n">run_from_nbconvert</span><span class="p">():</span>
+        <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="n">need_latex</span><span class="p">():</span>
             <span class="n">strlatex</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
 <span class="s2">            \begin{figure}</span>
 <span class="s2">                \centering</span>
@@ -1104,8 +1117,8 @@
 <span class="s2">                \caption{</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">                \label{fig:</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">            \end{figure}&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
-            <span class="n">display</span><span class="p">(</span><span class="n">Latex</span><span class="p">(</span><span class="n">strlatex</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">display</span><span class="p">(</span><span class="n">Latex</span><span class="p">(</span><span class="n">strlatex</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
@@ -1129,7 +1142,9 @@
         <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">formats</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">run_from_ipython</span><span class="p">():</span>
-                    <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;pgf&#39;</span><span class="p">]</span>
+                    <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;svg&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">need_latex</span><span class="p">():</span>
+                        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pgf&#39;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">format</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
