@@ -14,6 +14,8 @@ from copy import copy
 from IPython.display import SVG, display, Latex, HTML, display_latex
 import subprocess
 import sys
+import random
+import weakref
 
 def get_pname(id):
     p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
@@ -55,7 +57,6 @@ preamble = '\usepackage{nicefrac}\n' + \
     '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
     '{\mathrm{#1}}}}\n'
 
-
 # make the line graphing class
 class pyg2d(object):
     """ A ``pyg.pyg2d`` object plots many two-dimensional data types.
@@ -86,6 +87,7 @@ class pyg2d(object):
     leg_col_one_col = 2
     leg_col_two_col = 3
     leg_col_full_page = 4
+    instances = []
     marker = {0: '+',
               1: '.',
               2: '1',
@@ -103,6 +105,8 @@ class pyg2d(object):
                   'none': ''}
 
     def __init__(self, env='plot', polar=False, colors='purdue'):
+        self.__class__.instances.append(weakref.proxy(self))
+        self.counter = 1
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111, polar=polar)
         self.ax_subp = []
@@ -1048,7 +1052,7 @@ class pyg2d(object):
             self.remove_font_sizes(filename + self.sizestring[size] + add)
             self.pgf_filename = filename + self.sizestring[size] + add
 
-    def show(self, scale=None, interactive=False, caption=None):
+    def show(self, caption=None, scale=None, interactive=False):
         if scale is None and run_from_ipython() and not need_latex():
             scale = 2.0
         elif scale is None:
@@ -1059,13 +1063,14 @@ class pyg2d(object):
             plt.ion()
             plt.show(block=True)
         elif run_from_ipython() and not need_latex():
+            __counter__ = random.randint(0, 2e9)
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
                 <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
-                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s' />
+                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                 </div>
-            """ % (fig_width, self.svg_filename, 1, self.caption)
+            """ % (fig_width, self.svg_filename, __counter__, len(self.__class__.instances), self.caption)
             display(HTML(fig_html))
             self.close()
         elif run_from_ipython() and need_latex():
@@ -1076,8 +1081,8 @@ class pyg2d(object):
                 \caption{%s}
                 \label{fig:%s}
             \end{figure}""" % (self.pgf_filename, self.caption, self.caption)
-            self.close()
             display(Latex(strlatex))
+            self.close()
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
