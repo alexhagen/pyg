@@ -16,6 +16,7 @@ import subprocess
 import sys
 import random
 import weakref
+import re
 
 def get_pname(id):
     p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
@@ -584,8 +585,14 @@ class pyg2d(object):
         self.add_arrow(x_mid, x1, y_mid, y_mid, string=string)
         self.add_arrow(x_mid, x2, y_mid, y_mid, string=string)
 
+    @staticmethod
+    def latex_string(string):
+        power = int(re.search('(e([+-]?[0-9]+))', string).group(2))
+        string = re.sub('e([+-]?[0-9]+)', (r'\times 10^{%d}' % power).encode('string-escape'), string)
+        return string
+
     def add_data_pointer(self, x, curve=None, point=None, string=None,
-                         place='up-right', ha='left', axes=None):
+                         place='up-right', ha='left', axes=None, latex=True):
         if axes is None:
             axes = self.ax
         if curve is not None:
@@ -607,6 +614,8 @@ class pyg2d(object):
             curve_place = (2.0 * x / 4.0, 3.0 * y / 4.0)
         elif type(place) is tuple:
             curve_place = place
+        if latex:
+            string = self.latex_string(string)
         axes.annotate(string,
                       xy=(x, y),
                       xytext=curve_place,
