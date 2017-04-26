@@ -10,7 +10,14 @@ import numpy as np
 import platform
 import shutil
 import time
-from IPython.display import SVG, display, Latex, HTML
+from copy import copy
+from IPython.display import SVG, display, Latex, HTML, display_latex
+import subprocess
+import sys
+
+def get_pname(id):
+    p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
+    return str(p.communicate()[0])
 
 def run_from_ipython():
     try:
@@ -19,10 +26,16 @@ def run_from_ipython():
     except NameError:
         return False
 
-def run_from_nbconvert():
-    return False
-
-import os
+def need_latex():
+    cmds = get_pname(os.getpid())
+    cmds += get_pname(os.getppid())
+    if 'jupyter-nbconvert' in cmds and ('to pdf' in cmds or 'to latex' in cmds):
+        import IPython
+        ip = IPython.core.getipython.get_ipython()
+        ip.display_formatter.formatters['text/latex'].enabled = True
+        return True
+    else:
+        return False
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
@@ -1036,7 +1049,7 @@ class pyg2d(object):
             self.pgf_filename = filename + self.sizestring[size] + add
 
     def show(self, scale=None, interactive=False, caption=None):
-        if scale is None and run_from_ipython() and not run_from_nbconvert():
+        if scale is None and run_from_ipython() and not need_latex():
             scale = 2.0
         elif scale is None:
             scale = 1.0
@@ -1045,7 +1058,7 @@ class pyg2d(object):
         if interactive:
             plt.ion()
             plt.show(block=True)
-        elif run_from_ipython() and not run_from_nbconvert():
+        elif run_from_ipython() and not need_latex():
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
                 <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
@@ -1055,7 +1068,7 @@ class pyg2d(object):
             """ % (fig_width, self.svg_filename, 1, self.caption)
             display(HTML(fig_html))
             self.close()
-        elif run_from_ipython() and run_from_nbconvert():
+        elif run_from_ipython() and need_latex():
             strlatex = r"""
             \begin{figure}
                 \centering
@@ -1063,8 +1076,8 @@ class pyg2d(object):
                 \caption{%s}
                 \label{fig:%s}
             \end{figure}""" % (self.pgf_filename, self.caption, self.caption)
-            display(Latex(strlatex))
             self.close()
+            display(Latex(strlatex))
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
@@ -1088,7 +1101,9 @@ class pyg2d(object):
         for size in sizes:
             if formats is None:
                 if run_from_ipython():
-                    formats = ['svg', 'pgf']
+                    formats = ['svg']
+                    if need_latex():
+                        formats = ['pgf']
                 else:
                     formats = ['pdf']
             for format in formats:
