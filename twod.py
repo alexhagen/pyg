@@ -67,11 +67,16 @@ preamble = ['\usepackage{nicefrac}',
     '{\mathrm{#1}}}}']
 
 
-def svg_show(filename, caption='', scale=1.0):
+def svg_show(filename, caption='', scale=None, width=None):
     if run_from_ipython() and not need_latex():
         __counter__ = random.randint(0, 2e9)
         global __figcount__
-        fig_width = scale
+	curr_width = float(os.system('inkscape --without-gui -query-width %s' % filename))
+	if width is not None:
+	    fig_width = width
+	elif scale is not None:
+	    fig_width = curr_width * scale
+        fig_width = curr_width * scale
         fig_html = r"""
             <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
                 <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
