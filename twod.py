@@ -76,7 +76,6 @@ def svg_show(filename, caption='', scale=None, width=None):
 	    fig_width = width
 	elif scale is not None:
 	    fig_width = curr_width * scale
-        fig_width = curr_width * scale
         fig_html = r"""
             <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
                 <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
