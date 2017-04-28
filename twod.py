@@ -102,7 +102,7 @@ def svg_show(filename, caption='', scale=None, width=None):
         strlatex = r"""
         \begin{figure}
             \centering
-            \includesvg[width=%.2f in]{%s}
+            \includesvg[width=%.2fin]{%s}
             \caption{%s}
             \label{fig:%s}
         \end{figure}""" % (fig_width, filename, caption, caption)
@@ -646,8 +646,11 @@ class pyg2d(object):
 
     @staticmethod
     def latex_string(string):
-        power = int(re.search('(e([+-]?[0-9]+))', string).group(2))
-        string = re.sub('e([+-]?[0-9]+)', (r'\times 10^{%d}' % power).encode('string-escape'), string)
+        try:
+            power = int(re.search('(e([+-]?[0-9]+))', string).group(2))
+            string = re.sub('e([+-]?[0-9]+)', (r'\times 10^{%d}' % power).encode('string-escape'), string)
+        except AttributeError:
+            pass
         return string
 
     def add_data_pointer(self, x, curve=None, point=None, string=None,
