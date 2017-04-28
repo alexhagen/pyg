@@ -15,6 +15,17 @@ from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 import platform
 from matplotlib import cm
 from pyg.colors import pu as color
+from copy import copy
+from IPython.display import SVG, display, Latex, HTML, display_latex
+import subprocess
+import sys
+import random
+import weakref
+import re
+
+def get_pname(id):
+    p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
+    return str(p.communicate()[0])
 
 def run_from_ipython():
     try:
@@ -23,23 +34,42 @@ def run_from_ipython():
     except NameError:
         return False
 
-import os
+def need_latex():
+    cmds = get_pname(os.getpid())
+    cmds += get_pname(os.getppid())
+    if 'jupyter-nbconvert' in cmds and ('to pdf' in cmds or 'to latex' in cmds):
+        import IPython
+        ip = IPython.core.getipython.get_ipython()
+        ip.display_formatter.formatters['text/latex'].enabled = True
+        return True
+    else:
+        return False
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
 	matplotlib.use('Agg')
+else:
+    import matplotlib
+    matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
 
-plt.close("all")
-preamble = '\usepackage{nicefrac}\n' + \
-    '\usepackage{xcolor}\n' + \
-    '\definecolor{grey60}{HTML}{746C66}\n' + \
-    '\definecolor{grey40}{HTML}{A7A9AC}\n' + \
-    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' + \
-    '{\mathrm{#1}}}}\n'
+global context
+context = 'writeup'
+global __figcount__
+__figcount__ = 1
+exported_files = {}
 
-context = "writeup"
+plt.close("all")
+preamble = ['\usepackage{nicefrac}',
+    '\usepackage{gensymb}',
+    '\usepackage{xcolor}',
+    '\definecolor{grey60}{HTML}{746C66}',
+    '\definecolor{grey40}{HTML}{A7A9AC}',
+    r'\usepackage{amsmath, amssymb}',
+    r'\usepackage{stackrel}',
+    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
+    '{\mathrm{#1}}}}']
 
 # make the line graphing class
 class pyg3d(object):
@@ -721,46 +751,30 @@ class pyg3d(object):
 
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
                  tight=True, ratio="golden", width=None):
+        global context
         if context == "writeup":
             widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+        elif context == "tufte":
+            widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
         elif context == "thesis":
             widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
         if width is None:
             self.width = widths[size]
         elif isinstance(width, basestring):
             self.width = widths[width]
-        elif isinstance(width, str):
-            self.width = widths[width]
         else:
             self.width = width
         if size is '1':
-            #self.width = 3.25
             self.det_height(ratio=ratio)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #        ncol=self.leg_col_one_col, mode="expand",
-            #        borderaxespad=0.);
         elif size is '2':
-            #self.width = 6.25
             self.det_height(ratio=ratio)
-            # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #                   ncol=self.leg_col_two_col, mode="expand",
-            #                   borderaxespad=0.)
         elif size is '4':
-            #self.width = 6.25
             self.det_height(ratio=ratio)
-            # self.height = self.height / 2
             self.fig.set_size_inches(self.width, self.height)
-            # if self.leg:
-            #    self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-            #                   ncol=self.leg_col_two_col, mode="expand",
-            #                   borderaxespad=0.)
         elif size is 'fp':
-            #self.width=10;
-            self.det_height(ratio=ratio);
+            self.width=10;
+            self.det_height();
             self.fig.set_size_inches(self.width,self.height);
             if self.leg:
                 self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
@@ -775,7 +789,6 @@ class pyg3d(object):
         self.fig.set_size_inches(self.width, self.height)
         if tight:
             plt.tight_layout()
-        self.update_data_pointers()
 
     def export_fmt(self, filename, size, sizeofsizes, format):
         if sizeofsizes == 1:
@@ -786,36 +799,104 @@ class pyg3d(object):
             add = '.pgf'
         elif format is 'pdf':
             add = '.pdf'
-        elif format is 'html':
-            add = '.html'
         elif format is 'svg':
             # save as pdf, then pdf2svg
             self.fig.savefig(filename + self.sizestring[size] + '.pdf',
                         bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True)
+                        transparent=True, dpi=1200)
             os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
                       filename + self.sizestring[size] + '.svg')
             os.remove(filename + self.sizestring[size] + '.pdf')
+            self.svg_filename = filename + self.sizestring[size] + '.svg'
         elif format is 'websvg':
             add = 'web.svg'
+            self.svg_filename = filename + self.sizestring[size] + add
         if (format is not 'svg') and (format is not 'html'):
             self.fig.savefig(filename + self.sizestring[size] + add,
                         bbox_extra_artists=self.artists, bbox_inches='tight',
                         transparent=True)
         if format is 'html':
             add = '.html'
-            mpld3.save_html(self.fig, filename + add)
-            self.add_math_jax(filename + add)
+            import mpld3
+            from mpld3 import plugins
+            import plotly.plotly as py
+            import plotly.tools as tls
+            import plotly.offline as offline
+            from plotly.offline.offline import _plot_html
+            plotly_fig = tls.mpl_to_plotly(self.fig)
+            plot_file = offline.plot(plotly_fig)
+            js_string = '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"></script>'
+            self.html_filename = filename + add
+            os.system('cp temp-plot.html ' + filename + add)
+            scriptstring = \
+                "MathJax.Hub.Config({\n" + \
+                "  tex2jax: {\n" + \
+                r"    inlineMath: [ ['$','$'], ['\\(','\\)'] ]," + "\n" + \
+                "  }\n" + \
+                "});\n"
+            from bs4 import BeautifulSoup as bs
+            with open(filename + add, 'r') as f:
+                soup = bs(f.read(), "lxml")
+                title = soup.find('meta')
+                script = soup.new_tag('script')
+                script2 = soup.new_tag('script')
+                script['type'] = "text/javascript"
+                script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
+                script2['type'] = "text/x-mathjax-config"
+                script2.append(scriptstring)
+                # script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
+                title.insert_after(script2)
+                script2.insert_after(script)
+            with open(filename + '2' + add, 'wb') as f:
+                f.write(soup.prettify('utf-8'))
+            os.system("cp " + filename + "2" + add + " " + filename + add)
         if format is 'pgf':
             self.remove_font_sizes(filename + self.sizestring[size] + add)
+            self.pgf_filename = filename + self.sizestring[size] + add
 
-    def show(self, interactive=False):
+    def show(self, caption=None, scale=None, interactive=False):
+        if scale is None and run_from_ipython() and not need_latex():
+            scale = 2.0
+        elif scale is None:
+            scale = 1.0
+        if caption is not None:
+            self.caption = caption
         if interactive:
             plt.ion()
             plt.show(block=True)
-        elif run_from_ipython():
-            plt.ion()
-            self.fig.show()
+        elif run_from_ipython() and not need_latex():
+            __counter__ = random.randint(0, 2e9)
+            global __figcount__
+            fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
+            fig_html = r"""
+                <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
+                </div>
+            """ % (fig_width, self.svg_filename, __counter__, __figcount__, self.caption)
+            __figcount__ += 1
+            display(HTML(fig_html))
+            self.close()
+        elif run_from_ipython() and need_latex():
+            global context
+            if context == 'tufte' and self.width > 5.0:
+                figfloat = 'figure*'
+                centering = ''
+            elif context == 'tufte' and self.width < 4:
+                figfloat = 'marginfigure'
+                centering = ''
+            else:
+                figfloat = 'figure'
+                centering = r'\centering'
+            strlatex = r"""
+            \begin{%s}
+                %s
+                \input{%s}
+                \caption{%s}
+                \label{fig:%s}
+            \end{%s}""" % (figfloat, centering, self.pgf_filename, self.caption, self.caption, figfloat)
+            display(Latex(strlatex))
+            self.close()
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
@@ -825,36 +906,39 @@ class pyg3d(object):
             if self.html_filename is not None:
                 os.system("google-chrome " + self.html_filename + " &")
 
-    def aspect_equal(self):
-        ax = self.ax
-        extents = np.array([getattr(ax, 'get_{}lim'.format(dim))() for dim in 'xyz'])
-        sz = extents[:,1] - extents[:,0]
-        centers = np.mean(extents, axis=1)
-        maxsize = max(abs(sz))
-        r = maxsize/2
-        for ctr, dim in zip(centers, 'xyz'):
-            getattr(ax, 'set_{}lim'.format(dim))(ctr - r, ctr + r)
-
-    def export(self, filename, sizes=['1'], formats=['pgf'],
-               customsize=None, legloc=None, tight=True, ratio="golden"):
-        zaxis = self.ax.zaxis
-        draw_grid_old = zaxis.axes._draw_grid
-        # disable draw grid
-        zaxis.axes._draw_grid = False
-        tmp_planes = zaxis._PLANES
-        zaxis._PLANES = (tmp_planes[2], tmp_planes[3],
-                      tmp_planes[0], tmp_planes[1],
-                      tmp_planes[4], tmp_planes[5])
-        zaxis._PLANES = tmp_planes
-        zaxis.axes._draw_grid = draw_grid_old
+    def export(self, filename, sizes=None, formats=None,
+               customsize=None, legloc=None, tight=True, ratio="golden",
+               width=None, caption=''):
+        self.caption = caption
+        global context
+        if sizes is None:
+            if context == "writeup":
+                sizes = ['1']
+            elif context == "thesis":
+                sizes = ['2']
+            if run_from_ipython():
+                sizes = ['2']
         for size in sizes:
+            if formats is None:
+                if run_from_ipython():
+                    formats = ['svg']
+                    if need_latex():
+                        formats = ['pgf']
+                else:
+                    formats = ['pdf']
             for format in formats:
+                if format == 'html':
+                    tight = False
                 self.set_size(size, len(sizes), customsize=customsize,
-                              legloc=legloc, tight=tight, ratio=ratio)
-                #self.aspect_equal()
+                              legloc=legloc, tight=tight, ratio=ratio,
+                              width=width)
                 self.export_fmt(filename, size, len(sizes), format)
-                if format is 'pdf':
+                if format == 'pdf':
                     self.pdf_filename = filename + '.pdf'
+                elif format == 'pgf':
+                    self.pgf_filename = filename + '.pgf'
+                elif format == 'png':
+                    self.png_filename = filename + '.png'
 
     def close(self):
         plt.close(self.fig)

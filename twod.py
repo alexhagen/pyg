@@ -49,7 +49,10 @@ else:
 
 import matplotlib.pyplot as plt
 
+global context
 context = 'writeup'
+global __figcount__
+__figcount__ = 1
 exported_files = {}
 
 plt.close("all")
@@ -62,6 +65,31 @@ preamble = ['\usepackage{nicefrac}',
     r'\usepackage{stackrel}',
     '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
     '{\mathrm{#1}}}}']
+
+
+def svg_show(filename, caption='', scale=1.0):
+    if run_from_ipython() and not need_latex():
+        __counter__ = random.randint(0, 2e9)
+        global __figcount__
+        fig_width = scale
+        fig_html = r"""
+            <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
+                <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
+                <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
+            </div>
+        """ % (fig_width, filename, __counter__, __figcount__, caption)
+        __figcount__ += 1
+        display(HTML(fig_html))
+    elif run_from_ipython() and need_latex():
+        strlatex = r"""
+        \begin{figure}
+            \centering
+            \includesvg{%s}
+            \caption{%s}
+            \label{fig:%s}
+        \end{figure}""" % (filename, caption, caption)
+        display(Latex(strlatex))
+
 
 # make the line graphing class
 class pyg2d(object):
@@ -218,6 +246,11 @@ class pyg2d(object):
                 "text.latex.preamble": preamble
             }
         matplotlib.rcParams.update(self.rcparamsarray)
+
+    @staticmethod
+    def change_context(_context):
+        global context
+        context = _context
 
     def xlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -767,11 +800,15 @@ class pyg2d(object):
         y = y[idx];
         axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
 
-    def semi_log_y(self):
-        self.ax.set_yscale('log')
+    def semi_log_y(self, axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.set_yscale('log')
 
-    def semi_log_x(self):
-        self.ax.set_xscale('log')
+    def semi_log_x(self, axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.set_xscale('log')
 
     def log_log(self):
         self.semi_log_x()
@@ -892,9 +929,11 @@ class pyg2d(object):
         self.bars[name] = patches
         return x, y, delta
 
-    def add_legend(self):
+    def add_legend(self, axes=None):
+        if axes is None:
+            axes = self.ax
         self.leg = True
-        leg = self.ax.legend()
+        leg = axes.legend()
         self.artists.append(leg)
 
     def det_height(self, ratio="golden"):
@@ -969,8 +1008,11 @@ class pyg2d(object):
 
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
                  tight=True, ratio="golden", width=None):
+        global context
         if context == "writeup":
             widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+        elif context == "tufte":
+            widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
         elif context == "thesis":
             widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
         if width is None:
@@ -1081,23 +1123,35 @@ class pyg2d(object):
             plt.show(block=True)
         elif run_from_ipython() and not need_latex():
             __counter__ = random.randint(0, 2e9)
+            global __figcount__
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
                 <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
                     <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                 </div>
-            """ % (fig_width, self.svg_filename, __counter__, len(self.__class__.instances), self.caption)
+            """ % (fig_width, self.svg_filename, __counter__, __figcount__, self.caption)
+            __figcount__ += 1
             display(HTML(fig_html))
             self.close()
         elif run_from_ipython() and need_latex():
+            global context
+            if context == 'tufte' and self.width > 5.0:
+                figfloat = 'figure*'
+                centering = ''
+            elif context == 'tufte' and self.width < 4:
+                figfloat = 'marginfigure'
+                centering = ''
+            else:
+                figfloat = 'figure'
+                centering = r'\centering'
             strlatex = r"""
-            \begin{figure}
-                \centering
+            \begin{%s}
+                %s
                 \input{%s}
                 \caption{%s}
                 \label{fig:%s}
-            \end{figure}""" % (self.pgf_filename, self.caption, self.caption)
+            \end{%s}""" % (figfloat, centering, self.pgf_filename, self.caption, self.caption, figfloat)
             display(Latex(strlatex))
             self.close()
         else:
@@ -1113,6 +1167,7 @@ class pyg2d(object):
                customsize=None, legloc=None, tight=True, ratio="golden",
                width=None, caption=''):
         self.caption = caption
+        global context
         if sizes is None:
             if context == "writeup":
                 sizes = ['1']
