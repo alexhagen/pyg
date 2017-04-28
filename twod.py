@@ -88,13 +88,24 @@ def svg_show(filename, caption='', scale=None, width=None):
         __figcount__ += 1
         display(HTML(fig_html))
     elif run_from_ipython() and need_latex():
+        global context
+        if context == "writeup":
+            widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+        elif context == "tufte":
+            widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
+        elif context == "thesis":
+            widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+        if width is not None:
+            fig_width = widths[width]
+        else:
+            fig_width = widths['2']
         strlatex = r"""
         \begin{figure}
             \centering
-            \includesvg{%s}
+            \includesvg[width=%.2f in]{%s}
             \caption{%s}
             \label{fig:%s}
-        \end{figure}""" % (filename, caption, caption)
+        \end{figure}""" % (fig_width, filename, caption, caption)
         display(Latex(strlatex))
 
 
