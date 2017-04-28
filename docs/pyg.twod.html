@@ -110,7 +110,7 @@ added. Default: <code class="docutils literal"><span class="pre">purdue</span></
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.add_data_pointer">
-<code class="descname">add_data_pointer</code><span class="sig-paren">(</span><em>x</em>, <em>curve=None</em>, <em>point=None</em>, <em>string=None</em>, <em>place='up-right'</em>, <em>ha='left'</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_data_pointer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_data_pointer" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_data_pointer</code><span class="sig-paren">(</span><em>x</em>, <em>curve=None</em>, <em>point=None</em>, <em>string=None</em>, <em>place='up-right'</em>, <em>ha='left'</em>, <em>axes=None</em>, <em>latex=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_data_pointer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_data_pointer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -164,7 +164,7 @@ current.</li>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.add_legend">
-<code class="descname">add_legend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_legend" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_legend</code><span class="sig-paren">(</span><em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_legend" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -282,6 +282,11 @@ current.</li>
 <code class="descname">add_yy</code><span class="sig-paren">(</span><em>calfunc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.add_yy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.add_yy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="staticmethod">
+<dt id="pyg.twod.pyg2d.change_context">
+<em class="property">static </em><code class="descname">change_context</code><span class="sig-paren">(</span><em>_context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.change_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.change_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="pyg.twod.pyg2d.change_style">
 <code class="descname">change_style</code><span class="sig-paren">(</span><em>rcparamsarray</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.change_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.change_style" title="Permalink to this definition">¶</a></dt>
@@ -355,6 +360,16 @@ current.</li>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="pyg.twod.pyg2d.instances">
+<code class="descname">instances</code><em class="property"> = [&lt;weakproxy at 0x2abd5a4b7aa0 to NoneType at 0x8fe4d0&gt;]</em><a class="headerlink" href="#pyg.twod.pyg2d.instances" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="pyg.twod.pyg2d.latex_string">
+<em class="property">static </em><code class="descname">latex_string</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.latex_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.latex_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyg.twod.pyg2d.leg_col_full_page">
@@ -485,12 +500,12 @@ notation.</li>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.semi_log_x">
-<code class="descname">semi_log_x</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_x" title="Permalink to this definition">¶</a></dt>
+<code class="descname">semi_log_x</code><span class="sig-paren">(</span><em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_x" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.semi_log_y">
-<code class="descname">semi_log_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_y" title="Permalink to this definition">¶</a></dt>
+<code class="descname">semi_log_y</code><span class="sig-paren">(</span><em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.semi_log_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.semi_log_y" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -500,7 +515,7 @@ notation.</li>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.show">
-<code class="descname">show</code><span class="sig-paren">(</span><em>scale=None</em>, <em>interactive=False</em>, <em>caption=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.show" title="Permalink to this definition">¶</a></dt>
+<code class="descname">show</code><span class="sig-paren">(</span><em>caption=None</em>, <em>scale=None</em>, <em>interactive=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.show" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -687,6 +702,11 @@ on the y-axis.</li>
 <dl class="function">
 <dt id="pyg.twod.run_from_ipython">
 <code class="descclassname">pyg.twod.</code><code class="descname">run_from_ipython</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#run_from_ipython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.run_from_ipython" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pyg.twod.svg_show">
+<code class="descclassname">pyg.twod.</code><code class="descname">svg_show</code><span class="sig-paren">(</span><em>filename</em>, <em>caption=''</em>, <em>scale=None</em>, <em>width=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg_show" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

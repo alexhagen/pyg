@@ -55,6 +55,9 @@
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">SVG</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Latex</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_latex</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <div class="viewcode-block" id="get_pname"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.get_pname">[docs]</a><span class="k">def</span> <span class="nf">get_pname</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;ps -o cmd= {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">)],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -81,20 +84,70 @@
 <span class="k">if</span> <span class="s2">&quot;DISPLAY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 	<span class="kn">import</span> <span class="nn">matplotlib</span>
 	<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;pgf&#39;</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
+<span class="k">global</span> <span class="n">context</span>
 <span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;writeup&#39;</span>
+<span class="k">global</span> <span class="n">__figcount__</span>
+<span class="n">__figcount__</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">exported_files</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
-<span class="n">preamble</span> <span class="o">=</span> <span class="s1">&#39;\usepackage{nicefrac}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;\usepackage{gensymb}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;\usepackage{xcolor}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;\definecolor{grey60}{HTML}{746C66}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;\definecolor{grey40}{HTML}{A7A9AC}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor{grey60}&#39;</span> <span class="o">+</span> \
-    <span class="s1">&#39;{\mathrm{#1}}}}</span><span class="se">\n</span><span class="s1">&#39;</span>
+<span class="n">preamble</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;\usepackage{nicefrac}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\usepackage{gensymb}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\usepackage{xcolor}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\definecolor{grey60}{HTML}{746C66}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\definecolor{grey40}{HTML}{A7A9AC}&#39;</span><span class="p">,</span>
+    <span class="s1">r&#39;\usepackage{amsmath, amssymb}&#39;</span><span class="p">,</span>
+    <span class="s1">r&#39;\usepackage{stackrel}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor{grey60}&#39;</span> <span class="o">+</span>
+    <span class="s1">&#39;{\mathrm{#1}}}}&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="svg_show"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.svg_show">[docs]</a><span class="k">def</span> <span class="nf">svg_show</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">html_widths</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
+        <span class="n">__counter__</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2e9</span><span class="p">)</span>
+        <span class="k">global</span> <span class="n">__figcount__</span>
+	<span class="n">curr_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;inkscape --without-gui -query-width </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">))</span>
+	<span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+	    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+	        <span class="n">fig_width</span> <span class="o">=</span> <span class="n">width</span>
+	    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="n">fig_width</span> <span class="o">=</span> <span class="n">html_widths</span><span class="p">[</span><span class="n">width</span><span class="p">]</span>
+	<span class="k">elif</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+	    <span class="n">fig_width</span> <span class="o">=</span> <span class="n">curr_width</span> <span class="o">*</span> <span class="n">scale</span>
+        <span class="n">fig_html</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
+<span class="s2">            &lt;div class=&#39;figure&#39; style=&#39;align: center; margin-left: auto; margin-right: auto;&#39;&gt;</span>
+<span class="s2">                &lt;img style=&#39;margin: auto; max-width:800px; width:</span><span class="si">%f</span><span class="s2">px; height: auto;&#39; src=&#39;</span><span class="si">%s</span><span class="s2">?</span><span class="si">%d</span><span class="s2">&#39; /&gt;</span>
+<span class="s2">                &lt;div style=&#39;margin: auto; text-align: center;&#39; class=&#39;figurecaption&#39;&gt;&lt;b&gt;Figure </span><span class="si">%d</span><span class="s2">:&lt;/b&gt; </span><span class="si">%s</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">            &lt;/div&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">__counter__</span><span class="p">,</span> <span class="n">__figcount__</span><span class="p">,</span> <span class="n">caption</span><span class="p">)</span>
+        <span class="n">__figcount__</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">fig_html</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="n">need_latex</span><span class="p">():</span>
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.50</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;tufte&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">2.00</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">4.30</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">6.30</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;thesis&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.00</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fig_width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="n">width</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig_width</span> <span class="o">=</span> <span class="n">widths</span><span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">]</span>
+        <span class="n">strlatex</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
+<span class="s2">        \begin{figure}</span>
+<span class="s2">            \centering</span>
+<span class="s2">            \includesvg[width=</span><span class="si">%.2f</span><span class="s2"> in]{</span><span class="si">%s</span><span class="s2">}</span>
+<span class="s2">            \caption{</span><span class="si">%s</span><span class="s2">}</span>
+<span class="s2">            \label{fig:</span><span class="si">%s</span><span class="s2">}</span>
+<span class="s2">        \end{figure}&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span> <span class="n">caption</span><span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">Latex</span><span class="p">(</span><span class="n">strlatex</span><span class="p">))</span></div>
 
 
 <span class="c1"># make the line graphing class</span>
@@ -127,6 +180,7 @@
     <span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
               <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
               <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
@@ -144,6 +198,8 @@
                   <span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;purdue&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span> <span class="o">=</span> <span class="p">[]</span>
@@ -207,7 +263,9 @@
                 <span class="s2">&quot;grid.alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># transparency, between 0.0 and 1.0</span>
                 <span class="s2">&quot;savefig.transparent&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s2">&quot;path.simplify&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
+                <span class="s2">&quot;text.usetex&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span><span class="p">,</span>
+                <span class="s2">&quot;text.latex.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
             <span class="p">}</span>
         <span class="k">elif</span> <span class="n">env</span> <span class="ow">is</span> <span class="s1">&#39;gui&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rcparamsarray</span> <span class="o">=</span> <span class="p">{</span>
@@ -243,9 +301,15 @@
                 <span class="s2">&quot;grid.alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>     <span class="c1"># transparency, between 0.0 and 1.0</span>
                 <span class="s2">&quot;savefig.transparent&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s2">&quot;path.simplify&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
-                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
+                <span class="s2">&quot;pgf.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span><span class="p">,</span>
+                <span class="s2">&quot;text.latex.preamble&quot;</span><span class="p">:</span> <span class="n">preamble</span>
             <span class="p">}</span>
         <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rcparamsarray</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="pyg2d.change_context"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.change_context">[docs]</a>    <span class="k">def</span> <span class="nf">change_context</span><span class="p">(</span><span class="n">_context</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">context</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">_context</span></div>
 
 <div class="viewcode-block" id="pyg2d.xlabel"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.xlabel">[docs]</a>    <span class="k">def</span> <span class="nf">xlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot; ``pyg2d.xlabel`` adds a label to the x-axis.</span>
@@ -621,8 +685,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_arrow</span><span class="p">(</span><span class="n">x_mid</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_arrow</span><span class="p">(</span><span class="n">x_mid</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">y_mid</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">string</span><span class="p">)</span></div>
 
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="pyg2d.latex_string"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.latex_string">[docs]</a>    <span class="k">def</span> <span class="nf">latex_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(e([+-]?[0-9]+))&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;e([+-]?[0-9]+)&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">r&#39;\times 10^{</span><span class="si">%d</span><span class="s1">}&#39;</span> <span class="o">%</span> <span class="n">power</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;string-escape&#39;</span><span class="p">),</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span></div>
+
 <div class="viewcode-block" id="pyg2d.add_data_pointer"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.add_data_pointer">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_pointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">curve</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                         <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                         <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="k">if</span> <span class="n">curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -644,6 +714,8 @@
             <span class="n">curve_place</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">y</span> <span class="o">/</span> <span class="mf">4.0</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">place</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span><span class="p">:</span>
             <span class="n">curve_place</span> <span class="o">=</span> <span class="n">place</span>
+        <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex_string</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">string</span><span class="p">,</span>
                       <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
                       <span class="n">xytext</span><span class="o">=</span><span class="n">curve_place</span><span class="p">,</span>
@@ -787,11 +859,15 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">facecolor</span><span class="o">=</span><span class="n">fc</span><span class="p">,</span><span class="n">edgecolor</span><span class="o">=</span><span class="n">ec</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyg2d.semi_log_y"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.semi_log_y">[docs]</a>    <span class="k">def</span> <span class="nf">semi_log_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="pyg2d.semi_log_y"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.semi_log_y">[docs]</a>    <span class="k">def</span> <span class="nf">semi_log_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyg2d.semi_log_x"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.semi_log_x">[docs]</a>    <span class="k">def</span> <span class="nf">semi_log_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="pyg2d.semi_log_x"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.semi_log_x">[docs]</a>    <span class="k">def</span> <span class="nf">semi_log_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg2d.log_log"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.log_log">[docs]</a>    <span class="k">def</span> <span class="nf">log_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">semi_log_x</span><span class="p">()</span>
@@ -912,9 +988,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">patches</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">delta</span></div>
 
-<div class="viewcode-block" id="pyg2d.add_legend"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.add_legend">[docs]</a>    <span class="k">def</span> <span class="nf">add_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="pyg2d.add_legend"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.add_legend">[docs]</a>    <span class="k">def</span> <span class="nf">add_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">leg</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">leg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">leg</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">leg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg2d.det_height"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.det_height">[docs]</a>    <span class="k">def</span> <span class="nf">det_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">):</span>
@@ -989,8 +1067,11 @@
 
 <div class="viewcode-block" id="pyg2d.set_size"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sizeofsizes</span><span class="p">,</span> <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
                  <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">context</span>
         <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
             <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.25</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.25</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.50</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;tufte&quot;</span><span class="p">:</span>
+            <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">2.00</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">4.30</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">6.30</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
         <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;thesis&quot;</span><span class="p">:</span>
             <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="mf">12.00</span><span class="p">,</span> <span class="s2">&quot;fp&quot;</span><span class="p">:</span> <span class="mf">9.0</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">width</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1089,7 +1170,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_font_sizes</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span></div>
 
-<div class="viewcode-block" id="pyg2d.show"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="pyg2d.show"><a class="viewcode-back" href="../../pyg.twod.html#pyg.twod.pyg2d.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="mf">2.0</span>
         <span class="k">elif</span> <span class="n">scale</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1100,25 +1181,38 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
+            <span class="n">__counter__</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2e9</span><span class="p">)</span>
+            <span class="k">global</span> <span class="n">__figcount__</span>
             <span class="n">fig_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">get_figwidth</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi</span> <span class="o">*</span> <span class="n">scale</span>
             <span class="n">fig_html</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
 <span class="s2">                &lt;div class=&#39;figure&#39; style=&#39;align: center; margin-left: auto; margin-right: auto;&#39;&gt;</span>
-<span class="s2">                    &lt;img style=&#39;margin: auto; max-width:800px; width:</span><span class="si">%f</span><span class="s2">px; height: auto;&#39; src=&#39;</span><span class="si">%s</span><span class="s2">&#39; /&gt;</span>
+<span class="s2">                    &lt;img style=&#39;margin: auto; max-width:800px; width:</span><span class="si">%f</span><span class="s2">px; height: auto;&#39; src=&#39;</span><span class="si">%s</span><span class="s2">?</span><span class="si">%d</span><span class="s2">&#39; /&gt;</span>
 <span class="s2">                    &lt;div style=&#39;margin: auto; text-align: center;&#39; class=&#39;figurecaption&#39;&gt;&lt;b&gt;Figure </span><span class="si">%d</span><span class="s2">:&lt;/b&gt; </span><span class="si">%s</span><span class="s2">&lt;/div&gt;</span>
 <span class="s2">                &lt;/div&gt;</span>
-<span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
+<span class="s2">            &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">,</span> <span class="n">__counter__</span><span class="p">,</span> <span class="n">__figcount__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
+            <span class="n">__figcount__</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">fig_html</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="n">need_latex</span><span class="p">():</span>
+            <span class="k">global</span> <span class="n">context</span>
+            <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s1">&#39;tufte&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="mf">5.0</span><span class="p">:</span>
+                <span class="n">figfloat</span> <span class="o">=</span> <span class="s1">&#39;figure*&#39;</span>
+                <span class="n">centering</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">elif</span> <span class="n">context</span> <span class="o">==</span> <span class="s1">&#39;tufte&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">figfloat</span> <span class="o">=</span> <span class="s1">&#39;marginfigure&#39;</span>
+                <span class="n">centering</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">figfloat</span> <span class="o">=</span> <span class="s1">&#39;figure&#39;</span>
+                <span class="n">centering</span> <span class="o">=</span> <span class="s1">r&#39;\centering&#39;</span>
             <span class="n">strlatex</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;</span>
-<span class="s2">            \begin{figure}</span>
-<span class="s2">                \centering</span>
+<span class="s2">            \begin{</span><span class="si">%s</span><span class="s2">}</span>
+<span class="s2">                </span><span class="si">%s</span><span class="s2"></span>
 <span class="s2">                \input{</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">                \caption{</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">                \label{fig:</span><span class="si">%s</span><span class="s2">}</span>
-<span class="s2">            \end{figure}&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="s2">            \end{</span><span class="si">%s</span><span class="s2">}&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">figfloat</span><span class="p">,</span> <span class="n">centering</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pgf_filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">caption</span><span class="p">,</span> <span class="n">figfloat</span><span class="p">)</span>
             <span class="n">display</span><span class="p">(</span><span class="n">Latex</span><span class="p">(</span><span class="n">strlatex</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdf_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
@@ -1132,6 +1226,7 @@
                <span class="n">customsize</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">legloc</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s2">&quot;golden&quot;</span><span class="p">,</span>
                <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="n">caption</span>
+        <span class="k">global</span> <span class="n">context</span>
         <span class="k">if</span> <span class="n">sizes</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">context</span> <span class="o">==</span> <span class="s2">&quot;writeup&quot;</span><span class="p">:</span>
                 <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span>
