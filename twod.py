@@ -17,6 +17,7 @@ import sys
 import random
 import weakref
 import re
+import __builtin__ as bi
 
 def get_pname(id):
     p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
@@ -48,13 +49,23 @@ else:
     matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
+'''
+global bi.__context__
+bi.__context__ = 'writeup'
+bi.__exported_files__ = {}
 
-global context
-context = 'writeup'
-global __figcount__
-__figcount__ = 1
-exported_files = {}
+if "bi.bi.__figcount__" not in globals():
+    global bi.__figcount__
+    bi.__figcount__ = 1
 
+if '__tables__' not in globals():
+    global __tables__
+    __tables__ = {}
+
+if 'bi.__figures__' not in globals():
+    global bi.__figures__
+    bi.__figures__ = {}
+'''
 plt.close("all")
 preamble = ['\usepackage{nicefrac}',
     '\usepackage{gensymb}',
@@ -66,11 +77,12 @@ preamble = ['\usepackage{nicefrac}',
     '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
     '{\mathrm{#1}}}}']
 
-def svg_show(filename, caption='', scale=None, width=None):
+def svg_show(filename, caption='', label=None, scale=None, width=None):
+    if label is None:
+        label = caption
     html_widths = {'1': 400, '2': 600, '4': 800}
     if run_from_ipython() and not need_latex():
         __counter__ = random.randint(0, 2e9)
-        global __figcount__
 	curr_width = float(os.system('inkscape --without-gui -query-width %s' % filename))
 	if width is not None:
 	    if isinstance(width, int) or isinstance(width, float):
@@ -80,20 +92,20 @@ def svg_show(filename, caption='', scale=None, width=None):
 	elif scale is not None:
 	    fig_width = curr_width * scale
         fig_html = r"""
-            <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
+            <div class='figure' name='%s' style='align: center; margin-left: auto; margin-right: auto;'>
                 <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
-                <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
+                <div style='margin: auto; text-align: center;' class='figurecaption' name="%s"><b>Figure %d:</b> %s</div>
             </div>
-        """ % (fig_width, filename, __counter__, __figcount__, caption)
-        __figcount__ += 1
+        """ % (label, fig_width, filename, __counter__, label, bi.__figcount__, caption)
+        bi.__figures__[label] = bi.__figcount__
+        bi.__figcount__ += 1
         display(HTML(fig_html))
     elif run_from_ipython() and need_latex():
-        global context
-        if context == "writeup":
+        if bi.__context__ == "writeup":
             widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-        elif context == "tufte":
+        elif bi.__context__ == "tufte":
             widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-        elif context == "thesis":
+        elif bi.__context__ == "thesis":
             widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
         if width is not None:
             fig_width = widths[width]
@@ -105,7 +117,7 @@ def svg_show(filename, caption='', scale=None, width=None):
             \includesvg[width=%.2fin]{%s}
             \caption{%s}
             \label{fig:%s}
-        \end{figure}""" % (fig_width, filename, caption, caption)
+        \end{figure}""" % (fig_width, filename, caption, label)
         display(Latex(strlatex))
 
 
@@ -266,9 +278,8 @@ class pyg2d(object):
         matplotlib.rcParams.update(self.rcparamsarray)
 
     @staticmethod
-    def change_context(_context):
-        global context
-        context = _context
+    def change_context(context):
+        bi.__context__ = context
 
     def xlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -1029,12 +1040,12 @@ class pyg2d(object):
 
     def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
                  tight=True, ratio="golden", width=None):
-        global context
-        if context == "writeup":
+        #global bi.__context__
+        if bi.__context__ == "writeup":
             widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-        elif context == "tufte":
+        elif bi.__context__ == "tufte":
             widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-        elif context == "thesis":
+        elif bi.__context__ == "thesis":
             widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
         if width is None:
             self.width = widths[size]
@@ -1132,7 +1143,9 @@ class pyg2d(object):
             self.remove_font_sizes(filename + self.sizestring[size] + add)
             self.pgf_filename = filename + self.sizestring[size] + add
 
-    def show(self, caption=None, scale=None, interactive=False):
+    def show(self, caption='', label=None, scale=None, interactive=False):
+        if label is None:
+            label = caption
         if scale is None and run_from_ipython() and not need_latex():
             scale = 2.0
         elif scale is None:
@@ -1144,23 +1157,23 @@ class pyg2d(object):
             plt.show(block=True)
         elif run_from_ipython() and not need_latex():
             __counter__ = random.randint(0, 2e9)
-            global __figcount__
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
-                <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
+                <div class='figure' name='%s' style='align: center; margin-left: auto; margin-right: auto;'>
                     <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                 </div>
-            """ % (fig_width, self.svg_filename, __counter__, __figcount__, self.caption)
-            __figcount__ += 1
+            """ % (label, fig_width, self.svg_filename, __counter__, bi.__figcount__, self.caption)
+            bi.__figures__[label] = bi.__figcount__
+            bi.__figcount__ += 1
             display(HTML(fig_html))
             self.close()
         elif run_from_ipython() and need_latex():
-            global context
-            if context == 'tufte' and self.width > 5.0:
+            #global bi.__context__
+            if bi.__context__ == 'tufte' and self.width > 5.0:
                 figfloat = 'figure*'
                 centering = ''
-            elif context == 'tufte' and self.width < 4:
+            elif bi.__context__ == 'tufte' and self.width < 4:
                 figfloat = 'marginfigure'
                 centering = ''
             else:
@@ -1188,11 +1201,11 @@ class pyg2d(object):
                customsize=None, legloc=None, tight=True, ratio="golden",
                width=None, caption=''):
         self.caption = caption
-        global context
+        #global bi.__context__
         if sizes is None:
-            if context == "writeup":
+            if bi.__context__ == "writeup":
                 sizes = ['1']
-            elif context == "thesis":
+            elif bi.__context__ == "thesis":
                 sizes = ['2']
             if run_from_ipython():
                 sizes = ['2']
@@ -1226,23 +1239,23 @@ class pyg2d(object):
         os.system("setfattr -n user.creation_date -v \'%s\' %s" % (time.strftime("%d/%m/%Y"), filename))
 
     def publish_to(self, directory):
-        if directory not in exported_files:
-            exported_files[directory] = []
+        if directory not in bi.__exported_files__:
+            bi.__exported_files__[directory] = []
         if hasattr(self, 'pgf_filename'):
             self.add_metadata(self.pgf_filename)
             shutil.copy(self.pgf_filename, directory)
-            exported_files[directory].extend([os.path.basename(self.pgf_filename)])
+            bi.__exported_files__[directory].extend([os.path.basename(self.pgf_filename)])
         if hasattr(self, 'pdf_filename'):
             self.add_metadata(self.pdf_filename)
             shutil.copy(self.pdf_filename, directory)
-            exported_files[directory].extend([os.path.basename(self.pdf_filename)])
+            bi.__exported_files__[directory].extend([os.path.basename(self.pdf_filename)])
         if hasattr(self, 'png_filename'):
             self.add_metadata(self.png_filename)
             shutil.copy(self.png_filename, directory)
-            exported_files[directory].extend([os.path.basename(self.png_filename)])
+            bi.__exported_files__[directory].extend([os.path.basename(self.png_filename)])
 
 def commit_publications(message='automated commit'):
-    for key, val in exported_files.iteritems():
+    for key, val in bi.__exported_files__.iteritems():
         os.chdir(key)
         for filename in val:
             os.system('git add %s' % filename)
