@@ -25,7 +25,7 @@ def need_latex():
         ip.display_formatter.formatters['text/latex'].enabled = True
         return True
     else:
-        return False
+        return os.path.isfile('/tmp/need_latex')
 
 def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
     if label is None:

@@ -5,6 +5,7 @@ import matplotlib
 import string
 import os
 from matplotlib.patches import Ellipse, Polygon, Circle
+from matplotlib.lines import Line2D
 from colour import Color
 import numpy as np
 import platform
@@ -39,7 +40,7 @@ def need_latex():
         ip.display_formatter.formatters['text/latex'].enabled = True
         return True
     else:
-        return False
+        return os.path.isfile('/tmp/need_latex')
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
@@ -505,7 +506,7 @@ class pyg2d(object):
             self.lines[key].set_linewidth(0.0)
 
     def add_vline(self, x, ymin=None, ymax=None, ls='solid', lw=1.5,
-                  color='black', axes=None):
+                  color='black', name=None, axes=None):
         """ ``pyg2d.add_vline`` draws a vertical line.
 
         ``pyg2d.add_vline`` draws a vertical line from either the bottom axis
@@ -539,6 +540,8 @@ class pyg2d(object):
             ymin = np.min(axes.get_ylim())
         if ymax == None:
             ymax = np.max(axes.get_ylim())
+        if name is not None:
+            self.add_to_legend(name=name, color=color, linestyle=ls)
         return axes.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
                            color=color)
 
@@ -815,6 +818,20 @@ class pyg2d(object):
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    facecolor=fc, alpha=alpha, label=name))
             self.bars[name] = patch
+
+    def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
+                      alpha=1.0, axes=None):
+        if axes is None:
+            axes = self.ax
+        if not line:
+            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                   color=color, alpha=alpha, label=name))
+            self.bars[name] = patch
+        else:
+            line = axes.add_line(Line2D([0, 0], [0, 0],
+                                 color=color, alpha=alpha,
+                                 linestyle=linestyle, label=name))
+            self.lines[name] = line
 
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
                       leg=True, axes=None, alpha=0.5):
