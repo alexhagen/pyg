@@ -27,6 +27,15 @@ def need_latex():
     else:
         return os.path.isfile('/tmp/need_latex')
 
+def need_markdown():
+    return os.path.isfile('/tmp/need_markdown')
+
+def markdown(i=True):
+    if i:
+        os.system('touch /tmp/need_markdown')
+    else:
+        os.system('rm /tmp/need_markdown')
+
 def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
     if label is None:
         label = caption
@@ -42,7 +51,10 @@ def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
         """ % (label, bi.__tabcount__, caption, table)
         bi.__tables__[label] = bi.__tabcount__
         bi.__tabcount__ += 1
-        display(HTML(fig_html))
+        if need_markdown():
+            return fig_html
+        else:
+            return display(HTML(fig_html))
     elif run_from_ipython() and need_latex():
         table = tabulate(array, headers=headers, tablefmt='latex',
                          numalign='center', stralign='center',
@@ -55,10 +67,6 @@ def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
             \label{tab:%s}
         \end{table}""" % (table, caption, label)
         display(Latex(strlatex))
-
-def cite(label):
-    if run_from_ipython() and not need_latex():
-        return '[1]'
 
 def figures():
     print bi.__tables__
@@ -76,6 +84,9 @@ def cref(label):
             text = 'ref'
             number = 0
         html_str = '<a href="#%s">%s %d</a>' % (label, text, number)
-        return display(HTML(html_str))
+        if need_markdown():
+            return html_str
+        else:
+            return display(HTML(html_str))
     elif run_from_ipython and need_latex():
         return display(Latex('\[fig:%s\]' % label))
