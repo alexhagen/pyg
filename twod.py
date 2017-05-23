@@ -1176,8 +1176,8 @@ class pyg2d(object):
             __counter__ = random.randint(0, 2e9)
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
-                <div class='pygfigure' name='%s' style='text-align: center; margin-left: auto; margin-right: auto;'>
-                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
+                <div class='pygfigure' name='%s' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                 </div>
             """ % (label, fig_width, self.svg_filename, __counter__, bi.__figcount__, self.caption)
