@@ -1,93 +1,67 @@
-# AH Plot Library Class
+
+# pyg - A graphics class
+
 By Alex Hagen
 
-.. image:: http://img.shields.io/pypi/v/colour.svg?style=flat
-   :target: https://pypi.python.org/pypi/colour/
-   :alt: Latest PyPI version
-
-.. image:: http://img.shields.io/pypi/dm/colour.svg?style=flat
-   :target: https://pypi.python.org/pypi/colour/
-   :alt: Number of PyPI downloads
-
-.. image:: http://img.shields.io/travis/vaab/colour/master.svg?style=flat
-   :target: https://travis-ci.org/vaab/colour/
-   :alt: Travis CI build status
-
-The AH Plot library is a small and simple library that allows for creation of consitent plots in python.  This is optimized to be published in writeups and two column article format, and probably shouldn't be used for large scale visualizations.
+``pyg`` started as a simple wrapper around ``matplotlib`` to help me keep my style the same in plotting, but now it's expanded to a full graphics suite.
 
 ## Installation
-Obviously, python (2.7) must be installed, but also, because the library depends on matplotlib, this must also be installed.  Then, just put the file `ah_plot.py` into whatever directory you're using.
 
-## Usage
-Follow the steps below to use the ah_plot class.
+For ``pyg``, we need quite a few requirements.  Installation right now is pretty manual, but this should do the trick on unix systems:
 
-* Lets say we want to create some data, plot it, and then use it in a latex file.  Here's a quick line plot demo program:
+```bash
+pip install numpy scipy matplotlib colours
+mkdir ~/util
+cd ~/util
+git clone https://github.com/alexhagen/pyg -b master pyg
+sudo echo "export PYTHONPATH=${PYTHONPATH}:~/util" >> ~/.bashrc
+source ~/.bashrc
+```
+
+and then we can just import pyg whenever with
+
 
 ```python
-# in file plot_line.py
-from ah_plot import ahline
-import numpy as np
-
-# create a data set - for this we can use cos and sin
-x = np.arange(0.0,6.28,0.01)
-y = np.sin(x)
-z = np.cos(x)
-
-# create a new object with our first plot, and then add our
-#  second plot to that object
-plot = ahline(x,y,name='sin');
-plot.add_plot(x,z,name='cos');
-
-# label our axes and add a legend
-plot.xlabel('Time ($t$) [$\\mathrm{s}$]')
-plot.ylabel('Velocity ($v$) [$\\mathrm{\\frac{m}{s}}$]')
-plot.add_legend()
-
-# make sure we only have lines, no markers
-plot.markers_off()
-plot.lines_on()
-
-# now export to a file
-plot.export('plot_line')
+from pyg import twod as pyg2d
 ```
 
-* To run this, we use the line
+## Usage
 
-```bash
-$ python plot_line.py
+``pyg`` has one main class, a ``twod`` plot type, and it has several other classes. The ``table`` module has some table printing help for Jupyter notebooks and some LaTeX publication helper functions.  The ``threed`` module has some ``matplotlib`` three dimensional plotting (this is good for surface plotting, if you're doing geometric visualization, use my [``pyb``](github.com/alexhagen/pyb) class, which I'll include into ``pyg`` soon), ``three2twod`` is a class for annotating three dimensional plotting (if you have the transformation matrix from 3-d to 2-d).  I've created some informative examples of these below.
+
+### Line Plotting
+
+The simplest plotting in ``pyg`` is line plotting, so I've crafted a little exam
+
+
+```python
+# coming soon
 ```
 
-* This should generate a file named `line_plot.pgf`, this can be included in a latex document such as
+### Dual Axis Plotting
 
-```latex
-%% in file plot_line.tex
-% set document type as article and set up encoding
-\documentclass[english]{article}
-\usepackage[T1]{fontenc}
-\usepackage[utf8x]{inputenc}
 
-% import the pgf package in the preamble
-\makeatletter
-\usepackage{pgf}
-\makeatother
-
-% Use babel for the language package
-\usepackage{babel}
-
-% The only thing in the body is the image
-\begin{document}
-\input{plot_line_onecolumn.pgf}
-\end{document}
+```python
+# coming soon
 ```
 
-* This document can be compiled using
+### Cross Referencing
 
-```bash
-$ pdflatex plot_line.tex
+
+```python
+# coming soon
 ```
 
-* and viewed!
+### Three Dimensional Plotting
 
-## To Do
-- [ ] Absolute value support (added 10/16/14)
-- [ ] "Smart" change, indicating if value was changed and is still at speed (added 10/16/14)
+
+```python
+# coming soon
+```
+
+### Two to Three Dimensional Plotting
+
+
+```python
+# coming soon
+```
