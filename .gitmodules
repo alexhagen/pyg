@@ -1,6 +1,0 @@
-[submodule "_page_source/_layouts"]
-	path = _page_source/_layouts
-	url = https://github.com/alexhagen/layouts.git
-[submodule "_page_source/_includes"]
-	path = _page_source/_includes
-	url = https://github.com/alexhagen/includes.git
