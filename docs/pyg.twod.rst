@@ -1,5 +1,5 @@
-pyg.twod module
-===============
+pyg\.twod module
+================
 
 .. automodule:: pyg.twod
     :members:

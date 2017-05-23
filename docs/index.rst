@@ -6,10 +6,19 @@
 .. raw:: html
    :file: readme.html
 
-Class Documentation for func.curve
+Class Documentation for twod.pyg2d
 ==================================
 
-.. include:: pyg.rst
+.. autoclass:: twod.pyg2d
+  :members:
+  :show-inheritance:
+
+Class Documentation for threed.pyg3d
+====================================
+
+.. autoclass:: threed.pyg3d
+  :members:
+  :show-inheritance:
 
 ToDos
 -----

@@ -1,5 +1,5 @@
-pyg.three2twod module
-=====================
+pyg\.three2twod module
+======================
 
 .. automodule:: pyg.three2twod
     :members:

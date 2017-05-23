@@ -1,5 +1,5 @@
-pyg.colors package
-==================
+pyg\.colors package
+===================
 
 .. automodule:: pyg.colors
     :members:
