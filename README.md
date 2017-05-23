@@ -35,8 +35,33 @@ The simplest plotting in ``pyg`` is line plotting, so I've crafted a little exam
 
 
 ```python
-# coming soon
+import numpy as np
+
+x = np.linspace(0.0, 4.0 * np.pi, 1000)
+y = np.sin(x)
+u_y = 0.1
+
+plot = pyg2d.pyg2d()
+plot.add_line(x, y, linestyle='-', linecolor='#285668', yerr=u_y, name=r'$\sin \left( \theta \right)$')
+
+plot.xlabel('x-coordinate ($x$) [$\unit{cm}$]')
+plot.ylabel('y-coordinate ($y$) [$\unit{cm}$]')
+
+plot.lines_on()
+plot.markers_off()
+
+plot.export('_static/line', ratio='silver')
+plot.show('some caption')
 ```
+
+
+
+                <div class='pygfigure' name='some caption' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?32706518' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> some caption</div>
+                </div>
+            
+
 
 ### Dual Axis Plotting
 

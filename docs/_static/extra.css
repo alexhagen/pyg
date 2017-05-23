@@ -25,4 +25,7 @@
   span.navbar-version {
     margin-top: 18px;
   }
+  .anchor-link {
+    display: none;
+  }
 </style>
