@@ -62,3 +62,7 @@ class ann_im(twod.pyg2d):
                                facecolor=color, alpha=alpha, label=name))
         self.bars[name] = patch
         return self
+
+    def export(self, *args, **kwargs):
+        kwargs['force_pdf'] = True
+        super(ann_im, self).export(*args, **kwargs)

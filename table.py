@@ -3,7 +3,7 @@ from IPython.display import SVG, display, Latex, HTML, display_latex
 import sys
 import os
 import subprocess
-import __builtin__ as bi
+import __builtins__ as bi
 
 def get_pname(id):
     p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
