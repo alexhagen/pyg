@@ -22,28 +22,8 @@ import sys
 import random
 import weakref
 import re
-
-def get_pname(id):
-    p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)
-    return str(p.communicate()[0])
-
-def run_from_ipython():
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False
-
-def need_latex():
-    cmds = get_pname(os.getpid())
-    cmds += get_pname(os.getppid())
-    if 'jupyter-nbconvert' in cmds and ('to pdf' in cmds or 'to latex' in cmds):
-        import IPython
-        ip = IPython.core.getipython.get_ipython()
-        ip.display_formatter.formatters['text/latex'].enabled = True
-        return True
-    else:
-        return False
+import lyxithea.lyxithea as lyx
+from pyg import twod as pyg2d
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
@@ -72,7 +52,7 @@ preamble = ['\usepackage{nicefrac}',
     '{\mathrm{#1}}}}']
 
 # make the line graphing class
-class pyg3d(object):
+class pyg3d(pyg2d.pyg2d):
     """ A ``pyg.pyg3d`` object plots many three-dimensional data types.
 
     The ``pyg3d`` class provides an access to ``matplotlib`` charting functions
@@ -110,107 +90,11 @@ class pyg3d(object):
                   'none': ''}
 
     def __init__(self, env='plot', colors='purdue'):
-        self.fig = plt.figure()
-        self.cax = []
+        super(pyg3d, self).__init__(env=env, polar=False, colors=colors)
         matplotlib.rcParams['_internal.classic_mode'] = True
         self.ax = self.fig.gca(projection='3d')
-        self.ax_subp = []
-        self.leg = False
-        self.ax2 = None
-        #self.ax.get_xaxis().tick_bottom()
-        #self.ax.get_yaxis().tick_left()
-        self.artists = []
-        self.landscape = True
-        self.width = 3.25
-        self.height = self.width / 1.61803398875
-        self.plotnum = 0
-        self.regnum = 0
-        self.lines = {}
-        self.bars = {}
-        self.regs = {}
+        self.cax = []
         self.surfs = {}
-        self.reg_string = {}
-        if colors is 'purdue' or colors is 'pu':
-            from pyg.colors import pu as color
-            self.colors = color.pu_colors
-        else:
-            from pyg.colors import pu as color
-            self.colors = color.pu_colors
-        if env is 'plot':
-            rcparamsarray = {
-                "pgf.texsystem": "lualatex",
-                "pgf.rcfonts": False,
-                "font.family": "sans",
-                "font.size": 8.0,
-                "axes.linewidth": 0.5,
-                "axes.edgecolor": "#746C66",
-                "xtick.major.width": 0.25,
-                "xtick.major.size": 2,
-                "xtick.direction": "in",
-                "xtick.minor.width": 0.125,
-                "xtick.color": "#746C66",
-                "ytick.major.width": 0.25,
-                "ytick.major.size": 2,
-                "ytick.minor.width": 0.125,
-                "ytick.color": "#746C66",
-                "ytick.direction": "in",
-                "text.color": "#746C66",
-                "axes.facecolor": "none",
-                "figure.facecolor": "none",
-                "axes.labelcolor": "#746C66",
-                "xtick.labelsize": "small",
-                "ytick.labelsize": "small",
-                "axes.labelsize": "medium",
-                "legend.fontsize": "small",
-                "legend.frameon": False,
-                "axes.grid": False,
-                "grid.color": "#A7A9AC",   # grid color
-                "grid.linestyle": ":",       # dotted
-                "grid.linewidth": 0.125,     # in points
-                "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
-                "savefig.transparent": True,
-                "path.simplify": True,
-                "_internal.classic_mode": True,
-                "pgf.preamble": preamble
-            }
-        elif env is 'gui':
-            rcparamsarray = {
-                "pgf.texsystem": "lualatex",
-                "pgf.rcfonts": False,
-                "font.family": "sans",
-                "font.size": 18.0,
-                "axes.linewidth": 0.5,
-                "axes.edgecolor": "#FFFFFF",
-                "xtick.major.width": 0.25,
-                "xtick.major.size": 2,
-                "xtick.direction": "in",
-                "xtick.minor.width": 0.125,
-                "xtick.color": "#FFFFFF",
-                "ytick.major.width": 0.25,
-                "ytick.major.size": 2,
-                "ytick.minor.width": 0.125,
-                "ytick.color": "#FFFFFF",
-                "ytick.direction": "in",
-                "text.color": "#FFFFFF",
-                "axes.facecolor": "black",
-                "figure.facecolor": "black",
-                "axes.labelcolor": "#FFFFFF",
-                "xtick.labelsize": 12.0,
-                "ytick.labelsize": 12.0,
-                "axes.labelsize": 16.0,
-                "legend.fontsize": "small",
-                "legend.frameon": False,
-                "axes.grid": False,
-                "grid.color": "#A7A9AC",   # grid color
-                "grid.linestyle": ":",       # dotted
-                "grid.linewidth": 0.125,     # in points
-                "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
-                "savefig.transparent": True,
-                "path.simplify": True,
-                "_internal.classic_mode": True,
-                "pgf.preamble": preamble
-            }
-        matplotlib.rcParams.update(rcparamsarray)
         self.annotations = []
         self.ax.xaxis._axinfo['tick']['outward_factor'] = 0
         self.ax.yaxis._axinfo['tick']['outward_factor'] = 0
@@ -555,30 +439,8 @@ class pyg3d(object):
         if axes is None:
             axes = self.ax
         _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
-        if string is None:
-            string = '$\left( %f,%f \\right)$' % (x, y, z)
-        if place == 'up-right':
-            curve_place = (20, 20)
-        elif place == 'up-left':
-            curve_place = (-20, 20)
-        elif place == 'down-right':
-            curve_place = (20, -20)
-        elif place == 'down-left':
-            curve_place = (-20, -20)
-        elif type(place) is tuple:
-            curve_place = place
-
-        self.annotations.extend([[x, y, z, \
-            axes.annotate(string,
-                      xy=(_x, _y), zorder=100,
-                      xytext=curve_place,
-                      textcoords = 'offset points',
-                      arrowprops=dict(arrowstyle="fancy",
-                                      fc="0.3", ec="none",
-                                      patchB=Ellipse((2, -1), 0.5, 0.5),
-                                      connectionstyle=
-                                      "angle3,angleA=0,angleB=-90")
-                      )]])
+        super(pyg3d, self).add_data_pointer(x, y, z, string=string,
+                                            place='up-right', axes=None)
 
     def update_data_pointers(self):
         for ann in self.annotations:
@@ -587,7 +449,7 @@ class pyg3d(object):
             z = ann[2]
             _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
             ann[3].xy = (_x, _y)
-    '''
+
     def colorbar(self, cmap, cmap_name='Color Map'):
         if cmap.__class__.__name__ == "list" and \
             cmap[0].__class__.__name__ == "Color":
@@ -601,45 +463,6 @@ class pyg3d(object):
             cb1 = matplotlib.colorbar \
                 .ColorbarBase(ax1, cmap=cm, norm=norm)
             ax1.set_ylabel(cmap_name)
-    '''
-
-    def xlabel(self, label, axes=None):
-        r""" ``pyg2d.xlabel`` adds a label to the x-axis.
-
-        ``pyg2d.xlabel`` adds a label to the x-axis of the current axes (or
-        other axis given by kwarg ``axes``).
-
-        :param str label: The label added to the x-axis of the defined axis.
-            The label can take LaTeX arguments and the ah style guide asks for
-            labels given as 'Label ($variable$) [$unit$]'.
-        :param axes: If not ``None``, this argument will apply the x-label
-            to the provided axis.
-        :type axes: axes, or ``None``
-        :return: None
-        """
-        if axes is None:
-            axes = self.ax
-        xlab = axes.set_xlabel(label)
-        self.artists.append(xlab)
-
-    def ylabel(self, label, axes=None):
-        r""" ``pyg2d.ylabel`` adds a label to the x-axis.
-
-        ``pyg2d.ylabel`` adds a label to the x-axis of the current axes (or
-        other axis given by kwarg ``axes``).
-
-        :param str label: The label added to the x-axis of the defined axis.
-            The label can take LaTeX arguments and the ah style guide asks for
-            labels given as 'Label ($variable$) [$unit$]'.
-        :param axes: If not ``None``, this argument will apply the x-label
-            to the provided axis.
-        :type axes: axes, or ``None``
-        :return: None
-        """
-        if axes is None:
-            axes = self.ax
-        ylab = axes.set_ylabel(label)
-        self.artists.append(ylab)
 
     def zlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -677,299 +500,7 @@ class pyg3d(object):
         if axes is None:
             axes = self.ax
         self.clab = self.cbar.set_label(label)
-        #self.artists.append(self.clab)
-
-    def det_height(self, ratio="golden"):
-        if ratio is "golden":
-            r = (1. + np.sqrt(5.)) / 2.
-        elif ratio is "silver":
-            r = 1. + np.sqrt(2.)
-        elif ratio is "bronze":
-            r = (3. + np.sqrt(13.)) / 2.
-        else:
-            r = float(ratio)
-        if self.landscape:
-            self.height = self.width / r
-        else:
-            self.height = self.width * r
-
-    def remove_font_sizes(self,filename):
-        f=open(filename,'r')
-        fstring = "\\centering \n" + f.read()
-        f.close()
-        f=open(filename,'w')
-        fstring=fstring.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
-        fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")
-        fstring = filter(lambda x: x in string.printable, fstring);
-        f.write(fstring)
-        f.close()
-
-    def add_math_jax(self, filename):
-        f = open(filename, 'r')
-        fstring = \
-            "<script type=\"text/x-mathjax-config\">\n" + \
-            "MathJax.Hub.Config({\n" + \
-            "  tex2jax: {\n" + \
-            "    inlineMath: [ ['$','$'], ['\\\\(','\\\\)'] ],\n" + \
-            "  },\n" + \
-            "  \"HTML-CSS\": {\n" + \
-            "    linebreaks: {\n" + \
-            "      automatic: true,\n" + \
-            "      width: \"80% container\",\n" + \
-            "    }\n" + \
-            "  },\n" + \
-            "  SVG: {\n" + \
-            "    linebreaks: {\n" + \
-            "      automatic: true,\n" + \
-            "      width: \"80% container\",\n" + \
-            "    }\n" + \
-            "  },\n" + \
-            "  TeX: {\n" + \
-            "    equationNumbers: {\n" + \
-            "      autoNumber: \"all\"\n" + \
-            "    },\n" + \
-            "  },\n" + \
-            "    showMathMenu: false\n" + \
-            "});\n" + \
-            "\n" + \
-            "</script>\n" + \
-            "\n" + \
-            "<script type=\"text/javascript\"" + \
-            "     src=\"http://cdn.mathjax.org/mathjax/latest/MathJax.js?" + \
-            "config=TeX-AMS-MML_HTMLorMML\">" + \
-            "</script>" + f.read()
-        f.close()
-        f = open(filename, 'w')
-        f.write(fstring)
-        f.close()
-
-
-    def long_name(self):
-        self.leg_col_one_col = 1
-        self.leg_col_two_col = 1
-        self.leg_col_full_page = 1
-
-    def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
-                 tight=True, ratio="golden", width=None):
-        global context
-        if context == "writeup":
-            widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-        elif context == "tufte":
-            widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-        elif context == "thesis":
-            widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
-        if width is None:
-            self.width = widths[size]
-        elif isinstance(width, basestring):
-            self.width = widths[width]
-        else:
-            self.width = width
-        if size is '1':
-            self.det_height(ratio=ratio)
-        elif size is '2':
-            self.det_height(ratio=ratio)
-            self.fig.set_size_inches(self.width, self.height)
-        elif size is '4':
-            self.det_height(ratio=ratio)
-            self.fig.set_size_inches(self.width, self.height)
-        elif size is 'fp':
-            self.width=10;
-            self.det_height();
-            self.fig.set_size_inches(self.width,self.height);
-            if self.leg:
-                self.ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-                               ncol=self.leg_col_full_page, mode="expand",
-                               borderaxespad=0.);
-        elif size is 'cs':
-            if customsize is not None:
-                self.width=customsize[0];
-                self.height=customsize[1];
-                if legloc is not None:
-                    self.ax.legend(loc=legloc,ncol=2);
-        self.fig.set_size_inches(self.width, self.height)
-        if tight:
-            plt.tight_layout()
-
-    def export_fmt(self, filename, size, sizeofsizes, format):
-        if sizeofsizes == 1:
-            size = 'none'
-        if format is 'png':
-            add = '.png'
-        elif format is 'pgf':
-            add = '.pgf'
-        elif format is 'pdf':
-            add = '.pdf'
-        elif format is 'svg':
-            # save as pdf, then pdf2svg
-            self.fig.savefig(filename + self.sizestring[size] + '.pdf',
-                        bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True, dpi=1200)
-            os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
-                      filename + self.sizestring[size] + '.svg')
-            os.remove(filename + self.sizestring[size] + '.pdf')
-            self.svg_filename = filename + self.sizestring[size] + '.svg'
-        elif format is 'websvg':
-            add = 'web.svg'
-            self.svg_filename = filename + self.sizestring[size] + add
-        if (format is not 'svg') and (format is not 'html'):
-            self.fig.savefig(filename + self.sizestring[size] + add,
-                        bbox_extra_artists=self.artists, bbox_inches='tight',
-                        transparent=True)
-        if format is 'html':
-            add = '.html'
-            import mpld3
-            from mpld3 import plugins
-            import plotly.plotly as py
-            import plotly.tools as tls
-            import plotly.offline as offline
-            from plotly.offline.offline import _plot_html
-            plotly_fig = tls.mpl_to_plotly(self.fig)
-            plot_file = offline.plot(plotly_fig)
-            js_string = '<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"></script>'
-            self.html_filename = filename + add
-            os.system('cp temp-plot.html ' + filename + add)
-            scriptstring = \
-                "MathJax.Hub.Config({\n" + \
-                "  tex2jax: {\n" + \
-                r"    inlineMath: [ ['$','$'], ['\\(','\\)'] ]," + "\n" + \
-                "  }\n" + \
-                "});\n"
-            from bs4 import BeautifulSoup as bs
-            with open(filename + add, 'r') as f:
-                soup = bs(f.read(), "lxml")
-                title = soup.find('meta')
-                script = soup.new_tag('script')
-                script2 = soup.new_tag('script')
-                script['type'] = "text/javascript"
-                script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
-                script2['type'] = "text/x-mathjax-config"
-                script2.append(scriptstring)
-                # script['src'] = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG"
-                title.insert_after(script2)
-                script2.insert_after(script)
-            with open(filename + '2' + add, 'wb') as f:
-                f.write(soup.prettify('utf-8'))
-            os.system("cp " + filename + "2" + add + " " + filename + add)
-        if format is 'pgf':
-            self.remove_font_sizes(filename + self.sizestring[size] + add)
-            self.pgf_filename = filename + self.sizestring[size] + add
-
-    def show(self, caption=None, scale=None, interactive=False):
-        if scale is None and run_from_ipython() and not need_latex():
-            scale = 2.0
-        elif scale is None:
-            scale = 1.0
-        if caption is not None:
-            self.caption = caption
-        if interactive:
-            plt.ion()
-            plt.show(block=True)
-        elif run_from_ipython() and not need_latex():
-            __counter__ = random.randint(0, 2e9)
-            global __figcount__
-            fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
-            fig_html = r"""
-                <div class='figure' style='align: center; margin-left: auto; margin-right: auto;'>
-                    <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
-                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
-                </div>
-            """ % (fig_width, self.svg_filename, __counter__, __figcount__, self.caption)
-            __figcount__ += 1
-            display(HTML(fig_html))
-            self.close()
-        elif run_from_ipython() and need_latex():
-            global context
-            if context == 'tufte' and self.width > 5.0:
-                figfloat = 'figure*'
-                centering = ''
-            elif context == 'tufte' and self.width < 4:
-                figfloat = 'marginfigure'
-                centering = ''
-            else:
-                figfloat = 'figure'
-                centering = r'\centering'
-            strlatex = r"""
-            \begin{%s}
-                %s
-                \input{%s}
-                \caption{%s}
-                \label{fig:%s}
-            \end{%s}""" % (figfloat, centering, self.pgf_filename, self.caption, self.caption, figfloat)
-            display(Latex(strlatex))
-            self.close()
-        else:
-            if self.pdf_filename is not None:
-                if platform.system() == "Darwin":
-                    os.system("open -a Preview " + self.pdf_filename)
-                if platform.system() == "Linux":
-                    os.system("evince " + self.pdf_filename + " &")
-            if self.html_filename is not None:
-                os.system("google-chrome " + self.html_filename + " &")
-
-    def export(self, filename, sizes=None, formats=None,
-               customsize=None, legloc=None, tight=True, ratio="golden",
-               width=None, caption=''):
-        self.caption = caption
-        global context
-        if sizes is None:
-            if context == "writeup":
-                sizes = ['1']
-            elif context == "thesis":
-                sizes = ['2']
-            if run_from_ipython():
-                sizes = ['2']
-        for size in sizes:
-            if formats is None:
-                if run_from_ipython():
-                    formats = ['svg']
-                    if need_latex():
-                        formats = ['pgf']
-                else:
-                    formats = ['pdf']
-            for format in formats:
-                if format == 'html':
-                    tight = False
-                self.set_size(size, len(sizes), customsize=customsize,
-                              legloc=legloc, tight=tight, ratio=ratio,
-                              width=width)
-                self.export_fmt(filename, size, len(sizes), format)
-                if format == 'pdf':
-                    self.pdf_filename = filename + '.pdf'
-                elif format == 'pgf':
-                    self.pgf_filename = filename + '.pgf'
-                elif format == 'png':
-                    self.png_filename = filename + '.png'
-
-    def close(self):
-        plt.close(self.fig)
-
-    def xlim(self, minx, maxx, axes=None):
-        """ ``pyg2d.xlim`` limits the view of the x-axis to limits.
-
-        :param float minx: The minimum value of x that will be shown.
-        :param float maxx: The maximum value of x that will be shown.
-        :param axes: If not ``None``, this argument will apply the x-limit
-            to the provided axis.
-        :type axes: axes, or ``None``
-        :return: None
-        """
-        if axes is None:
-            axes = self.ax
-        axes.set_xlim([minx, maxx])
-
-    def ylim(self, miny, maxy, axes=None):
-        """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
-
-        :param float miny: The minimum value of y that will be shown.
-        :param float maxy: The maximum value of y that will be shown.
-        :param axes: If not ``None``, this argument will apply the y-limit
-            to the provided axis.
-        :type axes: axes, or ``None``
-        :return: None
-        """
-        if axes is None:
-            axes = self.ax
-        axes.set_ylim([miny, maxy])
+        self.artists.append(self.clab)
 
     def zlim(self, minz, maxz, axes=None):
         """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
