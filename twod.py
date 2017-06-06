@@ -571,11 +571,15 @@ class pyg2d(object):
 					  arrowprops=arrowprops)
 
 	def add_text(self, x1, y1, string=None, ha='center', va='center',
-				 color="#746C66", rotation=0, axes=None):
+				 color="#746C66", rotation=0, axes=None, fontsize=None):
 		if axes is None:
 			axes = self.ax
-		axes.text(x1, y1, string, ha=ha, va=va, color=color,
-				  rotation=rotation)
+		if fontsize is not None:
+			axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va, color=color,
+					  rotation=rotation)
+		else:
+			axes.text(x1, y1, string, ha=ha, va=va, color=color,
+					  rotation=rotation)
 
 	def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
 					 axes=None, units='', log=False):
@@ -600,8 +604,8 @@ class pyg2d(object):
 			y_mid = (y2 + y1) / 2.0
 		x_mid = (x1 - offset * total_width +
 				 x1 - offset * total_width - length * total_width) / 2.0
-		self.add_arrow(x_mid, x_mid, y_mid, y1, string=string)
-		self.add_arrow(x_mid, x_mid, y_mid, y2, string=string)
+		self.add_arrow(x_mid, x_mid, y_mid, y1, string=self.latex_string(string))
+		self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string))
 
 	def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
 					 axes=None, units=''):
@@ -623,8 +627,8 @@ class pyg2d(object):
 		x_mid = (x2 + x1) / 2.0
 		y_mid = (y1 + offset * total_width +
 				 y1 + offset * total_width + length * total_width) / 2.0
-		self.add_arrow(x_mid, x1, y_mid, y_mid, string=string)
-		self.add_arrow(x_mid, x2, y_mid, y_mid, string=string)
+		self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string))
+		self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string))
 
 	@staticmethod
 	def latex_string(string):
@@ -636,7 +640,8 @@ class pyg2d(object):
 		return string
 
 	def add_data_pointer(self, x, curve=None, point=None, string=None,
-						 place='up-right', ha='left', axes=None, latex=True):
+						 place='up-right', ha='left', axes=None, latex=True,
+						 fc='0.3'):
 		if axes is None:
 			axes = self.ax
 		if curve is not None:
@@ -663,9 +668,9 @@ class pyg2d(object):
 		axes.annotate(string,
 					  xy=(x, y),
 					  xytext=curve_place,
-					  ha=ha,
+					  ha=ha, color=fc,
 					  arrowprops=dict(arrowstyle="fancy",
-									  fc="0.3", ec="none",
+									  fc=fc, ec="none",
 									  patchB=Ellipse((2, -1), 0.5, 0.5),
 									  connectionstyle=
 									  "angle3,angleA=0,angleB=-90")
@@ -1187,7 +1192,7 @@ class pyg2d(object):
 					os.system("evince " + self.pdf_filename + " &")
 			if self.html_filename is not None:
 				os.system("google-chrome " + self.html_filename + " &")
-		return fig
+		return display(fig)
 
 	def export(self, filename, sizes=None, formats=None,
 			   customsize=None, legloc=None, tight=True, ratio="golden",
