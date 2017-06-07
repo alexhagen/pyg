@@ -56,5 +56,9 @@ teal_cmap = list(desat.range_to(c(pu_colors["teal"]), 256))
 desat = c(pu_colors["white"])
 bw_cmap = list(desat.range_to(c(pu_colors["black"]), 256))
 
+start_c = c(pu_colors["blue"])
+mid_c = c(pu_colors["green"])
+pu_jet_cmap = list(start_c.range_to(mid_c, 128)) + list(mid_c.range_to(c(pu_colors["red"]), 128))
+
 start_c = c(pu_colors["darkgray"])
 brand_cmap = list(start_c.range_to(c(pu_colors["newgold"]), 256))

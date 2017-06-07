@@ -141,8 +141,8 @@ class pyg2d(object):
 
 	def __init__(self, env='plot', polar=False, colors='purdue'):
 		self.__class__.instances.append(weakref.proxy(self))
-		self.counter = self._figcount.next()
-		self.fig = plt.figure(self.counter)
+		self.__counter__ = self._figcount.next()
+		self.fig = plt.figure(self.__counter__)
 		self.ax = self.fig.add_subplot(111, polar=polar)
 		self.ax_subp = []
 		self.leg = False
@@ -163,8 +163,10 @@ class pyg2d(object):
 		self.bars = {}
 		self.regs = {}
 		self.reg_string = {}
+		self.allartists = []
 		self.pdf_filename = None
 		self.html_filename = None
+		self.data = []
 		if colors is 'purdue' or colors is 'pu':
 			import pyg.colors.pu as color
 			self.colors = color.pu_colors
@@ -270,6 +272,7 @@ class pyg2d(object):
 			axes = self.ax
 		xlab = axes.set_xlabel(label)
 		self.artists.append(xlab)
+		self.allartists.append('xlab: ' + label)
 
 	def add_subplot(self, subp=121):
 		""" ``pyg2d.add_subplot`` adds a grid in which you can make subplots.
@@ -307,6 +310,7 @@ class pyg2d(object):
 			axes = self.ax
 		ttl = axes.set_title(title)
 		self.artists.append(ttl)
+		self.allartists.append(ttl)
 
 	def ylabel(self, label, axes=None):
 		""" ``pyg2d.ylabel`` adds a label to the y-axis.
@@ -328,6 +332,7 @@ class pyg2d(object):
 			axes = self.ax
 		ylab = axes.set_ylabel(label)
 		self.artists.append(ylab)
+		self.allartists.append('ylab: ' + label)
 
 	def xlim(self, minx, maxx, axes=None):
 		""" ``pyg2d.xlim`` limits the view of the x-axis to limits.
@@ -551,9 +556,10 @@ class pyg2d(object):
 
 	def add_label(self, x, y, string, color='black'):
 		curve_place = (x, y)
-		self.ax.annotate(string,
+		ann = self.ax.annotate(string,
 						 xy=curve_place,
 						 xytext=curve_place, color=color)
+		self.allartists.append(ann)
 
 	def change_style(self, rcparamsarray):
 		matplotlib.rcParams.update(rcparamsarray)
@@ -564,24 +570,26 @@ class pyg2d(object):
 			arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc, alpha=alpha)
 		if axes is None:
 			axes = self.ax
-		axes.annotate(string,
+		ann = axes.annotate(string,
 					  xy=(x2, y2),
 					  xytext=(x1, y1),
 					  color=fc, alpha=alpha,
 					  horizontalalignment=ha,
 					  verticalalignment=va,
 					  arrowprops=arrowprops)
+		self.allartists.append(ann)
 
 	def add_text(self, x1, y1, string=None, ha='center', va='center',
 				 color="#746C66", rotation=0, axes=None, fontsize=None):
 		if axes is None:
 			axes = self.ax
 		if fontsize is not None:
-			axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va, color=color,
+			ann = axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va, color=color,
 					  rotation=rotation)
 		else:
-			axes.text(x1, y1, string, ha=ha, va=va, color=color,
+			ann = axes.text(x1, y1, string, ha=ha, va=va, color=color,
 					  rotation=rotation)
+		self.allartists.append(ann)
 
 	def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
 					 axes=None, units='', log=False):
@@ -594,10 +602,10 @@ class pyg2d(object):
 		total_width = np.max(axes.get_xlim()) - np.min(axes.get_xlim())
 		length = 0.05
 		lw = 0.5
-		self.add_hline(y1, x1 - offset * total_width,
+		h1 = self.add_hline(y1, x1 - offset * total_width,
 					   x1 - offset * total_width - length * total_width,
 					   lw=lw, axes=axes)
-		self.add_hline(y2, x1 - offset * total_width,
+		h2 = self.add_hline(y2, x1 - offset * total_width,
 					   x1 - offset * total_width - length * total_width,
 					   lw=lw, axes=axes)
 		if log:
@@ -606,8 +614,9 @@ class pyg2d(object):
 			y_mid = (y2 + y1) / 2.0
 		x_mid = (x1 - offset * total_width +
 				 x1 - offset * total_width - length * total_width) / 2.0
-		self.add_arrow(x_mid, x_mid, y_mid, y1, string=self.latex_string(string))
-		self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string))
+		h3 = self.add_arrow(x_mid, x_mid, y_mid, y1, string=self.latex_string(string))
+		h4 = self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string))
+		self.allartists.append((h1, h2, h3, h4))
 
 	def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
 					 axes=None, units=''):
@@ -620,17 +629,18 @@ class pyg2d(object):
 		total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
 		length = 0.05
 		lw = 0.5
-		self.add_vline(x1, y1 + offset * total_width,
+		h1 = self.add_vline(x1, y1 + offset * total_width,
 					   y1 + offset * total_width + length * total_width,
 					   lw=lw, axes=axes)
-		self.add_vline(x2, y1 + offset * total_width,
+		h2 = self.add_vline(x2, y1 + offset * total_width,
 					   y1 + offset * total_width + length * total_width,
 					   lw=lw, axes=axes)
 		x_mid = (x2 + x1) / 2.0
 		y_mid = (y1 + offset * total_width +
 				 y1 + offset * total_width + length * total_width) / 2.0
-		self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string))
-		self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string))
+		h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string))
+		h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string))
+		self.allartists.append((h1, h2, h3, h4))
 
 	@staticmethod
 	def latex_string(string):
@@ -667,7 +677,7 @@ class pyg2d(object):
 			curve_place = place
 		if latex:
 			string = self.latex_string(string)
-		axes.annotate(string,
+		ann = axes.annotate(string,
 					  xy=(x, y),
 					  xytext=curve_place,
 					  ha=ha, color=fc,
@@ -677,6 +687,7 @@ class pyg2d(object):
 									  connectionstyle=
 									  "angle3,angleA=0,angleB=-90")
 					  )
+		self.allartists.append(ann)
 
 	def add_reg_line(self, x, y, regtype='lin', name='reg', xerr=None,
 					 yerr=None, axes=None):
@@ -788,11 +799,13 @@ class pyg2d(object):
 		self.plotnum = self.plotnum + 1
 		if name is 'plot':
 			name = 'plot%d' % (self.plotnum)
-		axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
+		p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
+		self.allartists.append(p)
 		if leg:
 			patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
 								   facecolor=fc, alpha=alpha, label=name))
 			self.bars[name] = patch
+
 
 	def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
 					  alpha=1.0, axes=None):
@@ -822,17 +835,21 @@ class pyg2d(object):
 		x1 = x1[idx];
 		x2 = x2[idx];
 		y = y[idx];
-		axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
+		p = axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
+		self.allartists.append(p)
+
 
 	def semi_log_y(self, axes=None):
 		if axes is None:
 			axes = self.ax
 		axes.set_yscale('log', nonposy='mask')
+		self.allartists.append('logy')
 
 	def semi_log_x(self, axes=None):
 		if axes is None:
 			axes = self.ax
 		axes.set_xscale('log', nonposx='mask')
+		self.allartists.append('logx')
 
 	def log_log(self):
 		self.semi_log_x()
@@ -848,11 +865,13 @@ class pyg2d(object):
 		patch = axes.add_patch(Circle((x, y), r, facecolor=fc, edgecolor=ec,
 							   alpha=alpha, label=name))
 		self.bars[name] = patch
+		self.allartists.append(patch)
 
 	def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
 				 linestyle=None, linecolor='black', legend=True, axes=None):
 		if axes is None:
 			axes = self.ax
+		self.data.extend([[x, y]])
 		self.plotnum = self.plotnum + 1
 		if name is 'plot':
 			name = 'plot%d' % (self.plotnum)
@@ -886,6 +905,7 @@ class pyg2d(object):
 			self.lines[name] = (line)
 		self.markers_on()
 		self.lines_off()
+		self.allartists.append(line)
 
 	def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
 					linecolor='black', linewidth=0.5, linestyle=None,
@@ -895,34 +915,38 @@ class pyg2d(object):
 			self.ax2 = self.ax.twinx()
 		else:
 			self.ax2 = axes.twinx()
-		self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
+		line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
 					  linewidth=linewidth,
 					  linecolor=linecolor,
 					  linestyle=linestyle,
 					  legend=legend, axes=self.ax2)
+		self.allartists.append(line)
 
 	def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
 					linecolor='black', linewidth=0.5, linestyle=None,
 					legend=True):
 		# make new axis
 		self.ax2 = self.ax.twiny()
-		self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
-					  linewidth=linewidth,
-					  linecolor=linecolor,
-					  linestyle=linestyle,
-					  legend=legend, axes=self.ax2)
+		line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
+					  		 linewidth=linewidth,
+					  		 linecolor=linecolor,
+					  		 linestyle=linestyle,
+					  		 legend=legend, axes=self.ax2)
+		self.allartists.append(line)
 
 	def add_xx(self,calfunc):
-		self.ax2 = self.ax.twiny();
-		mini = calfunc(np.min(self.ax.get_xlim()));
-		maxi = calfunc(np.max(self.ax.get_xlim()));
-		self.ax2.set_xlim(mini,maxi);
-		self.ax2.get_xaxis().tick_top();
+		self.ax2 = self.ax.twiny()
+		mini = calfunc(np.min(self.ax.get_xlim()))
+		maxi = calfunc(np.max(self.ax.get_xlim()))
+		self.ax2.set_xlim(mini,maxi)
+		self.ax2.get_xaxis().tick_top()
+		self.allartists.append(self.ax2)
 
 	def add_yy(self,calfunc):
 		self.ax2 = self.ax.twinx();
 		self.calfunc = calfunc;
 		self.update_yy()
+		self.allartists.append(self.ax2)
 
 	def update_yy(self):
 		mini = self.calfunc(np.min(self.ax.get_ylim()));
@@ -938,11 +962,13 @@ class pyg2d(object):
 									facecolor=facecolor, alpha=alpha,
 									normed=False)
 		self.bars[name] = patches
+		self.allartists.append(self.bars[name])
 		return n, bins
 
 	def add_bar(self, x, y, hold=True, facecolor='gray', alpha=0.5,
 				name='plot'):
 		self.plotnum = self.plotnum + 1
+		self.data.extend([[x, y]])
 		if name is 'plot':
 			name = 'plot%d' % (self.plotnum)
 		delta = [j - i for i, j in zip(x[:-1], x[1:])]
@@ -951,6 +977,7 @@ class pyg2d(object):
 		patches = self.ax.bar(x, y, width=delta, label=name, facecolor=facecolor,
 						  alpha=alpha)
 		self.bars[name] = patches
+		self.allartists.append(self.bars[name])
 		return x, y, delta
 
 	def add_legend(self, axes=None):

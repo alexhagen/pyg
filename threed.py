@@ -161,15 +161,16 @@ class pyg3d(pyg2d.pyg2d):
         self.norm = self.cax[0].norm
         maxes = []
         mins = []
-        for c in self.cax[1:]:
+        for c in self.cax:
             c.set_norm = self.norm
             maxes.extend([c.levels[-1]])
             mins.extend([c.levels[0]])
-        levels = np.linspace(np.min(mins), np.max(maxes))
+        levels = np.linspace(np.nanmin(mins), np.nanmax(maxes))
         for c in self.cax:
-            c.vmin = np.min(mins)
-            c.vmax = np.max(maxes)
+            c.vmin = np.nanmin(mins)
+            c.vmax = np.nanmax(maxes)
         self.cbar = self.fig.colorbar(self.cax[0])
+	#self.artists.append(self.cbar)
 
 
     def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None, name='plot',
@@ -450,7 +451,8 @@ class pyg3d(pyg2d.pyg2d):
             _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
             ann[3].xy = (_x, _y)
 
-    def colorbar(self, cmap, cmap_name='Color Map'):
+	'''
+    def colorbar(self):#, cmap, cmap_name='Color Map'):
         if cmap.__class__.__name__ == "list" and \
             cmap[0].__class__.__name__ == "Color":
             colors = [c.rgb for c in cmap]
@@ -463,6 +465,7 @@ class pyg3d(pyg2d.pyg2d):
             cb1 = matplotlib.colorbar \
                 .ColorbarBase(ax1, cmap=cm, norm=norm)
             ax1.set_ylabel(cmap_name)
+	'''
 
     def zlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -500,7 +503,7 @@ class pyg3d(pyg2d.pyg2d):
         if axes is None:
             axes = self.ax
         self.clab = self.cbar.set_label(label)
-        self.artists.append(self.clab)
+        #self.artists.append(self.clab)
 
     def zlim(self, minz, maxz, axes=None):
         """ ``pyg2d.ylim`` limits the view of the y-axis to limits.
