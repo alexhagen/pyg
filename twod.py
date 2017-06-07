@@ -20,6 +20,7 @@ import weakref
 import re
 import __builtins__ as bi
 import lyxithea.lyxithea as lyx
+from itertools import count
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
@@ -136,11 +137,12 @@ class pyg2d(object):
 				  'fp': 'fullpage',
 				  'cs': 'customsize',
 				  'none': ''}
+	_figcount = count(0)
 
 	def __init__(self, env='plot', polar=False, colors='purdue'):
 		self.__class__.instances.append(weakref.proxy(self))
-		self.counter = 1
-		self.fig = plt.figure()
+		self.counter = self._figcount.next()
+		self.fig = plt.figure(self.counter)
 		self.ax = self.fig.add_subplot(111, polar=polar)
 		self.ax_subp = []
 		self.leg = False
