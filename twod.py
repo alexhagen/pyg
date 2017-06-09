@@ -96,9 +96,10 @@ def svg_show(filename, caption='', label=None, scale=None, width=None):
 		\begin{figure}
 			\centering
 			\includegraphics[width=%.2fin]{%s}
-			\caption{%s}
-			\label{fig:%s}
+			\caption{%s\label{fig:%s}}
 		\end{figure}""" % (fig_width, pdf_filename, caption, label)
+		__figures__.val[label] = bi.__figcount__
+		bi.__figcount__ += 1
 		return Latex(strlatex)
 
 
