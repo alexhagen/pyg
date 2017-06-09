@@ -1222,8 +1222,7 @@ class pyg2d(object):
 				\begin{%s}
 					%s
 					%s
-					\caption{%s}
-					\label{fig:%s}
+					\caption{%s\label{fig:%s}}
 				\end{%s}""" % (figfloat, centering, include_line, self.caption,
 							   self.label, figfloat)
 			fig = Latex(strlatex)
