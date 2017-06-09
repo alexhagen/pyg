@@ -1227,6 +1227,8 @@ class pyg2d(object):
 					\caption{%s\label{fig:%s}}
 				\end{%s}""" % (figfloat, centering, include_line, self.caption,
 							   self.label, figfloat)
+			__figures__.val[label] = bi.__figcount__
+			bi.__figcount__ += 1
 			fig = Latex(strlatex)
 			self.close()
 		else:
