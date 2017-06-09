@@ -25,6 +25,8 @@ import psgv.psgv as psgv
 
 __context__ = psgv.psgv('__context__')
 __context__.val = 'writeup'
+__figures__ = psgv.psgv('__lyxfigures__')
+__figures__.val = {}
 
 def context(ctx='writeup'):
 	__context__.val = ctx
@@ -71,7 +73,7 @@ def svg_show(filename, caption='', label=None, scale=None, width=None):
 				<div style='margin: auto; text-align: center;' class='figurecaption' name="%s"><b>Figure %d:</b> %s</div>
 			</div>
 		""" % (label, fig_width, filename, __counter__, label, bi.__figcount__, caption)
-		bi.__figures__[label] = bi.__figcount__
+		__figures__.val[label] = bi.__figcount__
 		bi.__figcount__ += 1
 		return display(HTML(fig_html))
 	else:
@@ -1200,7 +1202,7 @@ class pyg2d(object):
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
 				</div>
 			""" % (label, fig_width, self.svg_filename, __counter__, bi.__figcount__, self.caption)
-			bi.__figures__[label] = bi.__figcount__
+			__figures__.val[label] = bi.__figcount__
 			bi.__figcount__ += 1
 			fig = display(HTML(fig_html))
 			self.close()
