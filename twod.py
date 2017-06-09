@@ -21,6 +21,13 @@ import re
 import __builtins__ as bi
 import lyxithea.lyxithea as lyx
 from itertools import count
+import psgv.psgv as psgv
+
+__context__ = psgv.psgv('__context__')
+__context__.val = 'writeup'
+
+def context(ctx='writeup'):
+	__context__.val = ctx
 
 if "DISPLAY" not in os.environ.keys():
 	import matplotlib
@@ -68,11 +75,13 @@ def svg_show(filename, caption='', label=None, scale=None, width=None):
 		bi.__figcount__ += 1
 		return display(HTML(fig_html))
 	else:
-		if bi.__context__ == "writeup":
+		if __context__.val == "writeup":
 			widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-		elif bi.__context__ == "tufte":
+		elif __context__.val == "tufte":
 			widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-		elif bi.__context__ == "thesis":
+		elif __context__.val == "thesis":
+			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+		else:
 			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
 		if width is not None:
 			fig_width = widths[width]
@@ -252,7 +261,7 @@ class pyg2d(object):
 
 	@staticmethod
 	def change_context(context):
-		bi.__context__ = context
+		__context__.val = context
 
 	def xlabel(self, label, axes=None):
 		r""" ``pyg2d.xlabel`` adds a label to the x-axis.
@@ -1059,12 +1068,14 @@ class pyg2d(object):
 
 	def set_size(self, size, sizeofsizes, customsize=None, legloc=None,
 				 tight=True, ratio="golden", width=None):
-		#global bi.__context__
-		if bi.__context__ == "writeup":
+		#global __context__.val
+		if __context__.val == "writeup":
 			widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-		elif bi.__context__ == "tufte":
+		elif __context__.val == "tufte":
 			widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-		elif bi.__context__ == "thesis":
+		elif __context__.val == "thesis":
+			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+		else:
 			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
 		if width is None:
 			self.width = widths[size]
@@ -1194,10 +1205,10 @@ class pyg2d(object):
 				include_line = '\includegraphics{%s}' % self.pdf_filename
 			else:
 				include_line = '\input{%s}' % (self.pgf_filename)
-			if bi.__context__ == 'tufte' and self.width > 5.0:
+			if __context__.val == 'tufte' and self.width > 5.0:
 				figfloat = 'figure*'
 				centering = ''
-			elif bi.__context__ == 'tufte' and self.width < 4:
+			elif __context__.val == 'tufte' and self.width < 4:
 				figfloat = 'marginfigure'
 				centering = ''
 			else:
@@ -1228,11 +1239,11 @@ class pyg2d(object):
 			   width=None, caption='', force_pdf=False):
 		self.force_pdf = force_pdf
 		self.caption = caption
-		#global bi.__context__
+		#global __context__.val
 		if sizes is None:
-			if bi.__context__ == "writeup":
+			if __context__.val == "writeup":
 				sizes = ['1']
-			elif bi.__context__ == "thesis":
+			elif __context__.val == "thesis":
 				sizes = ['2']
 			if lyx.run_from_ipython():
 				sizes = ['2']
