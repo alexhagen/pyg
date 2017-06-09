@@ -1120,20 +1120,24 @@ class pyg2d(object):
 			add = '.pdf'
 		elif format is 'svg':
 			# save as pdf, then pdf2svg
-			self.fig.savefig(filename + self.sizestring[size] + '.pdf',
-						bbox_extra_artists=self.artists, bbox_inches='tight',
-						transparent=True, dpi=1200)
-			os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
-					  filename + self.sizestring[size] + '.svg')
-			os.remove(filename + self.sizestring[size] + '.pdf')
+			if not os.path.isfile(filename + self.sizestring[size] + '.svg') \
+				or self.force_export:
+				self.fig.savefig(filename + self.sizestring[size] + '.pdf',
+							bbox_extra_artists=self.artists, bbox_inches='tight',
+							transparent=True, dpi=1200)
+				os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
+						  filename + self.sizestring[size] + '.svg')
+				os.remove(filename + self.sizestring[size] + '.pdf')
 			self.svg_filename = filename + self.sizestring[size] + '.svg'
 		elif format is 'websvg':
 			add = 'web.svg'
 			self.svg_filename = filename + self.sizestring[size] + add
 		if (format is not 'svg') and (format is not 'html'):
-			self.fig.savefig(filename + self.sizestring[size] + add,
-						bbox_extra_artists=self.artists, bbox_inches='tight',
-						transparent=True)
+			if not os.path.isfile(filename + self.sizestring[size] + add) \
+				or self.force_export:
+				self.fig.savefig(filename + self.sizestring[size] + add,
+							bbox_extra_artists=self.artists, bbox_inches='tight',
+							transparent=True)
 		if format is 'html':
 			add = '.html'
 			import mpld3
@@ -1236,8 +1240,9 @@ class pyg2d(object):
 
 	def export(self, filename, sizes=None, formats=None,
 			   customsize=None, legloc=None, tight=True, ratio="golden",
-			   width=None, caption='', force_pdf=False):
+			   width=None, caption='', force_pdf=False, force=False):
 		self.force_pdf = force_pdf
+		self.force_export = force
 		self.caption = caption
 		#global __context__.val
 		if sizes is None:
