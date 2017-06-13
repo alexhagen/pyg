@@ -51,7 +51,7 @@ preamble = ['\usepackage{nicefrac}',
 	'\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
 	'{\mathrm{#1}}}}']
 
-def svg_show(filename, caption='', label=None, scale=None, width=None):
+def svg_show(filename, caption='', label=None, scale=None, width=None, convert=True):
 	fig = None
 	if label is None:
 		label = caption
@@ -91,7 +91,8 @@ def svg_show(filename, caption='', label=None, scale=None, width=None):
 			fig_width = widths['2']
 		svg_filename = filename
 		pdf_filename = filename.replace('.svg', '.pdf')
-		os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+		if convert:
+			os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
 		strlatex = r"""
 		\begin{figure}
 			\centering
@@ -1205,7 +1206,7 @@ class pyg2d(object):
 			""" % (label, fig_width, self.svg_filename, __counter__, bi.__figcount__, self.caption)
 			__figures__.val[label] = bi.__figcount__
 			bi.__figcount__ += 1
-			fig = display(HTML(fig_html))
+			fig = HTML(fig_html)
 			self.close()
 		elif lyx.need_latex():
 			if self.force_pdf:
@@ -1240,7 +1241,7 @@ class pyg2d(object):
 					os.system("evince " + self.pdf_filename + " &")
 			if self.html_filename is not None:
 				os.system("google-chrome " + self.html_filename + " &")
-		return display(fig)
+		display(fig)
 
 	def export(self, filename, sizes=None, formats=None,
 			   customsize=None, legloc=None, tight=True, ratio="golden",
