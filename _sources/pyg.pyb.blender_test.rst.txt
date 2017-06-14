@@ -1,0 +1,7 @@
+pyg\.pyb\.blender\_test module
+==============================
+
+.. automodule:: pyg.pyb.blender_test
+    :members:
+    :undoc-members:
+    :show-inheritance:

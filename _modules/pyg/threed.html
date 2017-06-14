@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyg.threed &#8212; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/extra.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+
+
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/pyg.svg"></span>
+        pyg</a>
+      <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+    </div>
+
+      <div class="collapse navbar-collapse nav-collapse">
+        <ul class="nav navbar-nav">
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Alex Hagen <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#"> <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+            
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+          
+          
+            
+              
+            
+          
+          
+          
+          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://alexhagen.github.io/" target="_blank">Alex Hagen</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pyg.threed</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.odr</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">exp</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">colour</span> <span class="k">import</span> <span class="n">Color</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#matplotlib.use(&#39;pgf&#39;)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="k">import</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">proj3d</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">LinearSegmentedColormap</span><span class="p">,</span> <span class="n">ListedColormap</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">pyg.colors</span> <span class="k">import</span> <span class="n">pu</span> <span class="k">as</span> <span class="n">color</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">SVG</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Latex</span><span class="p">,</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display_latex</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">lyxithea.lyxithea</span> <span class="k">as</span> <span class="nn">lyx</span>
+<span class="kn">from</span> <span class="nn">pyg</span> <span class="k">import</span> <span class="n">twod</span> <span class="k">as</span> <span class="n">pyg2d</span>
+
+<span class="k">if</span> <span class="s2">&quot;DISPLAY&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+	<span class="kn">import</span> <span class="nn">matplotlib</span>
+	<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;pgf&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">global</span> <span class="n">context</span>
+<span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;writeup&#39;</span>
+<span class="k">global</span> <span class="n">__figcount__</span>
+<span class="n">__figcount__</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">exported_files</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">preamble</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;\usepackage</span><span class="si">{nicefrac}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\usepackage</span><span class="si">{gensymb}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\usepackage</span><span class="si">{xcolor}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\definecolor</span><span class="si">{grey60}{HTML}{746C66}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;\definecolor</span><span class="si">{grey40}{HTML}{A7A9AC}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="sa">r</span><span class="s1">&#39;\usepackage{amsmath, amssymb}&#39;</span><span class="p">,</span>
+    <span class="sa">r</span><span class="s1">&#39;\usepackage</span><span class="si">{stackrel}</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor</span><span class="si">{grey60}</span><span class="s1">&#39;</span> <span class="o">+</span>
+    <span class="s1">&#39;{\mathrm{#1}}}}&#39;</span><span class="p">]</span>
+
+<span class="c1"># make the line graphing class</span>
+<div class="viewcode-block" id="pyg3d"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d">[docs]</a><span class="k">class</span> <span class="nc">pyg3d</span><span class="p">(</span><span class="n">pyg2d</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A ``pyg.pyg3d`` object plots many three-dimensional data types.</span>
+
+<span class="sd">    The ``pyg3d`` class provides an access to ``matplotlib`` charting functions</span>
+<span class="sd">    and some hook ins to making these functions easier to use and more</span>
+<span class="sd">    repeatable.  The constructor itself takes only one optional argument,</span>
+<span class="sd">    ``env``.</span>
+
+<span class="sd">    :param str env: The environement option defines where you are going to use</span>
+<span class="sd">        the generated plot, with the default option being plot (or printing).</span>
+<span class="sd">        If you are using this to generate plots for a gui, define this option</span>
+<span class="sd">        as ``gui`` and the class will choose a prettier parameter set for your</span>
+<span class="sd">        chart. Default: ``plot``.</span>
+<span class="sd">    :type env: ``plot``, ``gui``, or ``None``</span>
+<span class="sd">    :return: the ``pyg3d`` object.</span>
+<span class="sd">    :rtype: ``pyg3d``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">leg_col_one_col</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">leg_col_two_col</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">leg_col_full_page</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+              <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+              <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+              <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+              <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+              <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span>
+              <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;4&#39;</span><span class="p">}</span>
+    <span class="n">linestyle</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                 <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                 <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                 <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;:&#39;</span><span class="p">}</span>
+    <span class="n">sizestring</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;onecolumn&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;2&#39;</span><span class="p">:</span> <span class="s1">&#39;twocolumn&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;fp&#39;</span><span class="p">:</span> <span class="s1">&#39;fullpage&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;cs&#39;</span><span class="p">:</span> <span class="s1">&#39;customsize&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;purdue&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">pyg3d</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;_internal.classic_mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cax</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">_axinfo</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">][</span><span class="s1">&#39;outward_factor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">_axinfo</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">][</span><span class="s1">&#39;outward_factor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">_axinfo</span><span class="p">[</span><span class="s1">&#39;tick&#39;</span><span class="p">][</span><span class="s1">&#39;outward_factor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">245</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_xaxis</span><span class="o">.</span><span class="n">gridlines</span><span class="o">.</span><span class="n">set_lw</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_yaxis</span><span class="o">.</span><span class="n">gridlines</span><span class="o">.</span><span class="n">set_lw</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_zaxis</span><span class="o">.</span><span class="n">gridlines</span><span class="o">.</span><span class="n">set_lw</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_xaxis</span><span class="o">.</span><span class="n">set_pane_color</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_yaxis</span><span class="o">.</span><span class="n">set_pane_color</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">w_zaxis</span><span class="o">.</span><span class="n">set_pane_color</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="pyg3d.orthogonal_proj"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.orthogonal_proj">[docs]</a>    <span class="k">def</span> <span class="nf">orthogonal_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zfront</span><span class="p">,</span> <span class="n">zback</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">zfront</span><span class="o">+</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">zfront</span><span class="o">*</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0e-9</span><span class="p">,</span><span class="n">zback</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="pyg3d.upright_orthogonal_proj"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.upright_orthogonal_proj">[docs]</a>    <span class="k">def</span> <span class="nf">upright_orthogonal_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zfront</span><span class="p">,</span> <span class="n">zback</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">zfront</span><span class="o">+</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">zfront</span><span class="o">*</span><span class="n">zback</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">zfront</span><span class="o">-</span><span class="n">zback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0e-9</span><span class="p">,</span><span class="n">zback</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="pyg3d.surf2d"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.surf2d">[docs]</a>    <span class="k">def</span> <span class="nf">surf2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">brand_cmap</span><span class="p">,</span> <span class="n">addto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
+               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">PolyCollection</span>
+        <span class="k">if</span> <span class="n">addto</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">addto</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">cmaplist</span> <span class="o">=</span> <span class="p">[</span><span class="n">_c</span><span class="o">.</span><span class="n">rgb</span> <span class="k">for</span> <span class="n">_c</span> <span class="ow">in</span> <span class="n">cmap</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">cmaplist</span><span class="p">,</span>
+                                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;brand_cmap&#39;</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;x&#39;</span>
+            <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+            <span class="n">zdir</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span>
+            <span class="n">zs</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">axes</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
+                                     <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;y&#39;</span>
+            <span class="n">Z</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">zdir</span> <span class="o">=</span> <span class="s1">&#39;y&#39;</span>
+            <span class="n">zs</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">axes</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+                                     <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;z&#39;</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">zdir</span> <span class="o">=</span> <span class="s1">&#39;z&#39;</span>
+            <span class="n">zs</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">axes</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cmap</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">zs</span><span class="p">,</span> <span class="n">zdir</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span>
+                                     <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="pyg3d.colorbar"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.colorbar">[docs]</a>    <span class="k">def</span> <span class="nf">colorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span>
+        <span class="n">maxes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">set_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span>
+            <span class="n">maxes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">mins</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">mins</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">maxes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">mins</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">maxes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cbar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+	<span class="c1">#self.artists.append(self.cbar)</span>
+
+
+<div class="viewcode-block" id="pyg3d.surf"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.surf">[docs]</a>    <span class="k">def</span> <span class="nf">surf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">color</span><span class="o">.</span><span class="n">brand_cmap</span><span class="p">,</span> <span class="n">addto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">addto</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">addto</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># z = np.nan_to_num(z)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">z</span><span class="p">),</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">cmaplist</span> <span class="o">=</span> <span class="p">[</span><span class="n">_c</span><span class="o">.</span><span class="n">rgb</span> <span class="k">for</span> <span class="n">_c</span> <span class="ow">in</span> <span class="n">cmap</span><span class="p">]</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">cmaplist</span><span class="p">,</span>
+                                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;brand_cmap&#39;</span><span class="p">)</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                                 <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                 <span class="n">vmin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">z</span><span class="p">),</span>
+                                 <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">surf</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.legend"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">surfs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfs</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">key</span><span class="p">])</span>
+            <span class="n">surfs</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">val</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">surfs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">numpoints</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pyg3d.view"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.view">[docs]</a>    <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">perspective</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">upright</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">perspective</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">upright</span><span class="p">:</span>
+                <span class="n">proj3d</span><span class="o">.</span><span class="n">persp_transformation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upright_orthogonal_proj</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">proj3d</span><span class="o">.</span><span class="n">persp_transformation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orthogonal_proj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.cylinder"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.cylinder">[docs]</a>    <span class="k">def</span> <span class="nf">cylinder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">planes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c_data</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">c_data</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="n">planes</span>
+        <span class="k">elif</span> <span class="n">planes</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># draw the cylindrical surface</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">cz</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cx</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">cz</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">cx</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">cz</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">Tc</span><span class="p">,</span> <span class="n">Zc</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">Xc</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Tc</span><span class="p">)</span>
+        <span class="n">Yc</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Tc</span><span class="p">)</span>
+        <span class="n">rstride</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">cstride</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">cylsurface</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Zc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Xc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span>
+                                           <span class="n">rstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span>
+                                           <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">cylsurface</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span>
+                                           <span class="n">rstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span>
+                                           <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">R</span><span class="p">,</span> <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Theta</span><span class="p">),</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
+        <span class="n">Zc</span> <span class="o">=</span> <span class="n">cz</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Zc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Xc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                    <span class="n">cstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                    <span class="n">cstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">Zc</span> <span class="o">=</span> <span class="n">cz</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">if</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Zc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Xc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                    <span class="n">cstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                                    <span class="n">cstride</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.sphere"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.sphere">[docs]</a>    <span class="k">def</span> <span class="nf">sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">planes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="n">planes</span>
+        <span class="k">elif</span> <span class="n">planes</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">rstride</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">cstride</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">theta</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+
+        <span class="n">sph</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span>
+                                <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.box"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.box">[docs]</a>    <span class="k">def</span> <span class="nf">box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">d3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">planes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="n">planes</span>
+        <span class="k">elif</span> <span class="n">planes</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">rstride</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">cstride</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">l1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">l2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">l3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">d3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">numpts</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">planes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">top_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corner</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span> <span class="o">+</span> \
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d3</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">),</span> <span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">d3</span><span class="p">),</span> <span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d3</span><span class="p">)]:</span>
+            <span class="n">a1</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">a2</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpts</span><span class="p">,</span> <span class="n">numpts</span><span class="p">))</span>
+            <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpts</span><span class="p">,</span> <span class="n">numpts</span><span class="p">))</span>
+            <span class="n">zz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">numpts</span><span class="p">,</span> <span class="n">numpts</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numpts</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numpts</span><span class="p">):</span>
+                    <span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">a1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">yy</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">a1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">planes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span>
+                                       <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                       <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numpts</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numpts</span><span class="p">):</span>
+                    <span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> \
+                        <span class="n">a1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">yy</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> \
+                        <span class="n">a1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_corner</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> \
+                        <span class="n">a1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> \
+                        <span class="n">a2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">numpts</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">planes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span>
+                                       <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                       <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)])</span>
+        <span class="c1">#top = axes.plot_surface(Xc, Yc, )</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="pyg3d.cube"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.cube">[docs]</a>    <span class="k">def</span> <span class="nf">cube</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">planes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">ax</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">planes</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="n">planes</span>
+        <span class="k">elif</span> <span class="n">planes</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">planes_alpha</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">rstride</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">cstride</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                   <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                   <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">Xc</span><span class="p">,</span> <span class="n">Zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span>
+                                <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span>
+                                   <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                   <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span>
+                                         <span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dz</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+        <span class="n">front</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span>
+                                <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="n">back</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dx</span><span class="o">/</span><span class="mf">2.</span><span class="p">,</span> <span class="n">Yc</span><span class="p">,</span> <span class="n">Zc</span><span class="p">,</span>
+                                   <span class="n">rstride</span><span class="o">=</span><span class="n">cstride</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="n">rstride</span><span class="p">,</span>
+                                   <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">planes_alpha</span><span class="p">,</span> <span class="n">shade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="pyg3d.add_data_pointer"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.add_data_pointer">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_pointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">proj3d</span><span class="o">.</span><span class="n">proj_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">get_proj</span><span class="p">())</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">pyg3d</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_data_pointer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">string</span><span class="p">,</span>
+                                            <span class="n">place</span><span class="o">=</span><span class="s1">&#39;up-right&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pyg3d.update_data_pointers"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.update_data_pointers">[docs]</a>    <span class="k">def</span> <span class="nf">update_data_pointers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotations</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">ann</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">ann</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">ann</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">proj3d</span><span class="o">.</span><span class="n">proj_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">get_proj</span><span class="p">())</span>
+            <span class="n">ann</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">)</span>
+
+	<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    def colorbar(self):#, cmap, cmap_name=&#39;Color Map&#39;):</span>
+<span class="sd">        if cmap.__class__.__name__ == &quot;list&quot; and \</span>
+<span class="sd">            cmap[0].__class__.__name__ == &quot;Color&quot;:</span>
+<span class="sd">            colors = [c.rgb for c in cmap]</span>
+<span class="sd">            ax1 = self.fig.add_axes([0.95, 0.05, 0.04, 0.9])</span>
+<span class="sd">            self.ax_subp.extend([ax1])</span>
+<span class="sd">            cm = LinearSegmentedColormap.from_list(</span>
+<span class="sd">                cmap_name, colors, N=len(cmap))</span>
+<span class="sd">            norm = matplotlib.colors\</span>
+<span class="sd">                .Normalize(vmin=np.min(self.c_data), vmax=np.max(self.c_data))</span>
+<span class="sd">            cb1 = matplotlib.colorbar \</span>
+<span class="sd">                .ColorbarBase(ax1, cmap=cm, norm=norm)</span>
+<span class="sd">            ax1.set_ylabel(cmap_name)</span>
+<span class="sd">	&#39;&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="pyg3d.zlabel"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.zlabel">[docs]</a>    <span class="k">def</span> <span class="nf">zlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot; ``pyg2d.xlabel`` adds a label to the x-axis.</span>
+
+<span class="sd">        ``pyg2d.xlabel`` adds a label to the x-axis of the current axes (or</span>
+<span class="sd">        other axis given by kwarg ``axes``).</span>
+
+<span class="sd">        :param str label: The label added to the x-axis of the defined axis.</span>
+<span class="sd">            The label can take LaTeX arguments and the ah style guide asks for</span>
+<span class="sd">            labels given as &#39;Label ($variable$) [$unit$]&#39;.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the x-label</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">zlab</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zlab</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pyg3d.clabel"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.clabel">[docs]</a>    <span class="k">def</span> <span class="nf">clabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot; ``pyg2d.xlabel`` adds a label to the x-axis.</span>
+
+<span class="sd">        ``pyg2d.xlabel`` adds a label to the x-axis of the current axes (or</span>
+<span class="sd">        other axis given by kwarg ``axes``).</span>
+
+<span class="sd">        :param str label: The label added to the x-axis of the defined axis.</span>
+<span class="sd">            The label can take LaTeX arguments and the ah style guide asks for</span>
+<span class="sd">            labels given as &#39;Label ($variable$) [$unit$]&#39;.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the x-label</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span></div>
+        <span class="c1">#self.artists.append(self.clab)</span>
+
+<div class="viewcode-block" id="pyg3d.zlim"><a class="viewcode-back" href="../../pyg.threed.html#pyg.threed.pyg3d.zlim">[docs]</a>    <span class="k">def</span> <span class="nf">zlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; ``pyg2d.ylim`` limits the view of the y-axis to limits.</span>
+
+<span class="sd">        :param float miny: The minimum value of y that will be shown.</span>
+<span class="sd">        :param float maxy: The maximum value of y that will be shown.</span>
+<span class="sd">        :param axes: If not ``None``, this argument will apply the y-limit</span>
+<span class="sd">            to the provided axis.</span>
+<span class="sd">        :type axes: axes, or ``None``</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="n">minz</span><span class="p">,</span> <span class="n">maxz</span><span class="p">])</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Alex Hagen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

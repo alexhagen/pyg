@@ -1,0 +1,7 @@
+pyg\.pyb\.blender\_mats\_utils module
+=====================================
+
+.. automodule:: pyg.pyb.blender_mats_utils
+    :members:
+    :undoc-members:
+    :show-inheritance:

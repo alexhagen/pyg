@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Class Documentation for twod.pyg2d &#8212; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="_static/extra.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+
+
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><span><img src="_static/pyg.svg"></span>
+        pyg</a>
+      <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+    </div>
+
+      <div class="collapse navbar-collapse nav-collapse">
+        <ul class="nav navbar-nav">
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Alex Hagen <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#"> <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Class Documentation for twod.pyg2d</a></li>
+<li><a class="reference internal" href="#class-documentation-for-threed-pyg3d">Class Documentation for threed.pyg3d</a><ul>
+<li><a class="reference internal" href="#todos">ToDos</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+            
+          
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+          
+          
+            
+              
+            
+          
+          
+          
+          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://alexhagen.github.io/" target="_blank">Alex Hagen</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="pyg---A-graphics-class">pyg - A graphics class<a class="anchor-link" href="#pyg---A-graphics-class">&#182;</a></h1><p>By Alex Hagen</p>
+<p><code>pyg</code> started as a simple wrapper around <code>matplotlib</code> to help me keep my style the same in plotting, but now it's expanded to a full graphics suite.  If you get bored reading through the first two examples, skip to the bottom. Those examples are a bit cooler.</p>
+<h2 id="Installation">Installation<a class="anchor-link" href="#Installation">&#182;</a></h2><p>For <code>pyg</code>, we need quite a few requirements.  Installation right now is pretty manual, but this should do the trick on unix systems:</p>
+<div class="highlight"><pre><span></span>pip install numpy scipy matplotlib colours
+mkdir ~/util
+<span class="nb">cd</span> ~/util
+git clone https://github.com/alexhagen/pyg -b master pyg
+sudo <span class="nb">echo</span> <span class="s2">&quot;export PYTHONPATH=</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:~/util&quot;</span> &gt;&gt; ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+</pre></div>
+<p>and then we can just import pyg whenever with</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">twod</span> <span class="k">as</span> <span class="n">pyg2d</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Usage">Usage<a class="anchor-link" href="#Usage">&#182;</a></h2><p><code>pyg</code> has one main class, a <code>twod</code> plot type, and it has several other classes. The <code>table</code> module has some table printing help for Jupyter notebooks and some LaTeX publication helper functions.  The <code>threed</code> module has some <code>matplotlib</code> three dimensional plotting (this is good for surface plotting, if you're doing geometric visualization, use my <a href="github.com/alexhagen/pyb"><code>pyb</code></a> class, which I'll include into <code>pyg</code> soon), <code>three2twod</code> is a class for annotating three dimensional plotting (if you have the transformation matrix from 3-d to 2-d).  I've created some informative examples of these below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Line-Plotting">Line Plotting<a class="anchor-link" href="#Line-Plotting">&#182;</a></h3><p>The simplest plotting in <code>pyg</code> is line plotting, and the following two figures show the api for plotting a line with its associated uncertainty.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">u_y</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2d</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#285668&#39;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">u_y</span><span class="p">,</span> <span class="n">error_fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sin \left( \theta \right)$&#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x-coordinate ($x$) [$\unit{cm}$]&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y-coordinate ($y$) [$\unit{cm}$]&#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">lines_on</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/line&#39;</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;silver&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">caption</span><span class="o">=</span><span class="s1">&#39;some caption&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['somecaption']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?1512730380' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> some caption</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">u_y</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">x_sparse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">y_sparse</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x_sparse</span><span class="p">)</span>
+<span class="n">u_y_sparse</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2d</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#fc8d82&#39;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">u_y</span><span class="p">,</span> <span class="n">error_fill</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sin \left( \theta \right)$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x_sparse</span><span class="p">,</span> <span class="n">y_sparse</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">u_y_sparse</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;sparse&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines_on</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="s1">&#39;sparse&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="s1">&#39;sparse&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_markersize</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="s1">&#39;sparse&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/err&#39;</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;silver&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">caption</span><span class="o">=</span><span class="s1">&#39;Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['Sinusoidwithuncertaintyandasparselysampledsinusoidwithuncertainty']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?146043539' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 2:</b> Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Dual-Axis-Plotting">Dual Axis Plotting<a class="anchor-link" href="#Dual-Axis-Plotting">&#182;</a></h3><p>The following figure shows the API for plotting data on concurrent axes.  There are two different APIs to this:  the first requires you to plot your data, and then define a function that converts one axis to another.  The other API requires you to plot two different data sets on axes with different limits.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2d</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#fc8d82&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;$y_{1}$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line_yy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#285668&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;$y_{2}$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x coordinate ($x$)&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y coordinate ($y_{1}$)&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y coordinate ($y_{2}$)&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/dual&#39;</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;silver&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="s1">&#39;Sinusoids with the same $x$ axis, on different $y$ axes&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['Sinusoidswiththesamexaxisondifferentyaxes']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?1318415182' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 3:</b> Sinusoids with the same $x$ axis, on different $y$ axes</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next figure shows how you can compare a single function against different ordinate axes.  This would be useful if you are comparing different units, but I particularly use it when there is some electrical measurement that is calibrated non-linearly (for example, in gamma spectroscopy).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg2d</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">()</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;#285668&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;$y$&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">markers_off</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">pi_div</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_xx</span><span class="p">(</span><span class="n">pi_div</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x coordinate ($x$) [$\unit{cm}$]&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x coordinate in terms of $\pi$ ($x$) [$\unit{\pi}$]&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y coordinate ($y$) [$\unit{cm}$]&#39;</span><span class="p">)</span>
+
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/dualx&#39;</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;silver&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="s1">&#39;Sinusoid in terms of radians and in terms of $\pi$&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['Sinusoidintermsofradiansandintermsofpi']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?50955383' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 4:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Three-Dimensional-Plotting">Three Dimensional Plotting<a class="anchor-link" href="#Three-Dimensional-Plotting">&#182;</a></h3><p>The following shows an example for 3d plotting using <code>pyg</code>, which is generally simple except for the conversion from matrix data into a form that can be plotted.  Below shows a simple example for a power fit, but an API is soon coming for converting data into the right formats.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">threed</span> <span class="k">as</span> <span class="n">pyg3d</span>
+
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg3d</span><span class="o">.</span><span class="n">pyg3d</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">surf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/threed_surf&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">caption</span><span class="o">=</span><span class="s1">&#39;An arbitrary three dimensional surface&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['Anarbitrarythreedimensionalsurface']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?118499539' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 5:</b> An arbitrary three dimensional surface</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Two-to-Three-Dimensional-Plotting">Two to Three Dimensional Plotting<a class="anchor-link" href="#Two-to-Three-Dimensional-Plotting">&#182;</a></h3><p>The description of 3 dimensional geometry by annotation is difficult in the best circumstances, but very few things are "best circumstances".  Most of the field of visualization relies on software specifically designed for visualization, such as <code>VTK</code> and its derivatives.  This is very powerful, but for someone analyzing data or writing simulations, the last thing they want to do is write an interface to these programs.  So, I've written a quick and easy API to keep all the data in Python and visualize the geometry in Blender.  Then, I have an interface for which the code can extract the camera parameters of an exported render, and then the user can plot two dimensional annotations overtop of the three-dimensional geometry, in place.  A more advanced example is coming, but a rudimentary example is shown below.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">pyg.pyb</span> <span class="kn">import</span> <span class="n">pyb</span>
+<span class="kn">from</span> <span class="nn">pyg</span> <span class="kn">import</span> <span class="n">three2twod</span> <span class="k">as</span> <span class="n">pyg32d</span>
+
+<span class="n">scene</span> <span class="o">=</span> <span class="n">pyb</span><span class="o">.</span><span class="n">pyb</span><span class="p">()</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rpp</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">l</span><span class="o">=</span><span class="p">(</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cube&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">flat</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;#E3AE24&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;newgold&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_matl</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="s1">&#39;cube&#39;</span><span class="p">,</span> <span class="n">matl</span><span class="o">=</span><span class="s1">&#39;newgold&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rpp</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">65.</span><span class="p">),</span> <span class="n">l</span><span class="o">=</span><span class="p">(</span><span class="mf">500.</span><span class="p">,</span> <span class="mf">500.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;floor&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">flat</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#888888&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">set_matl</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="s1">&#39;floor&#39;</span><span class="p">,</span> <span class="n">matl</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;_static/blenderrender.png&#39;</span><span class="p">)</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="n">pyg32d</span><span class="o">.</span><span class="n">ann_im</span><span class="p">(</span><span class="s1">&#39;_static/blenderrender.png&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_data_pointer</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\vec{c} = \left( 0, 0, 0 \right)$&#39;</span><span class="p">,</span>
+                   <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">500.</span><span class="p">,</span> <span class="mf">200.</span><span class="p">))</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">add_legend_entry</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;#E3AE24&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Cube&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">add_legend_entry</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#888888&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Floor&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;_static/ann_im&#39;</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;golden&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="s1">&#39;Using two dimensional annotations on a three dimensional geometric plot&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+
+<div class="output_html rendered_html output_subarea ">
+
+				<div class='pygfigure' name='['Usingtwodimensionalannotationsonathreedimensionalgeometricplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?433591664' />
+					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 6:</b> Using two dimensional annotations on a three dimensional geometric plot</div>
+				</div>
+			
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+ 
+
+<div class="section" id="class-documentation-for-twod-pyg2d">
+<h1>Class Documentation for twod.pyg2d<a class="headerlink" href="#class-documentation-for-twod-pyg2d" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="twod.pyg2d">
+<em class="property">class </em><code class="descclassname">twod.</code><code class="descname">pyg2d</code><span class="sig-paren">(</span><em>env=’plot’</em>, <em>polar=False</em>, <em>colors=’purdue’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A <code class="docutils literal"><span class="pre">pyg.pyg2d</span></code> object plots many two-dimensional data types.</p>
+<p>The <code class="docutils literal"><span class="pre">pyg2d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
+and some hook ins to making these functions easier to use and more
+repeatable.  The constructor itself takes only one optional argument,
+<code class="docutils literal"><span class="pre">env</span></code>.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add more color schemes and the ability to define and hook in color
+schemes manually.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env</strong> (<code class="docutils literal"><span class="pre">plot</span></code>, <code class="docutils literal"><span class="pre">gui</span></code>, or <code class="docutils literal"><span class="pre">None</span></code>) – The environement option defines where you are going to use
+the generated plot, with the default option being plot (or printing).
+If you are using this to generate plots for a gui, define this option
+as <code class="docutils literal"><span class="pre">gui</span></code> and the class will choose a prettier parameter set for your
+chart. Default: <code class="docutils literal"><span class="pre">plot</span></code>.</li>
+<li><strong>colors</strong> (<code class="docutils literal"><span class="pre">pu</span></code>, <code class="docutils literal"><span class="pre">purdue</span></code>, <code class="docutils literal"><span class="pre">salabs</span></code>, or <code class="docutils literal"><span class="pre">ah</span></code>) – The <code class="docutils literal"><span class="pre">colors</span></code> option defines the color scheme which
+will be used in the plotting.  The ability to hook in schemes will be
+added. Default: <code class="docutils literal"><span class="pre">purdue</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the <code class="docutils literal"><span class="pre">pyg2d</span></code> object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">pyg2d</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="twod.pyg2d.add_hline">
+<code class="descname">add_hline</code><span class="sig-paren">(</span><em>y</em>, <em>xmin=None</em>, <em>xmax=None</em>, <em>ls=’solid’</em>, <em>lw=1.5</em>, <em>color=’black’</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.add_hline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.add_hline" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_hline</span></code> draws a horizontal line.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_hline</span></code> draws a horizontal line from either the left axis
+to the right axis if <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are not provided, otherwise
+it is drawn from <code class="docutils literal"><span class="pre">xmin</span></code> to <code class="docutils literal"><span class="pre">xmax</span></code> at <code class="docutils literal"><span class="pre">y</span></code>.  Be careful not to
+change from linear to log scale AFTER using this function, as</p>
+<div class="math">
+\[\log\left(0\right)=-\infty\]</div>
+<p>and this means the line will extend past the extents of the latex page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The ordinate axis coordinate of the line.</li>
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The left extent of the line.</li>
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The right extent of the line.</li>
+<li><strong>ls</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) – The style of the line, i.e. ‘-‘, ‘–’, ‘:’, etc.</li>
+<li><strong>lw</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The width of the line in pt.</li>
+<li><strong>color</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) – The color of the line.</li>
+<li><strong>axes</strong> (<em>axes</em>) – The axes object the line should be added to, if not
+current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.add_subplot">
+<code class="descname">add_subplot</code><span class="sig-paren">(</span><em>subp=121</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.add_subplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.add_subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> adds a grid in which you can make subplots.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_subplot</span></code> follows Matlab’s lead and allows you to plot
+several axes on one plot. The newly created axes is saved as
+<code class="docutils literal"><span class="pre">pyg2d.ax2</span></code> - this should be expanded for more axes later.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Expand subplotting to be able to use more than two axes total.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>subp</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – If kwarg <code class="docutils literal"><span class="pre">subp</span></code> is not defined, the
+default is to add a second plot in a 1x2 array.  When <code class="docutils literal"><span class="pre">subp</span></code> is
+defined, it will follow that system (i.e. <code class="docutils literal"><span class="pre">subp=234</span></code> means you
+have two rows and three columns and you are plotting in the 4th
+postition <code class="docutils literal"><span class="pre">(2,1)</span></code>).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.add_vline">
+<code class="descname">add_vline</code><span class="sig-paren">(</span><em>x</em>, <em>ymin=None</em>, <em>ymax=None</em>, <em>ls=’solid’</em>, <em>lw=1.5</em>, <em>color=’black’</em>, <em>name=None</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.add_vline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.add_vline" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.add_vline</span></code> draws a vertical line from either the bottom axis
+to the top axis if <code class="docutils literal"><span class="pre">ymin</span></code> and <code class="docutils literal"><span class="pre">ymax</span></code> are not provided, otherwise
+it is drawn from <code class="docutils literal"><span class="pre">ymin</span></code> to <code class="docutils literal"><span class="pre">ymax</span></code> at <code class="docutils literal"><span class="pre">x</span></code>.  Be careful not to
+change from linear to log scale AFTER using this function, as</p>
+<div class="math">
+\[\log\left(0\right)=-\infty\]</div>
+<p>and this means the line will extend past the extents of the latex page.</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The abscissa coordinate of the line.</li>
+<li><strong>ymin</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The lower extent of the line.</li>
+<li><strong>ymax</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The upper extent of the line.</li>
+<li><strong>ls</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) – The style of the line, i.e. ‘-‘, ‘–’, ‘:’, etc.</li>
+<li><strong>lw</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The width of the line in pt.</li>
+<li><strong>color</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) – The color of the line.</li>
+<li><strong>axes</strong> (<em>axes</em>) – The axes object the line should be added to, if not
+current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.fit_lines_on">
+<code class="descname">fit_lines_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.fit_lines_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.fit_lines_on" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyg2d.fit_lines_on</span></code> turns on the connector lines for any</dt>
+<dd>regression fits that are plotted</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.fit_markers_off">
+<code class="descname">fit_markers_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.fit_markers_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.fit_markers_off" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">pyg2d.fit_markers_off</span></code> turns off the data markers for any</dt>
+<dd>fit lines that are plotted</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.legend">
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc=1</em>, <em>exclude=’saljfdaljdfaslkjfd’</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> shows the legend on the plot.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.legend</span></code> toggles the legend showing on.  This is done by getting
+the included objects and titles from the <code class="docutils literal"><span class="pre">matplotlib</span></code> axis item, and
+then checking to see if there is the word ‘connector’ in that title. If
+there is that word, then the entry is discarded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>loc</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) – The location of the legend in counter-clockwise
+notation.</li>
+<li><strong>exclude</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Partial key string of legend entries to exclude</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.lines_off">
+<code class="descname">lines_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.lines_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.lines_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_off</span></code> turns off the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.lines_on">
+<code class="descname">lines_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.lines_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.lines_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.lines_on</span></code> turns on the connector lines for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.markers_off">
+<code class="descname">markers_off</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.markers_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.markers_off" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_off</span></code> turns off the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.markers_on">
+<code class="descname">markers_on</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.markers_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.markers_on" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.markers_on</span></code> turns on the data markers for all data sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.title">
+<code class="descname">title</code><span class="sig-paren">(</span><em>title</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.title</span></code> adds a title to the plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>title</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – the title to be added to the plot. The title can take
+LaTeX arguments.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.xlabel">
+<code class="descname">xlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The label added to the x-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as ‘Label ($variable$) [$unit$]’.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.xlim">
+<code class="descname">xlim</code><span class="sig-paren">(</span><em>minx</em>, <em>maxx</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlim</span></code> limits the view of the x-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>minx</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The minimum value of x that will be shown.</li>
+<li><strong>maxx</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The maximum value of x that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.xticks">
+<code class="descname">xticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.xticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.xticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xticks</span></code> will move the ticks on the abscissa to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<em>list</em>) – The values where the new tick labels will be placed
+on the x-axis.</li>
+<li><strong>labels</strong> (<em>list</em>) – The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) – An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.ylabel">
+<code class="descname">ylabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.ylabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.ylabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.ylabel</span></code> adds a label to the y-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).  The label can take LaTeX
+arguments and the ah style guide asks for labels given as ‘Label
+($variable$) [$unit$]’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The label added to the y-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as ‘Label ($variable$) [$unit$]’.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.ylim">
+<code class="descname">ylim</code><span class="sig-paren">(</span><em>miny</em>, <em>maxy</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.ylim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.ylim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>miny</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The minimum value of y that will be shown.</li>
+<li><strong>maxy</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The maximum value of y that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the y-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="twod.pyg2d.yticks">
+<code class="descname">yticks</code><span class="sig-paren">(</span><em>ticks</em>, <em>labels</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/twod.html#pyg2d.yticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#twod.pyg2d.yticks" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> changes the ticks and labels to provided values.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.yticks</span></code> will move the ticks on the ordinate axis to the
+locations given in <code class="docutils literal"><span class="pre">ticks</span></code> and place the labels in list <code class="docutils literal"><span class="pre">labels</span></code> at
+those locations, repsectively.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ticks</strong> (<em>list</em>) – The values where the new tick labels will be placed
+on the y-axis.</li>
+<li><strong>labels</strong> (<em>list</em>) – The string labels for each tick.</li>
+<li><strong>axes</strong> (<em>axes</em>) – An axes to append these ticks to, if not current.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="class-documentation-for-threed-pyg3d">
+<h1>Class Documentation for threed.pyg3d<a class="headerlink" href="#class-documentation-for-threed-pyg3d" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="threed.pyg3d">
+<em class="property">class </em><code class="descclassname">threed.</code><code class="descname">pyg3d</code><span class="sig-paren">(</span><em>env=’plot’</em>, <em>colors=’purdue’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/threed.html#pyg3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#threed.pyg3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyg.twod.html#pyg.twod.pyg2d" title="pyg.twod.pyg2d"><code class="xref py py-class docutils literal"><span class="pre">pyg.twod.pyg2d</span></code></a></p>
+<p>A <code class="docutils literal"><span class="pre">pyg.pyg3d</span></code> object plots many three-dimensional data types.</p>
+<p>The <code class="docutils literal"><span class="pre">pyg3d</span></code> class provides an access to <code class="docutils literal"><span class="pre">matplotlib</span></code> charting functions
+and some hook ins to making these functions easier to use and more
+repeatable.  The constructor itself takes only one optional argument,
+<code class="docutils literal"><span class="pre">env</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>env</strong> (<code class="docutils literal"><span class="pre">plot</span></code>, <code class="docutils literal"><span class="pre">gui</span></code>, or <code class="docutils literal"><span class="pre">None</span></code>) – The environement option defines where you are going to use
+the generated plot, with the default option being plot (or printing).
+If you are using this to generate plots for a gui, define this option
+as <code class="docutils literal"><span class="pre">gui</span></code> and the class will choose a prettier parameter set for your
+chart. Default: <code class="docutils literal"><span class="pre">plot</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the <code class="docutils literal"><span class="pre">pyg3d</span></code> object.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">pyg3d</span></code></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="threed.pyg3d.clabel">
+<code class="descname">clabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/threed.html#pyg3d.clabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#threed.pyg3d.clabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The label added to the x-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as ‘Label ($variable$) [$unit$]’.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="threed.pyg3d.zlabel">
+<code class="descname">zlabel</code><span class="sig-paren">(</span><em>label</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/threed.html#pyg3d.zlabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#threed.pyg3d.zlabel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis.</p>
+<p><code class="docutils literal"><span class="pre">pyg2d.xlabel</span></code> adds a label to the x-axis of the current axes (or
+other axis given by kwarg <code class="docutils literal"><span class="pre">axes</span></code>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – The label added to the x-axis of the defined axis.
+The label can take LaTeX arguments and the ah style guide asks for
+labels given as ‘Label ($variable$) [$unit$]’.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the x-label
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="threed.pyg3d.zlim">
+<code class="descname">zlim</code><span class="sig-paren">(</span><em>minz</em>, <em>maxz</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/threed.html#pyg3d.zlim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#threed.pyg3d.zlim" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">pyg2d.ylim</span></code> limits the view of the y-axis to limits.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>miny</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The minimum value of y that will be shown.</li>
+<li><strong>maxy</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – The maximum value of y that will be shown.</li>
+<li><strong>axes</strong> (axes, or <code class="docutils literal"><span class="pre">None</span></code>) – If not <code class="docutils literal"><span class="pre">None</span></code>, this argument will apply the y-limit
+to the provided axis.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="todos">
+<h2>ToDos<a class="headerlink" href="#todos" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add more color schemes and the ability to define and hook in color
+schemes manually.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="#index-0"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of twod.pyg2d, line 8.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Expand subplotting to be able to use more than two axes total.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="#index-1"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of twod.pyg2d.add_subplot, line 7.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="#index-2"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of twod.pyg2d.add_vline, line 14.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Make sure rotation works here</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="pyg.pyb.pyb.html#index-0"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/pyb/pyb.py:docstring of pyg.pyb.pyb.pyb.cone, line 9.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Make sure rotation works here</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="pyg.pyb.pyb.html#index-1"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/pyb/pyb.py:docstring of pyg.pyb.pyb.pyb.rcc, line 3.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Add more color schemes and the ability to define and hook in color
+schemes manually.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="pyg.twod.html#index-0"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of pyg.twod.pyg2d, line 8.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Expand subplotting to be able to use more than two axes total.</p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="pyg.twod.html#index-1"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of pyg.twod.pyg2d.add_subplot, line 7.)</p>
+<div class="admonition-todo admonition">
+<p class="first admonition-title">Todo</p>
+<p class="last">Fix the latex page extents problem with <span class="math">\(-\infty\)</span></p>
+</div>
+<p class="todo-source">(The <a class="reference internal" href="pyg.twod.html#index-2"><em>original entry</em></a> is located in /Users/ahagen/code/pyg/twod.py:docstring of pyg.twod.pyg2d.add_vline, line 14.)</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Alex Hagen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

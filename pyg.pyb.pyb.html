@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyg.pyb.pyb module &#8212; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="_static/extra.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+
+
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"><span><img src="_static/pyg.svg"></span>
+        pyg</a>
+      <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+    </div>
+
+      <div class="collapse navbar-collapse nav-collapse">
+        <ul class="nav navbar-nav">
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Alex Hagen <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#"> <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">pyg.pyb.pyb module</a></li>
+</ul>
+</ul>
+</li>
+            
+          
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+          
+          
+            
+              
+            
+          
+          
+          
+          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://alexhagen.github.io/" target="_blank">Alex Hagen</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-pyg.pyb.pyb">
+<span id="pyg-pyb-pyb-module"></span><h1>pyg.pyb.pyb module<a class="headerlink" href="#module-pyg.pyb.pyb" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyg.pyb.pyb.pyb">
+<em class="property">class </em><code class="descclassname">pyg.pyb.pyb.</code><code class="descname">pyb</code><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>An object to save commands for blender 3d plotting and render</p>
+<p>The <code class="docutils literal"><span class="pre">pyb</span></code> class is your blender scene, and I’ve coded in a limited
+set of commands for some simplified bldnder plotting.  Right now, it
+automatically saves to “brender_01.blend/.png” in the current
+directory, if you can’t find the files.</p>
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.boolean">
+<code class="descname">boolean</code><span class="sig-paren">(</span><em>left</em>, <em>right</em>, <em>operation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.boolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.boolean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.cone">
+<code class="descname">cone</code><span class="sig-paren">(</span><em>c=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>r1=None</em>, <em>r2=None</em>, <em>h=None</em>, <em>name=’cone’</em>, <em>color=None</em>, <em>direction=’z’</em>, <em>alpha=1.0</em>, <em>emis=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.cone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.cone" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">cone</span></code> makes a truncated cone with height <code class="docutils literal"><span class="pre">h</span></code> and radii <code class="docutils literal"><span class="pre">r1</span></code>
+and <code class="docutils literal"><span class="pre">r2</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">cone</span></code> creates a truncated cone with the center of the cone at
+point <code class="docutils literal"><span class="pre">c</span></code>, a tuple of three dimensions.  Then, the base has radius
+<code class="docutils literal"><span class="pre">r1</span></code>, the tip has radius <code class="docutils literal"><span class="pre">r2</span></code>, and the base and tip are
+separated by <code class="docutils literal"><span class="pre">h</span></code>.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Make sure rotation works here</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>c</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#tuple" title="(in Python v2.7)"><em>tuple</em></a>) – the centerpoint of the cone</li>
+<li><strong>r1</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – radius of the base</li>
+<li><strong>r2</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – radius of the tip</li>
+<li><strong>h</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – distance between <code class="docutils literal"><span class="pre">r1</span></code> and <code class="docutils literal"><span class="pre">r2</span></code></li>
+<li><strong>direction</strong> (<a class="reference external" href="https://docs.python.org/2/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) – axis which coincides with the rotational
+axis of the cone, either <code class="docutils literal"><span class="pre">'x'</span></code>, <code class="docutils literal"><span class="pre">'y'</span></code>, or <code class="docutils literal"><span class="pre">'z'</span></code>. The
+direction can be changed by reversing <code class="docutils literal"><span class="pre">r1</span></code> and <code class="docutils literal"><span class="pre">r2</span></code>, so
+<code class="docutils literal"><span class="pre">'+z'</span></code> won’t work.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.cutaway">
+<code class="descname">cutaway</code><span class="sig-paren">(</span><em>points=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.cutaway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.cutaway" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.emis">
+<code class="descname">emis</code><span class="sig-paren">(</span><em>name=’Source’</em>, <em>color=’#555555’</em>, <em>alpha=1.0</em>, <em>volume=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.emis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.emis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.flat">
+<code class="descname">flat</code><span class="sig-paren">(</span><em>name=’Flat’</em>, <em>color=’#555555’</em>, <em>alpha=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.flat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.flat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.gq">
+<code class="descname">gq</code><span class="sig-paren">(</span><em>A=0.0</em>, <em>B=0.0</em>, <em>C=0.0</em>, <em>D=0.0</em>, <em>E=0.0</em>, <em>F=0.0</em>, <em>G=0.0</em>, <em>H=0.0</em>, <em>J=0.0</em>, <em>K=0.0</em>, <em>name=’gq’</em>, <em>color=None</em>, <em>alpha=1.0</em>, <em>emis=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.gq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.gq" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">gq</span></code> adds a generalized quadratic surface using the mesh.</p>
+<p><code class="docutils literal"><span class="pre">gq</span></code> adds a generalized quadratic surface using the mesh operators.
+The surface itself is defined by the function</p>
+<div class="math">
+\[\begin{split}Ax^{2}+By^{2}+Cz^{2}+Dxy+Eyz\\+Fzx+Gx+Hy+Jz+K=0\end{split}\]</div>
+<p>and takes inputs of <span class="math">\(A\)</span>, <span class="math">\(B\)</span>, <span class="math">\(C\)</span>, <span class="math">\(D\)</span>,
+<span class="math">\(E\)</span>, <span class="math">\(F\)</span>, <span class="math">\(G\)</span>, <span class="math">\(H\)</span>, <span class="math">\(J\)</span>, and <span class="math">\(K\)</span>.</p>
+<p>Note that this object is not necessarily closed, so it may need to be
+added to or subtracted from other surfaces or it will look unrealistic.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>A</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(A\)</span></li>
+<li><strong>B</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(B\)</span></li>
+<li><strong>C</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(C\)</span></li>
+<li><strong>D</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(D\)</span></li>
+<li><strong>E</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(E\)</span></li>
+<li><strong>F</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(F\)</span></li>
+<li><strong>G</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(G\)</span></li>
+<li><strong>H</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(H\)</span></li>
+<li><strong>J</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(J\)</span></li>
+<li><strong>K</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the coefficient <span class="math">\(K\)</span></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.image">
+<code class="descname">image</code><span class="sig-paren">(</span><em>name=’Image’</em>, <em>fname=None</em>, <em>alpha=1.0</em>, <em>volume=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.look_at">
+<code class="descname">look_at</code><span class="sig-paren">(</span><em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.look_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.look_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.plane">
+<code class="descname">plane</code><span class="sig-paren">(</span><em>x1=None</em>, <em>x2=None</em>, <em>y1=None</em>, <em>y2=None</em>, <em>z1=None</em>, <em>z2=None</em>, <em>c=None</em>, <em>l=None</em>, <em>name=’rpp’</em>, <em>color=None</em>, <em>alpha=1.0</em>, <em>verts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.plane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.point">
+<code class="descname">point</code><span class="sig-paren">(</span><em>location=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>strength=1.0</em>, <em>name=’Point’</em>, <em>color=’#555555’</em>, <em>alpha=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.rcc">
+<code class="descname">rcc</code><span class="sig-paren">(</span><em>c=None</em>, <em>r=None</em>, <em>h=None</em>, <em>name=’rcc’</em>, <em>color=None</em>, <em>direction=’z’</em>, <em>alpha=1.0</em>, <em>emis=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.rcc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.rcc" title="Permalink to this definition">¶</a></dt>
+<dd><p>makes a cylinder with center point <code class="docutils literal"><span class="pre">c</span></code>, radius <code class="docutils literal"><span class="pre">r</span></code>, and height <code class="docutils literal"><span class="pre">h</span></code></p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Make sure rotation works here</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>camera_location=(500, 500, 300), c=(0.0, 0.0, 0.0), l=(250.0, 250.0, 250.0), render=True, fit=True, samples=20, res=[1920, 1080]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.rpp">
+<code class="descname">rpp</code><span class="sig-paren">(</span><em>x1=None</em>, <em>x2=None</em>, <em>y1=None</em>, <em>y2=None</em>, <em>z1=None</em>, <em>z2=None</em>, <em>c=None</em>, <em>l=None</em>, <em>name=’rpp’</em>, <em>color=None</em>, <em>alpha=1.0</em>, <em>verts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.rpp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.rpp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>filename=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a blender instance and runs the generated model rendering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.scene_setup">
+<code class="descname">scene_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.scene_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.scene_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes the default cube and sets up a scene to be used to render</p>
+<p><code class="docutils literal"><span class="pre">pyb.scene_setup</span></code> is a convenience class that creates a new
+scene and deletes the default cube, leaving you with a clean slate
+to render on.  It is called automatically during initialization,
+so there’s no real reason that the user should ever call this.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.set_matl">
+<code class="descname">set_matl</code><span class="sig-paren">(</span><em>obj=None</em>, <em>matl=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.set_matl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.set_matl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the image if it has been rendered</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.sph">
+<code class="descname">sph</code><span class="sig-paren">(</span><em>c=None</em>, <em>r=None</em>, <em>name=’sph’</em>, <em>color=None</em>, <em>alpha=1.0</em>, <em>emis=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.sph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.sph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.subtract">
+<code class="descname">subtract</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.subtract"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.subtract" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.sun">
+<code class="descname">sun</code><span class="sig-paren">(</span><em>strength=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.sun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.sun" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a blender sun lamp</p>
+<p><code class="docutils literal"><span class="pre">pyb.sun</span></code> creates a blender sun lamp and places it.  Location is
+non-sensical in this context, as blender places its sun lamps
+infinitely far away.  Strength, however, should be set, and set
+much lower than the strength for a point lamp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>strength</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) – the strength of the sun lamp</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">pyb</span></code> object with <code class="docutils literal"><span class="pre">sun</span></code> lamp added</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.trans">
+<code class="descname">trans</code><span class="sig-paren">(</span><em>name=’Trans’</em>, <em>color=’#555555’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.trans" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.pyb.pyb.pyb.union">
+<code class="descname">union</code><span class="sig-paren">(</span><em>left</em>, <em>right</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/pyb/pyb.html#pyb.union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.pyb.pyb.pyb.union" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Alex Hagen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

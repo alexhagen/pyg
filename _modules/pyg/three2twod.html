@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyg.three2twod &#8212; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/extra.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+
+
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/pyg.svg"></span>
+        pyg</a>
+      <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+    </div>
+
+      <div class="collapse navbar-collapse nav-collapse">
+        <ul class="nav navbar-nav">
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Alex Hagen <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#"> <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+            
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+          
+          
+            
+              
+            
+          
+          
+          
+          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://alexhagen.github.io/" target="_blank">Alex Hagen</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pyg.three2twod</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">twod</span>
+<span class="kn">import</span> <span class="nn">matplotlib.image</span> <span class="k">as</span> <span class="nn">mpimg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="k">import</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">Circle</span>
+<span class="kn">from</span> <span class="nn">colour</span> <span class="k">import</span> <span class="n">Color</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="ann_im"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im">[docs]</a><span class="k">class</span> <span class="nc">ann_im</span><span class="p">(</span><span class="n">twod</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im_filename</span><span class="p">,</span> <span class="n">proj_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ann_im</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">mpimg</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">im_filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">im_filename</span> <span class="o">=</span> <span class="n">im_filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">proj_matrix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_proj_matrix</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">proj_matrix</span>
+
+<div class="viewcode-block" id="ann_im.get_proj_matrix"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.get_proj_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_proj_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="s2">&quot;identify -verbose </span><span class="si">%s</span><span class="s2"> | grep proj_matrix&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">im_filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">exec</span><span class="p">(</span><span class="n">proj_matrix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span> <span class="o">=</span> <span class="n">proj_matrix</span></div>
+
+<div class="viewcode-block" id="ann_im.convert_3d_to_2d"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.convert_3d_to_2d">[docs]</a>    <span class="k">def</span> <span class="nf">convert_3d_to_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proj_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1">#print &quot;array&quot;</span>
+        <span class="c1">#print arr</span>
+        <span class="c1">#print &quot;projection matrix&quot;</span>
+        <span class="c1">#print mat</span>
+        <span class="n">pcam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
+        <span class="n">pcam</span> <span class="o">/=</span> <span class="n">pcam</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c1"># print pcam</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">pcam</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">pcam</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="ann_im.add_data_pointer"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.add_data_pointer">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_pointer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">place</span><span class="o">=</span><span class="s1">&#39;down-right&#39;</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_3d_to_2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+        <span class="c1"># print x,y</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">place</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">place</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span> <span class="o">-</span> <span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s1">&#39;up&#39;</span> <span class="ow">in</span> <span class="n">place</span><span class="p">:</span>
+            <span class="n">place</span> <span class="o">=</span> <span class="n">place</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">,</span><span class="s1">&#39;down&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39;down&#39;</span> <span class="ow">in</span> <span class="n">place</span><span class="p">:</span>
+            <span class="n">place</span> <span class="o">=</span> <span class="n">place</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;down&#39;</span><span class="p">,</span> <span class="s1">&#39;up&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ann_im</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_data_pointer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">string</span><span class="o">=</span><span class="n">string</span><span class="p">,</span>
+                                             <span class="n">place</span><span class="o">=</span><span class="n">place</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ann_im.add_arrow"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.add_arrow">[docs]</a>    <span class="k">def</span> <span class="nf">add_arrow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_3d_to_2d</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">)</span>
+        <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_3d_to_2d</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ann_im</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_arrow</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ann_im.add_legend_entry"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.add_legend_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_legend_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+                               <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">patch</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ann_im.export"><a class="viewcode-back" href="../../pyg.three2twod.html#pyg.three2twod.ann_im.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;force_pdf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ann_im</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Alex Hagen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
