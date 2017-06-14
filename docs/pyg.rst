@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
 
     pyg.colors
+    pyg.pyb
 
 Submodules
 ----------
