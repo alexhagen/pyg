@@ -881,15 +881,16 @@ class pyg2d(object):
 		self.allartists.append(patch)
 
 	def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
-				 linestyle=None, linecolor='black', legend=True, axes=None):
+				 linestyle=None, linecolor='black', legend=True, axes=None,
+				 error_fill=False):
 		if axes is None:
 			axes = self.ax
 		self.data.extend([[x, y]])
 		self.plotnum = self.plotnum + 1
-		if name is 'plot':
+		if name == 'plot':
 			name = 'plot%d' % (self.plotnum)
 		if linestyle is None:
-			_ls = self.linestyle[self.plotnum % 4]
+			_ls = '-'
 		else:
 			_ls = linestyle
 		if xerr is None and yerr is None:
@@ -899,6 +900,7 @@ class pyg2d(object):
 			for i in range(0, len(line)):
 				self.lines[name + '%d' % (i)] = (line[i])
 		else:
+
 			if linecolor == 'black':
 				ecolor = '#A7A9AC'
 			else:
@@ -906,18 +908,27 @@ class pyg2d(object):
 				col.saturation = 0.5
 				col.luminance = 0.75
 				ecolor = col.hex
-			line, caplines, barlinecols = axes.errorbar(x, y, label=name,
-														color=linecolor,
-														xerr=xerr,
-														yerr=yerr,
-														marker=self.marker[self.plotnum % 5],
-														ls=_ls,
-														ecolor=ecolor,
-														lw=linewidth,
-														clip_on=True)
-			self.lines[name] = (line)
+			if not error_fill:
+				line, caplines, barlinecols = axes.errorbar(x, y, label=name,
+															color=linecolor,
+															xerr=xerr,
+															yerr=yerr,
+															marker=self.marker[self.plotnum % 5],
+															ls=_ls,
+															ecolor=ecolor,
+															lw=linewidth,
+															clip_on=True)
+				self.lines[name] = (line)
+			else:
+				self.add_line(x, y, xerr=None, yerr=None, name=name, linewidth=0.5,
+							  linestyle=linestyle, linecolor=linecolor,
+							  legend=legend, axes=axes)
+				self.fill_between(x, np.array(y) - np.array(yerr),
+								  np.array(y) + np.array(yerr), leg=False,
+								  fc=linecolor, name=name + 'err')
+				line = self.lines[name + '0']
 		self.markers_on()
-		self.lines_off()
+		self.lines_on()
 		self.allartists.append(line)
 
 	def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
@@ -928,12 +939,15 @@ class pyg2d(object):
 			self.ax2 = self.ax.twinx()
 		else:
 			self.ax2 = axes.twinx()
-		line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
+		line = self.add_line(x, y, name=name + 'yy', xerr=xerr, yerr=yerr,
 					  linewidth=linewidth,
 					  linecolor=linecolor,
 					  linestyle=linestyle,
 					  legend=legend, axes=self.ax2)
 		self.allartists.append(line)
+		if legend:
+			self.add_line([0., 0.], [np.nan, np.nan], name=name, linewidth=linewidth,
+						  linecolor=linecolor, linestyle=linestyle, axes=self.ax)
 
 	def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
 					linecolor='black', linewidth=0.5, linestyle=None,
@@ -1184,7 +1198,7 @@ class pyg2d(object):
 	def show(self, caption='', label=None, scale=None, interactive=False):
 		fig = None
 		if label is None:
-			label = [''.join(ch for ch in caption if ch.isalnum())]
+			label = str([''.join(ch for ch in caption if ch.isalnum())])
 		self.label = label
 		if scale is None and lyx.run_from_ipython() and not lyx.need_latex():
 			scale = 2.0
