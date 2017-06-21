@@ -5,7 +5,6 @@ docs: FORCE
 	jupyter nbconvert docs/readme_pyg.ipynb --to html --template=basic --execute; \
 	mv docs/readme_pyg.html docs/readme.html; \
 	jupyter nbconvert docs/readme_pyg.ipynb --to markdown --execute; \
-	# sed 's/_static/docs\/_static/g' docs/pym_readme.md > README.md;\
 	mv docs/readme_pyg.md README.md; \
   cd ~/code/pyg/docs; \
 	sphinx-apidoc -e -f -M -o ./ ../; \
