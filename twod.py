@@ -655,6 +655,9 @@ class pyg2d(object):
 		h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string), axes=axes)
 		self.allartists.append((h1, h2, h3, h4))
 
+	def equal_aspect_ratio(self):
+		self.ax.set_aspect('equal', 'datalim')
+
 	@staticmethod
 	def latex_string(string):
 		try:
@@ -1007,6 +1010,12 @@ class pyg2d(object):
 			r = 1. + np.sqrt(2.)
 		elif ratio is "bronze":
 			r = (3. + np.sqrt(13.)) / 2.
+		elif ratio is "invgolden":
+			r = 2. / (1. + np.sqrt(5.))
+		elif ratio is "invsilver":
+			r = 1. / (1. + np.sqrt(2.))
+		elif ratio is "invbronze":
+			r = 2. / (3. + np.sqrt(13.))
 		else:
 			r = float(ratio)
 		if self.landscape:

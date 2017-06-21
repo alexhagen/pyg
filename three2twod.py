@@ -37,7 +37,7 @@ class ann_im(twod.pyg2d):
         y = pcam[1]
         return x, y
 
-    def add_data_pointer(self, x, y, z, string='', place='down-right'):
+    def add_data_pointer(self, x, y, z, string='', place='down-right', **kwargs):
         x,y = self.convert_3d_to_2d(x, y, z)
         # print x,y
         if isinstance(place, tuple):
@@ -48,7 +48,7 @@ class ann_im(twod.pyg2d):
             place = place.replace('down', 'up')
 
         super(ann_im, self).add_data_pointer(x, point=y, string=string,
-                                             place=place)
+                                             place=place, **kwargs)
         return self
 
     def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
