@@ -440,7 +440,7 @@ class pyg3d(pyg2d.pyg2d):
         if axes is None:
             axes = self.ax
         _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
-        super(pyg3d, self).add_data_pointer(x, y, z, string=string,
+        super(pyg3d, self).add_data_pointer(_x, point=_y, string=string,
                                             place='up-right', axes=None)
 
     def update_data_pointers(self):
