@@ -92,7 +92,8 @@ def svg_show(filename, caption='', label=None, scale=None, width=None, convert=T
 		svg_filename = filename
 		pdf_filename = filename.replace('.svg', '.pdf')
 		if convert:
-			os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+			os.system('inkscape --without-gui -f {svg_filename} -A {pdf_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+			#os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
 		strlatex = r"""
 		\begin{figure}
 			\centering
