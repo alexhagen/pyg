@@ -1,0 +1,20 @@
+pyg\.pyb package
+================
+
+.. automodule:: pyg.pyb
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   pyg.pyb.blender_geo
+   pyg.pyb.blender_matl
+   pyg.pyb.blender_mats_utils
+   pyg.pyb.blender_render
+   pyg.pyb.blender_test
+   pyg.pyb.pyb
+

@@ -1,0 +1,7 @@
+pyg\.pyb\.pyb module
+====================
+
+.. automodule:: pyg.pyb.pyb
+    :members:
+    :undoc-members:
+    :show-inheritance:

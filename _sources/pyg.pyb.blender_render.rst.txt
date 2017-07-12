@@ -1,0 +1,7 @@
+pyg\.pyb\.blender\_render module
+================================
+
+.. automodule:: pyg.pyb.blender_render
+    :members:
+    :undoc-members:
+    :show-inheritance:
