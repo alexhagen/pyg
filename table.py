@@ -36,7 +36,8 @@ def markdown(i=True):
     else:
         os.system('rm /tmp/need_markdown')
 
-def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
+def table(array, caption='', label=None, headers=None, floatfmt=".2f",
+          need_string=False):
     if label is None:
         label = caption
     if run_from_ipython() and not need_latex():
@@ -66,6 +67,8 @@ def table(array, caption='', label=None, headers=None, floatfmt=".2f"):
             \caption{%s}
             \label{tab:%s}
         \end{table}""" % (table, caption, label)
+        if need_string:
+            return strlatex
         display(Latex(strlatex))
 
 def figures():

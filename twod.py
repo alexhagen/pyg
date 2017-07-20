@@ -22,6 +22,8 @@ import __builtins__ as bi
 import lyxithea.lyxithea as lyx
 from itertools import count
 import psgv.psgv as psgv
+import pickle
+import os.path
 
 __context__ = psgv.psgv('__context__')
 __context__.val = 'writeup'
@@ -51,58 +53,91 @@ preamble = ['\usepackage{nicefrac}',
 	'\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
 	'{\mathrm{#1}}}}']
 
-def svg_show(filename, caption='', label=None, scale=None, width=None, convert=True):
-	fig = None
-	if label is None:
-		label = caption
-	html_widths = {'1': 400, '2': 600, '4': 800}
-	if lyx.run_from_ipython() and not lyx.need_latex():
-		__counter__ = random.randint(0, 2e9)
-	curr_width = float(os.system('inkscape --without-gui -query-width %s' % filename))
-	if width is not None:
-		if isinstance(width, int) or isinstance(width, float):
-			fig_width = width
-		elif isinstance(width, str):
-			fig_width = html_widths[width]
-	elif scale is not None:
-		fig_width = curr_width * scale
-	if not lyx.need_latex():
-		fig_html = r"""
-			<div class='figure' name='%s' style='align: center; margin-left: auto; margin-right: auto;'>
-				<img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
-				<div style='margin: auto; text-align: center;' class='figurecaption' name="%s"><b>Figure %d:</b> %s</div>
-			</div>
-		""" % (label, fig_width, filename, __counter__, label, bi.__figcount__, caption)
-		__figures__.val[label] = bi.__figcount__
-		bi.__figcount__ += 1
-		return display(HTML(fig_html))
-	else:
-		if __context__.val == "writeup":
-			widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
-		elif __context__.val == "tufte":
-			widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
-		elif __context__.val == "thesis":
-			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
-		else:
-			widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+def load(fname, svg=False):
+	_fig = pickle.load(file(os.path.expanduser('~') +
+							'/.pyg/%s.pickle' % fname))
+	if not svg:
+		_fig.fig._cachedRenderer = None
+		for ax in [_fig.ax, _fig.ax2]:
+			if ax is not None:
+				for axi in ax.images:
+					axi._imcache = None
+				ax._cachedRenderer = None
+	_fig.loaded = True
+	return _fig
+
+class svg(object):
+	def __init__(self, filename):
+		self.filename = filename
+		self.loaded = False
+
+	def show(self, caption='', label=None, scale=None, width=None,
+			 convert=True, need_string=False):
+		if label is not None and not self.loaded:
+			pickle.dump(self, file(os.path.expanduser('~') +
+							 	   '/.pyg/%s.pickle' % label, 'w'))
+		fig = None
+		if label is None:
+			label = caption
+		html_widths = {'1': 400, '2': 600, '4': 800}
+		if lyx.run_from_ipython() and not lyx.need_latex():
+			__counter__ = random.randint(0, 2e9)
+		curr_width = float(os.system('inkscape --without-gui -query-width %s' % self.filename))
 		if width is not None:
-			fig_width = widths[width]
+			if isinstance(width, int) or isinstance(width, float):
+				fig_width = width
+			elif isinstance(width, str):
+				fig_width = html_widths[width]
+		elif scale is not None:
+			fig_width = curr_width * scale
+		if not lyx.need_latex():
+			fig_html = r"""
+				<div class='figure' name='%s' style='align: center; margin-left: auto; margin-right: auto;'>
+					<img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
+					<div style='margin: auto; text-align: center;' class='figurecaption' name="%s"><b>Figure %d:</b> %s</div>
+				</div>
+			""" % (label, fig_width, self.filename, __counter__, label, bi.__figcount__, caption)
+			__figures__.val[label] = bi.__figcount__
+			bi.__figcount__ += 1
+			return display(HTML(fig_html))
 		else:
-			fig_width = widths['2']
-		svg_filename = filename
-		pdf_filename = filename.replace('.svg', '.pdf')
-		if convert:
-			os.system('inkscape --without-gui -f {svg_filename} -A {pdf_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
-			#os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
-		strlatex = r"""
-		\begin{figure}
-			\centering
-			\includegraphics[width=%.2fin]{%s}
-			\caption{%s\label{fig:%s}}
-		\end{figure}""" % (fig_width, pdf_filename, caption, label)
-		__figures__.val[label] = bi.__figcount__
-		bi.__figcount__ += 1
-		return Latex(strlatex)
+			if __context__.val == "writeup":
+				widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+			elif __context__.val == "tufte":
+				widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
+			elif __context__.val == "thesis":
+				widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+			else:
+				widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+			if width is not None:
+				if isinstance(width, float):
+					fig_width = width
+				else:
+					fig_width = widths[width]
+			else:
+				fig_width = widths['2']
+			svg_filename = self.filename
+			pdf_filename = self.filename.replace('.svg', '.pdf')
+			if convert:
+				os.system('inkscape --without-gui -f {svg_filename} -A {pdf_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+				#os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+			strlatex = r"""
+			\begin{figure}
+				\centering
+				\includegraphics[width=%.2fin]{%s}
+				\caption{%s\label{fig:%s}}
+			\end{figure}""" % (fig_width, pdf_filename, caption, label)
+			__figures__.val[label] = bi.__figcount__
+			bi.__figcount__ += 1
+			if need_string:
+				return strlatex
+			return Latex(strlatex)
+
+def svg_show(filename, caption='', label=None, scale=None, width=None,
+			 convert=True, need_string=False):
+	_svg = svg(filename)
+	return _svg.show(caption=caption, label=label, scale=scale, width=width,
+					 convert=convert, need_string=need_string)
 
 
 # make the line graphing class
@@ -160,6 +195,7 @@ class pyg2d(object):
 		self.ax = self.fig.add_subplot(111, polar=polar)
 		self.ax_subp = []
 		self.leg = False
+		self.loaded = False
 		self.ax2 = None
 		self.polar = polar
 		if not self.polar:
@@ -1205,7 +1241,12 @@ class pyg2d(object):
 			self.remove_font_sizes(filename + self.sizestring[size] + add)
 			self.pgf_filename = filename + self.sizestring[size] + add
 
-	def show(self, caption='', label=None, scale=None, interactive=False):
+	def show(self, caption='', label=None, scale=None, interactive=False,
+			 need_string=False):
+		if label is not None and not self.loaded:
+			plt.ioff()
+			pickle.dump(self, file(os.path.expanduser('~') +
+							 	   '/.pyg/%s.pickle' % label, 'w'))
 		fig = None
 		if label is None:
 			label = str([''.join(ch for ch in caption if ch.isalnum())])
@@ -1232,6 +1273,8 @@ class pyg2d(object):
 			bi.__figcount__ += 1
 			fig = HTML(fig_html)
 			self.close()
+			if need_string:
+				return fig_html
 		elif lyx.need_latex():
 			if self.force_pdf:
 				include_line = '\includegraphics{%s}' % self.pdf_filename
@@ -1257,6 +1300,8 @@ class pyg2d(object):
 			bi.__figcount__ += 1
 			fig = Latex(strlatex)
 			self.close()
+			if need_string:
+				return strlatex
 		else:
 			if self.pdf_filename is not None:
 				if platform.system() == "Darwin":
