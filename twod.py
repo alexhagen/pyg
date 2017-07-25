@@ -71,8 +71,18 @@ class svg(object):
 		self.filename = filename
 		self.loaded = False
 
+	@staticmethod
+	def get_width(fname):
+		width = float(os.system('inkscape --without-gui -query-width %s' % fname))
+		return width
+
+	@staticmethod
+	def get_height(fname):
+		height = float(os.system('inkscape --without-gui -query-height %s' % fname))
+		return height
+
 	def show(self, caption='', label=None, scale=None, width=None,
-			 convert=True, need_string=False):
+			 convert=True, need_string=False, bbox=None):
 		if label is not None and not self.loaded:
 			pickle.dump(self, file(os.path.expanduser('~') +
 							 	   '/.pyg/%s.pickle' % label, 'w'))
@@ -82,7 +92,8 @@ class svg(object):
 		html_widths = {'1': 400, '2': 600, '4': 800}
 		if lyx.run_from_ipython() and not lyx.need_latex():
 			__counter__ = random.randint(0, 2e9)
-		curr_width = float(os.system('inkscape --without-gui -query-width %s' % self.filename))
+		curr_width = self.get_width(self.filename)
+		curr_height = self.get_height(self.filename)
 		if width is not None:
 			if isinstance(width, int) or isinstance(width, float):
 				fig_width = width
@@ -116,6 +127,9 @@ class svg(object):
 					fig_width = widths[width]
 			else:
 				fig_width = widths['2']
+			if bbox is not None:
+				if fig_width * curr_height / curr_width > bbox[1]:
+					fig_width = bbox[1] * curr_width / curr_height
 			svg_filename = self.filename
 			pdf_filename = self.filename.replace('.svg', '.pdf')
 			if convert:
