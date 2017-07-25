@@ -73,19 +73,41 @@ class svg(object):
 
 	@staticmethod
 	def get_width(fname):
-		width = float(os.system('inkscape --without-gui -query-width %s' % fname))
+		if 'png' in fname:
+			cmd = 'identify -format "%%[w]" %s' % fname
+		else:
+			cmd = 'inkscape --without-gui --query-width %s' % fname
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		try:
+			width = float(out)
+		except ValueError:
+			print out
+			print err
 		return width
 
 	@staticmethod
 	def get_height(fname):
-		height = float(os.system('inkscape --without-gui -query-height %s' % fname))
+		if 'png' in fname:
+			cmd = 'identify -format "%%[h]" %s' % fname
+		else:
+			cmd = 'inkscape --without-gui --query-height %s' % fname
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		try:
+			height = float(out)
+		except ValueError:
+			print out
+			print err
 		return height
 
 	def show(self, caption='', label=None, scale=None, width=None,
 			 convert=True, need_string=False, bbox=None):
 		if label is not None and not self.loaded:
 			pickle.dump(self, file(os.path.expanduser('~') +
-							 	   '/.pyg/%s.pickle' % label, 'w'))
+									'/.pyg/%s.pickle' % label, 'w'))
 		fig = None
 		if label is None:
 			label = caption
@@ -1009,10 +1031,10 @@ class pyg2d(object):
 		# make new axis
 		self.ax2 = self.ax.twiny()
 		line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
-					  		 linewidth=linewidth,
-					  		 linecolor=linecolor,
-					  		 linestyle=linestyle,
-					  		 legend=legend, axes=self.ax2)
+							   linewidth=linewidth,
+							   linecolor=linecolor,
+							   linestyle=linestyle,
+							   legend=legend, axes=self.ax2)
 		self.allartists.append(line)
 
 	def add_xx(self,calfunc):
@@ -1260,7 +1282,7 @@ class pyg2d(object):
 		if label is not None and not self.loaded:
 			plt.ioff()
 			pickle.dump(self, file(os.path.expanduser('~') +
-							 	   '/.pyg/%s.pickle' % label, 'w'))
+									'/.pyg/%s.pickle' % label, 'w'))
 		fig = None
 		if label is None:
 			label = str([''.join(ch for ch in caption if ch.isalnum())])
