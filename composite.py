@@ -7,12 +7,15 @@ import svgutils.compose as sc
 from sys import platform
 import subprocess
 
+gscale = 1.00
+
 class asset(object):
 	def __init__(self, filename, bbox, parent):
 		self.filename = filename
 		self.bbox = bbox
 		self.parent = parent
 		self.cwd = os.getcwd()
+		self.gscale = 1.5
 
 	def calc_pos(self):
 		width = self.parent.get_width(self.filename)
@@ -21,8 +24,8 @@ class asset(object):
 		dpi = 96.
 		bbox = self.parent.ax.transData.transform(self.bbox)
 		print bbox
-		max_width = bbox[1, 0] - bbox[0, 0]
-		max_height = bbox[1, 1] - bbox[0, 1]
+		max_width = (bbox[1, 0] - bbox[0, 0])/self.gscale
+		max_height = (bbox[1, 1] - bbox[0, 1])/self.gscale
 		# Our first option is to make the width the full of the bounding box
 		set_width = max_width
 		set_height = set_width * aspect_ratio
@@ -31,8 +34,8 @@ class asset(object):
 			set_height = max_height
 			set_width = set_height / aspect_ratio
 			self.scale = (set_height / height)
-		self.x = ((bbox[0, 0] + bbox[1, 0])/2.0 - (set_width/2.0))/1.25
-		self.y = ((bbox[1, 1] + bbox[0, 1])/2.0 - (set_height/2.0))/1.25
+		self.x = ((bbox[0, 0] + bbox[1, 0])/2.0 - (set_width/2.0))/self.gscale
+		self.y = ((bbox[1, 1] + bbox[0, 1])/2.0 + (set_height/2.0))/self.gscale
 		#print scale
 		#print disp_coords
 		#print fig_coords
@@ -42,8 +45,8 @@ class asset(object):
 		print "scale: %f" % (self.scale)
 		print "fig_width: %f" % (self.parent.fig.dpi * self.parent.fig.get_figwidth())
 		print "fig_height: %f" % (self.parent.fig.dpi * self.parent.fig.get_figheight())
-		self.fig_height = self.parent.fig.dpi * self.parent.fig.get_figheight()
-		#self.y = self.fig_height - self.y
+		self.fig_height = gscale * self.parent.fig.dpi * self.parent.fig.get_figheight()
+		self.y = self.fig_height - self.y
 		#self.x = (self.x - (set_width / 2.0))/1.25
 		print "pos: %f, %f" % (self.x, self.y)
 
@@ -86,6 +89,38 @@ class composite(twod.pyg2d):
 		height = float(out)
 		return height
 
+	def get_x(self, fname):
+		if platform == "linux" or platform == "linux2":
+			inkscape_bin = 'inkscape'
+		elif platform == "darwin":
+			inkscape_bin = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+			pass
+		cmd = '%s --without-gui --query-x %s' % (inkscape_bin, os.path.join(self.cwd,fname))
+		#print cmd
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		#print out,err
+		x = float(out)
+		return x
+
+	def get_y(self, fname):
+		if platform == "linux" or platform == "linux2":
+			inkscape_bin = 'inkscape'
+		elif platform == "darwin":
+			inkscape_bin = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+			pass
+		cmd = '%s --without-gui --query-y %s' % (inkscape_bin, os.path.join(self.cwd,fname))
+		#print cmd
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		#print out,err
+		y = float(out)
+		return y
+
 	def get_dpi(self, fname):
 		return self.fig.dpi
 
@@ -103,15 +138,16 @@ class composite(twod.pyg2d):
 			self.below.extend([asst])
 
 	def export(self, *args, **kwargs):
-		kwargs['formats'] = ['svg']
-		super(composite, self).export(*args, **kwargs)
+		super(composite, self).export(*args, tight=False, formats=['svg'], **kwargs)
 		below_panels = []
 		for asst in self.below:
 			asst.calc_pos()
 			x = sc.Panel(sc.SVG(asst.filename).scale(asst.scale)\
 				.move(asst.x, asst.y))
 			below_panels.extend([x])
-		panel = [sc.Panel(sc.SVG(self.svg_filename).scale(1.25))]
+		x = sc.Panel(sc.SVG(self.svg_filename))
+		x.moveto(0., 0., gscale)
+		panel = [x]
 		above_panels = []
 		for asst in self.above:
 			asst.calc_pos()
@@ -120,6 +156,7 @@ class composite(twod.pyg2d):
 			above_panels.extend([x])
 		panels = below_panels + panel + above_panels
 		print panels
-		sc.Figure("%fcm" % (2.54 * self.width), "%fcm" % (2.54 * self.height),
+		sc.Figure("%fpx" % (self.get_width(self.svg_filename)),
+				  "%fpx" % (self.get_height(self.svg_filename)),
 			*panels
 		).save(self.svg_filename)
