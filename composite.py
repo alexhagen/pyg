@@ -2,42 +2,48 @@ import twod
 import numpy as np
 from colour import Color
 import os
+import os.path
 import svgutils.compose as sc
-from matplotlib.transforms import Bbox
+from sys import platform
+import subprocess
 
 class asset(object):
 	def __init__(self, filename, bbox, parent):
 		self.filename = filename
 		self.bbox = bbox
 		self.parent = parent
+		self.cwd = os.getcwd()
 
 	def calc_pos(self):
 		width = self.parent.get_width(self.filename)
 		height = self.parent.get_height(self.filename)
 		aspect_ratio = width / height
-		dpi = 200.
+		dpi = 96.
 		bbox = self.parent.ax.transData.transform(self.bbox)
+		print bbox
 		max_width = bbox[1, 0] - bbox[0, 0]
 		max_height = bbox[1, 1] - bbox[0, 1]
 		# Our first option is to make the width the full of the bounding box
 		set_width = max_width
 		set_height = set_width * aspect_ratio
-		self.scale = 1.0/(set_width / width)
+		self.scale = (set_width / width)
 		if set_height > max_height:
 			set_height = max_height
 			set_width = set_height / aspect_ratio
-			self.scale = 1.0 / (set_height / height)
-		self.x = bbox[0, 0]
-		self.y = bbox[1, 1]
+			self.scale = (set_height / height)
+		self.x = ((bbox[0, 0] + bbox[1, 0])/2.0 - (set_width/2.0))/1.25
+		self.y = ((bbox[1, 1] + bbox[0, 1])/2.0 - (set_height/2.0))/1.25
 		#print scale
 		#print disp_coords
 		#print fig_coords
 		#self.scale = 1.0
+		print "set_width: %f set_height: %f" % (set_width, set_height)
+		print "width: %f height: %f" % (width, height)
 		print "scale: %f" % (self.scale)
 		print "fig_width: %f" % (self.parent.fig.dpi * self.parent.fig.get_figwidth())
 		print "fig_height: %f" % (self.parent.fig.dpi * self.parent.fig.get_figheight())
 		self.fig_height = self.parent.fig.dpi * self.parent.fig.get_figheight()
-		#self.y = self.fig_height - (self.y + (set_height / 2.0))/1.25
+		#self.y = self.fig_height - self.y
 		#self.x = (self.x - (set_width / 2.0))/1.25
 		print "pos: %f, %f" % (self.x, self.y)
 
@@ -46,15 +52,38 @@ class composite(twod.pyg2d):
 		super(composite, self).__init__()
 		self.above = []
 		self.below = []
+		self.cwd = os.getcwd()
 
-	@staticmethod
-	def get_width(fname):
-		width = float(os.system('inkscape --without-gui -query-width %s' % fname))
+	def get_width(self, fname):
+		if platform == "linux" or platform == "linux2":
+			inkscape_bin = 'inkscape'
+		elif platform == "darwin":
+			inkscape_bin = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+			pass
+		cmd = '%s --without-gui --query-width %s' % (inkscape_bin, os.path.join(self.cwd,fname))
+		#print cmd
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		#print out,err
+		width = float(out)
 		return width
 
-	@staticmethod
-	def get_height(fname):
-		height = float(os.system('inkscape --without-gui -query-height %s' % fname))
+	def get_height(self, fname):
+		if platform == "linux" or platform == "linux2":
+			inkscape_bin = 'inkscape'
+		elif platform == "darwin":
+			inkscape_bin = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+			pass
+		cmd = '%s --without-gui --query-height %s' % (inkscape_bin, os.path.join(self.cwd,fname))
+		#print cmd
+		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
+							 stderr=subprocess.PIPE, shell=True)
+		(out, err) = p.communicate()
+		#print out,err
+		height = float(out)
 		return height
 
 	def get_dpi(self, fname):
@@ -77,7 +106,7 @@ class composite(twod.pyg2d):
 		kwargs['formats'] = ['svg']
 		super(composite, self).export(*args, **kwargs)
 		below_panels = []
-		for asst in self.above:
+		for asst in self.below:
 			asst.calc_pos()
 			x = sc.Panel(sc.SVG(asst.filename).scale(asst.scale)\
 				.move(asst.x, asst.y))
@@ -92,5 +121,5 @@ class composite(twod.pyg2d):
 		panels = below_panels + panel + above_panels
 		print panels
 		sc.Figure("%fcm" % (2.54 * self.width), "%fcm" % (2.54 * self.height),
-		    *panels
+			*panels
 		).save(self.svg_filename)
