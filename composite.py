@@ -138,7 +138,7 @@ class composite(twod.pyg2d):
 			self.below.extend([asst])
 
 	def export(self, *args, **kwargs):
-		super(composite, self).export(*args, tight=False, formats=['svg'], **kwargs)
+		super(composite, self).export(*args, formats=['svg'], **kwargs)
 		below_panels = []
 		for asst in self.below:
 			asst.calc_pos()
