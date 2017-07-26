@@ -6,13 +6,40 @@ import svgutils.compose as sc
 from matplotlib.transforms import Bbox
 
 class asset(object):
-	def __init__(self, filename, width, height, x, y, scale):
+	def __init__(self, filename, bbox, parent):
 		self.filename = filename
-		self.width = width
-		self.height = height
-		self.x = x
-		self.y = y
-		self.scale = scale
+		self.bbox = bbox
+		self.parent = parent
+
+	def calc_pos(self):
+		width = self.parent.get_width(self.filename)
+		height = self.parent.get_height(self.filename)
+		aspect_ratio = width / height
+		dpi = 200.
+		bbox = self.parent.ax.transData.transform(self.bbox)
+		max_width = bbox[1, 0] - bbox[0, 0]
+		max_height = bbox[1, 1] - bbox[0, 1]
+		# Our first option is to make the width the full of the bounding box
+		set_width = max_width
+		set_height = set_width * aspect_ratio
+		self.scale = 1.0/(set_width / width)
+		if set_height > max_height:
+			set_height = max_height
+			set_width = set_height / aspect_ratio
+			self.scale = 1.0 / (set_height / height)
+		self.x = bbox[0, 0]
+		self.y = bbox[1, 1]
+		#print scale
+		#print disp_coords
+		#print fig_coords
+		#self.scale = 1.0
+		print "scale: %f" % (self.scale)
+		print "fig_width: %f" % (self.parent.fig.dpi * self.parent.fig.get_figwidth())
+		print "fig_height: %f" % (self.parent.fig.dpi * self.parent.fig.get_figheight())
+		self.fig_height = self.parent.fig.dpi * self.parent.fig.get_figheight()
+		#self.y = self.fig_height - (self.y + (set_height / 2.0))/1.25
+		#self.x = (self.x - (set_width / 2.0))/1.25
+		print "pos: %f, %f" % (self.x, self.y)
 
 class composite(twod.pyg2d):
 	def __init__(self):
@@ -30,63 +57,35 @@ class composite(twod.pyg2d):
 		height = float(os.system('inkscape --without-gui -query-height %s' % fname))
 		return height
 
-	@staticmethod
-	def get_dpi(fname):
-		return 200.0
+	def get_dpi(self, fname):
+		return self.fig.dpi
 
 	def add_asset(self, filename, wh=[10.0, 10.0], pos=(0., 0.), above=True):
-		# first we have to calculate the bounding box while keeping aspect
-		# ratio
-		# then, we create an asset
-		asst = asset(filename, set_width, set_height,
-					 1.25 * pos[0], self.fig.dpi * self.fig.get_figheight() - pos[1],
-					 scale)
+		x1 = pos[0] - wh[0]/2.0
+		x2 = pos[0] + wh[0]/2.0
+		y1 = pos[1] - wh[1]/2.0
+		y2 = pos[1] + wh[1]/2.0
+		self.add_line([x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1])
+		bbox = np.array([[x1, y1], [x2, y2]])
+		asst = asset(filename, bbox, self)
 		if above:
 			self.above.extend([asst])
 		else:
 			self.below.extend([asst])
-
-	def calc_scale(self):
-		width = self.get_width(filename)
-		height = self.get_height(filename)
-		aspect_ratio = width / height
-		self.dpi = self.get_dpi(filename)
-		bb_data = Bbox.from_bounds(pos[0], pos[1],
-								   wh[0], wh[1])
-		disp_coords = self.ax.transData.transform(bb_data)
-		fig_coords = self.fig.transFigure.inverted().transform(disp_coords)
-		pos = self.ax.transData.transform((pos[0], pos[1]))
-		print pos
-
-		# Our first option is to make the width the full of the bounding box
-		set_width = wh[0]
-		set_height = set_width / aspect_ratio
-		scale = wh[0] / width * self.dpi
-		if set_height > wh[1]:
-			set_height = wh[1]
-			set_width = set_height * aspect_ratio
-			scale = wh[1] / height * self.dpi
-		#print scale
-		#print disp_coords
-		#print fig_coords
-		print "fig_width: %f" % (self.fig.dpi * self.fig.get_figwidth())
-		print "fig_height: %f" % (self.fig.dpi * self.fig.get_figheight())
-		print "pos: %f, %f" % (pos[0], pos[1])
-
-	def calc_pos(self, asst):
-		pass
 
 	def export(self, *args, **kwargs):
 		kwargs['formats'] = ['svg']
 		super(composite, self).export(*args, **kwargs)
 		below_panels = []
 		for asst in self.above:
+			asst.calc_pos()
 			x = sc.Panel(sc.SVG(asst.filename).scale(asst.scale)\
 				.move(asst.x, asst.y))
 			below_panels.extend([x])
 		panel = [sc.Panel(sc.SVG(self.svg_filename).scale(1.25))]
 		above_panels = []
 		for asst in self.above:
+			asst.calc_pos()
 			x = sc.Panel(sc.SVG(asst.filename).scale(asst.scale)\
 				.move(asst.x, asst.y))
 			above_panels.extend([x])
