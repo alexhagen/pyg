@@ -1,0 +1,7 @@
+pyg\.composite module
+=====================
+
+.. automodule:: pyg.composite
+    :members:
+    :undoc-members:
+    :show-inheritance:

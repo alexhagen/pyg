@@ -127,6 +127,11 @@
 <code class="descclassname">pyg.twod.</code><code class="descname">context</code><span class="sig-paren">(</span><em>ctx=’writeup’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.context" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="function">
+<dt id="pyg.twod.load">
+<code class="descclassname">pyg.twod.</code><code class="descname">load</code><span class="sig-paren">(</span><em>fname</em>, <em>svg=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="pyg.twod.pyg2d">
 <em class="property">class </em><code class="descclassname">pyg.twod.</code><code class="descname">pyg2d</code><span class="sig-paren">(</span><em>env=’plot’</em>, <em>polar=False</em>, <em>colors=’purdue’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d" title="Permalink to this definition">¶</a></dt>
@@ -445,7 +450,7 @@ current.</li>
 
 <dl class="attribute">
 <dt id="pyg.twod.pyg2d.instances">
-<code class="descname">instances</code><em class="property"> = [&lt;weakproxy at 0x2b912cdd32b8 to NoneType at 0x8fe4d0&gt;]</em><a class="headerlink" href="#pyg.twod.pyg2d.instances" title="Permalink to this definition">¶</a></dt>
+<code class="descname">instances</code><em class="property"> = [&lt;weakproxy at 0x2ab3c9d922b8 to NoneType at 0x8fe4d0&gt;]</em><a class="headerlink" href="#pyg.twod.pyg2d.instances" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -597,7 +602,7 @@ notation.</li>
 
 <dl class="method">
 <dt id="pyg.twod.pyg2d.show">
-<code class="descname">show</code><span class="sig-paren">(</span><em>caption=”</em>, <em>label=None</em>, <em>scale=None</em>, <em>interactive=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.show" title="Permalink to this definition">¶</a></dt>
+<code class="descname">show</code><span class="sig-paren">(</span><em>caption=”</em>, <em>label=None</em>, <em>scale=None</em>, <em>interactive=False</em>, <em>need_string=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#pyg2d.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.pyg2d.show" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -781,9 +786,30 @@ on the y-axis.</li>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="pyg.twod.svg">
+<em class="property">class </em><code class="descclassname">pyg.twod.</code><code class="descname">svg</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="staticmethod">
+<dt id="pyg.twod.svg.get_height">
+<em class="property">static </em><code class="descname">get_height</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg.get_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg.get_height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="pyg.twod.svg.get_width">
+<em class="property">static </em><code class="descname">get_width</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg.get_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg.get_width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyg.twod.svg.show">
+<code class="descname">show</code><span class="sig-paren">(</span><em>caption=”</em>, <em>label=None</em>, <em>scale=None</em>, <em>width=None</em>, <em>convert=True</em>, <em>need_string=False</em>, <em>bbox=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="pyg.twod.svg_show">
-<code class="descclassname">pyg.twod.</code><code class="descname">svg_show</code><span class="sig-paren">(</span><em>filename</em>, <em>caption=”</em>, <em>label=None</em>, <em>scale=None</em>, <em>width=None</em>, <em>convert=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg_show" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pyg.twod.</code><code class="descname">svg_show</code><span class="sig-paren">(</span><em>filename</em>, <em>caption=”</em>, <em>label=None</em>, <em>scale=None</em>, <em>width=None</em>, <em>convert=True</em>, <em>need_string=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyg/twod.html#svg_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyg.twod.svg_show" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

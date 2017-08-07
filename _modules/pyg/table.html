@@ -151,7 +151,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;rm /tmp/need_markdown&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../pyg.table.html#pyg.table.table">[docs]</a><span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="table"><a class="viewcode-back" href="../../pyg.table.html#pyg.table.table">[docs]</a><span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">,</span>
+          <span class="n">need_string</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">caption</span>
     <span class="k">if</span> <span class="n">run_from_ipython</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">need_latex</span><span class="p">():</span>
@@ -181,6 +182,8 @@
 <span class="s2">            \caption{</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">            \label{tab:</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">        \end</span><span class="si">{table}</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">need_string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">strlatex</span>
         <span class="n">display</span><span class="p">(</span><span class="n">Latex</span><span class="p">(</span><span class="n">strlatex</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="figures"><a class="viewcode-back" href="../../pyg.table.html#pyg.table.figures">[docs]</a><span class="k">def</span> <span class="nf">figures</span><span class="p">():</span>

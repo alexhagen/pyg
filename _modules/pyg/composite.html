@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyg.composite &#8212; pyg 0.1a1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/extra.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+
+
+
+<div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/pyg.svg"></span>
+        pyg</a>
+      <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+    </div>
+
+      <div class="collapse navbar-collapse nav-collapse">
+        <ul class="nav navbar-nav">
+          
+            <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Alex Hagen <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+            
+              <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#"> <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+            
+          
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+          
+          
+            
+              
+            
+          
+          
+          
+          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="http://alexhagen.github.io/" target="_blank">Alex Hagen</a></li>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for pyg.composite</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">twod</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">colour</span> <span class="k">import</span> <span class="n">Color</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">svgutils.compose</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="n">gscale</span> <span class="o">=</span> <span class="mf">0.96</span>
+
+<div class="viewcode-block" id="asset"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.asset">[docs]</a><span class="k">class</span> <span class="nc">asset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">bbox</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">gscale</span> <span class="o">=</span> <span class="mf">1.144117591</span>
+
+<div class="viewcode-block" id="asset.calc_pos"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.asset.calc_pos">[docs]</a>	<span class="k">def</span> <span class="nf">calc_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_height</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="n">height</span>
+		<span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
+		<span class="n">max_width</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">gscale</span>
+		<span class="n">max_height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">gscale</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">fig_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">get_figheight</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">gscale</span>
+		<span class="n">top_margin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_height</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_y</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)</span>
+		<span class="n">set_width</span> <span class="o">=</span> <span class="n">max_width</span>
+		<span class="n">set_height</span> <span class="o">=</span> <span class="n">set_width</span> <span class="o">*</span> <span class="n">aspect_ratio</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">set_width</span> <span class="o">/</span> <span class="n">width</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">set_height</span> <span class="o">&gt;</span> <span class="n">max_height</span><span class="p">:</span>
+			<span class="n">set_height</span> <span class="o">=</span> <span class="n">max_height</span>
+			<span class="n">set_width</span> <span class="o">=</span> <span class="n">set_height</span> <span class="o">/</span> <span class="n">aspect_ratio</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">set_height</span> <span class="o">/</span> <span class="n">height</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">((</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">set_width</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">gscale</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">((</span><span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mf">2.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">set_height</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">gscale</span> <span class="o">-</span> <span class="n">top_margin</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_height</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span></div></div>
+
+<div class="viewcode-block" id="composite"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite">[docs]</a><span class="k">class</span> <span class="nc">composite</span><span class="p">(</span><span class="n">twod</span><span class="o">.</span><span class="n">pyg2d</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">composite</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">above</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">below</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+<div class="viewcode-block" id="composite.get_width"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.get_width">[docs]</a>	<span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+			<span class="k">pass</span>
+		<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-width </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inkscape_bin</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+		<span class="c1">#print cmd</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+		<span class="c1">#print out,err</span>
+		<span class="n">width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">width</span></div>
+
+<div class="viewcode-block" id="composite.get_height"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.get_height">[docs]</a>	<span class="k">def</span> <span class="nf">get_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+			<span class="k">pass</span>
+		<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-height </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inkscape_bin</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+		<span class="c1">#print cmd</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+		<span class="c1">#print out,err</span>
+		<span class="n">height</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">height</span></div>
+
+<div class="viewcode-block" id="composite.get_x"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.get_x">[docs]</a>	<span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+			<span class="k">pass</span>
+		<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-x </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inkscape_bin</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+		<span class="c1">#print cmd</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+		<span class="c1">#print out,err</span>
+		<span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="composite.get_y"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.get_y">[docs]</a>	<span class="k">def</span> <span class="nf">get_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+			<span class="n">inkscape_bin</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+			<span class="k">pass</span>
+		<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-y </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inkscape_bin</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cwd</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+		<span class="c1">#print cmd</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+		<span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="composite.get_dpi"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.get_dpi">[docs]</a>	<span class="k">def</span> <span class="nf">get_dpi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">dpi</span></div>
+
+<div class="viewcode-block" id="composite.add_asset"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.add_asset">[docs]</a>	<span class="k">def</span> <span class="nf">add_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">wh</span><span class="o">=</span><span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">above</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="n">x1</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">wh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span>
+		<span class="n">x2</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">wh</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span>
+		<span class="n">y1</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">wh</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span>
+		<span class="n">y2</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">wh</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span>
+		<span class="c1">#self.add_line([x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1])</span>
+		<span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">]])</span>
+		<span class="n">asst</span> <span class="o">=</span> <span class="n">asset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">above</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">above</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">asst</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">below</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">asst</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="composite.export"><a class="viewcode-back" href="../../pyg.composite.html#pyg.composite.composite.export">[docs]</a>	<span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">composite</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">formats</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;websvg&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;inkscape -z --export-area-drawing --export-pdf=temp.pdf </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">))</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;inkscape -z --export-plain-svg=</span><span class="si">%s</span><span class="s1"> temp.pdf&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">))</span>
+		<span class="n">below_panels</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">asst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">below</span><span class="p">:</span>
+			<span class="n">asst</span><span class="o">.</span><span class="n">calc_pos</span><span class="p">()</span>
+			<span class="n">x</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">SVG</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>\
+				<span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">asst</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+			<span class="n">below_panels</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+		<span class="n">x</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">SVG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">))</span>
+		<span class="n">x</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">gscale</span><span class="p">)</span>
+		<span class="n">panel</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+		<span class="n">above_panels</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">asst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">above</span><span class="p">:</span>
+			<span class="n">asst</span><span class="o">.</span><span class="n">calc_pos</span><span class="p">()</span>
+			<span class="n">x</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">SVG</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>\
+				<span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">asst</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">asst</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+			<span class="n">above_panels</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+		<span class="n">panels</span> <span class="o">=</span> <span class="n">below_panels</span> <span class="o">+</span> <span class="n">panel</span> <span class="o">+</span> <span class="n">above_panels</span>
+		<span class="n">sc</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%f</span><span class="s2">px&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_width</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)),</span>
+				  <span class="s2">&quot;</span><span class="si">%f</span><span class="s2">px&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)),</span>
+			<span class="o">*</span><span class="n">panels</span>
+		<span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span><span class="p">)</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Alex Hagen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
