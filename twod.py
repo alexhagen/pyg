@@ -695,7 +695,7 @@ class pyg2d(object):
 					   x1 - offset * total_width - length * total_width,
 					   lw=lw, axes=axes)
 		if log:
-			y_mid = np.power(10., (np.log10(y2) + np.log10(y1)) / 2.)
+			y_mid = np.sqrt(y2 * y1)
 		else:
 			y_mid = (y2 + y1) / 2.0
 		x_mid = (x1 - offset * total_width +
@@ -705,7 +705,7 @@ class pyg2d(object):
 		self.allartists.append((h1, h2, h3, h4))
 
 	def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
-					 axes=None, units=''):
+					 axes=None, units='', log=False):
 		if axes is None:
 			axes = self.ax
 		if string is None:
@@ -721,7 +721,10 @@ class pyg2d(object):
 		h2 = self.add_vline(x2, y1 + offset * total_width,
 					   y1 + offset * total_width + length * total_width,
 					   lw=lw, axes=axes)
-		x_mid = (x2 + x1) / 2.0
+		if log:
+			x_mid = np.sqrt(x1 * x2)
+		else:
+			x_mid = (x2 + x1) / 2.0
 		y_mid = (y1 + offset * total_width +
 				 y1 + offset * total_width + length * total_width) / 2.0
 		h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string), axes=axes)

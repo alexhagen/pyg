@@ -19,6 +19,7 @@ Submodules
 
 .. toctree::
 
+   pyg.composite
    pyg.table
    pyg.three2twod
    pyg.threed

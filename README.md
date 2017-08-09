@@ -53,7 +53,7 @@ plot.show(caption='An arbitrary three dimensional surface')
 
 
 				<div class='pygfigure' name='['Anarbitrarythreedimensionalsurface']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?1033029359' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?447347064' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> An arbitrary three dimensional surface</div>
 				</div>
 			
@@ -89,7 +89,7 @@ plot.show('Using two dimensional annotations on a three dimensional geometric pl
 
 
 				<div class='pygfigure' name='['Usingtwodimensionalannotationsonathreedimensionalgeometricplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?1225003135' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?514704452' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 2:</b> Using two dimensional annotations on a three dimensional geometric plot</div>
 				</div>
 			
@@ -142,7 +142,7 @@ plot.show(caption='Depiction of useful measurements on a two-d plot')
 
 
 				<div class='pygfigure' name='['Depictionofusefulmeasurementsonatwodplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/measure.svg?36815011' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/measure.svg?511086549' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 3:</b> Depiction of useful measurements on a two-d plot</div>
 				</div>
 			
@@ -176,7 +176,7 @@ plot.show(caption='A line drawing with uncertainty in y')
 
 
 				<div class='pygfigure' name='['Alinedrawingwithuncertaintyiny']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?735397508' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?1889443711' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 4:</b> A line drawing with uncertainty in y</div>
 				</div>
 			
@@ -209,7 +209,7 @@ plot.show(caption='Sinusoid with uncertainty and a sparsely sampled sinusoid wit
 
 
 				<div class='pygfigure' name='['Sinusoidwithuncertaintyandasparselysampledsinusoidwithuncertainty']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?237666398' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?819966078' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 5:</b> Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty</div>
 				</div>
 			
@@ -242,7 +242,7 @@ plot.show('Sinusoids with the same $x$ axis, on different $y$ axes')
 
 
 				<div class='pygfigure' name='['Sinusoidswiththesamexaxisondifferentyaxes']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?1491952160' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?659500581' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 6:</b> Sinusoids with the same $x$ axis, on different $y$ axes</div>
 				</div>
 			
@@ -274,7 +274,7 @@ plot.show('Sinusoid in terms of radians and in terms of $\pi$')
 
 
 				<div class='pygfigure' name='['Sinusoidintermsofradiansandintermsofpi']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?1498368724' />
+					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?275099556' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 7:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
 				</div>
 			
