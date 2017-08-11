@@ -29,6 +29,8 @@ __context__ = psgv.psgv('__context__')
 __context__.val = 'writeup'
 __figures__ = psgv.psgv('__lyxfigures__')
 __figures__.val = {}
+__force__ = psgv.psgv('__pygforce__')
+__force__.val = False
 
 def context(ctx='writeup'):
 	__context__.val = ctx
@@ -52,6 +54,9 @@ preamble = ['\usepackage{nicefrac}',
 	r'\usepackage{stackrel}',
 	'\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
 	'{\mathrm{#1}}}}']
+
+def force(val=True):
+	__force__.val = val
 
 def load(fname, svg=False):
 	_fig = pickle.load(file(os.path.expanduser('~') +
@@ -1224,7 +1229,7 @@ class pyg2d(object):
 		elif format is 'svg':
 			# save as pdf, then pdf2svg
 			if not os.path.isfile(filename + self.sizestring[size] + '.svg') \
-				or self.force_export:
+				or self.force_export or __force__.val:
 				self.fig.savefig(filename + self.sizestring[size] + '.pdf',
 							bbox_extra_artists=self.artists, bbox_inches='tight',
 							transparent=True, dpi=1200)
@@ -1237,7 +1242,7 @@ class pyg2d(object):
 			self.svg_filename = filename + self.sizestring[size] + add
 		if (format is not 'svg') and (format is not 'html'):
 			if not os.path.isfile(filename + self.sizestring[size] + add) \
-				or self.force_export:
+				or self.force_export or __force__.val:
 				self.fig.savefig(filename + self.sizestring[size] + add,
 							bbox_extra_artists=self.artists, bbox_inches='tight',
 							transparent=True)
