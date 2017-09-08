@@ -365,7 +365,7 @@ class pyg2d(object):
 		self.artists.append(xlab)
 		self.allartists.append('xlab: ' + label)
 
-	def add_subplot(self, subp=121):
+	def add_subplot(self, subp=121, polar=False):
 		""" ``pyg2d.add_subplot`` adds a grid in which you can make subplots.
 
 		``pyg2d.add_subplot`` follows Matlab's lead and allows you to plot
@@ -386,9 +386,15 @@ class pyg2d(object):
 		gsstr = str(subp)
 		gs1 = int(gsstr[0])
 		gs2 = int(gsstr[1])
+		self.ax2 = self.fig.add_subplot(subp, polar=polar)
 		self.ax.change_geometry(gs1, gs2, 1)
-		self.ax2.change_geometry(gs1, gs2, 1)
+		self.ax2.change_geometry(gs1, gs2, 2)
 		self.ax_subp.append(self.fig.add_subplot(subp))
+		if not self.polar:
+			self.ax2.spines['top'].set_visible(False)
+			self.ax2.spines['right'].set_visible(False)
+		self.ax2.get_xaxis().tick_bottom()
+		self.ax2.get_yaxis().tick_left()
 
 	def title(self, title, axes=None):
 		""" ``pyg2d.title`` adds a title to the plot.
@@ -494,9 +500,9 @@ class pyg2d(object):
 		if axes is not None:
 			plt.sca(axes)
 		else:
-			plt.sca(self.ax)
-		self.ax.set_xticks(ticks)
-		self.ax.set_xticklabels(labels)
+			axes = self.ax
+		axes.set_xticks(ticks)
+		axes.set_xticklabels(labels)
 
 	def yticks(self, ticks, labels, axes=None):
 		""" ``pyg2d.yticks`` changes the ticks and labels to provided values.
@@ -514,9 +520,9 @@ class pyg2d(object):
 		if axes is not None:
 			plt.sca(axes)
 		else:
-			plt.sca(self.ax)
-		self.ax.set_yticks(ticks)
-		self.ax.set_yticklabels(labels)
+			axes = self.ax
+		axes.set_yticks(ticks)
+		axes.set_yticklabels(labels)
 
 	def markers_on(self):
 		""" ``pyg2d.markers_on`` turns on the data markers for all data sets.
