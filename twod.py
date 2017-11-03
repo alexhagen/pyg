@@ -32,6 +32,21 @@ __figures__.val = {}
 __force__ = psgv.psgv('__pygforce__')
 __force__.val = False
 
+def ratio(ratio='golden'):
+	if ratio is "golden":
+		r = (1. + np.sqrt(5.)) / 2.
+	elif ratio is "silver":
+		r = 1. + np.sqrt(2.)
+	elif ratio is "bronze":
+		r = (3. + np.sqrt(13.)) / 2.
+	elif ratio is "invgolden":
+		r = 2. / (1. + np.sqrt(5.))
+	elif ratio is "invsilver":
+		r = 1. / (1. + np.sqrt(2.))
+	elif ratio is "invbronze":
+		r = 2. / (3. + np.sqrt(13.))
+	return r
+
 def context(ctx='writeup'):
 	__context__.val = ctx
 
