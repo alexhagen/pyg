@@ -32,7 +32,7 @@ __figures__.val = {}
 __force__ = psgv.psgv('__pygforce__')
 __force__.val = False
 
-def ratio(ratio='golden'):
+def metal_dim(ratio='golden'):
 	if ratio is "golden":
 		r = (1. + np.sqrt(5.)) / 2.
 	elif ratio is "silver":
@@ -46,6 +46,10 @@ def ratio(ratio='golden'):
 	elif ratio is "invbronze":
 		r = 2. / (3. + np.sqrt(13.))
 	return r
+
+def res(w=1080., ratio='golden'):
+	h = w * metal_dim(ratio)
+	return (w, h)
 
 def context(ctx='writeup'):
 	__context__.val = ctx
