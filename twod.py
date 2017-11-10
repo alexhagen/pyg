@@ -45,11 +45,13 @@ def metal_dim(ratio='golden'):
 		r = 1. / (1. + np.sqrt(2.))
 	elif ratio is "invbronze":
 		r = 2. / (3. + np.sqrt(13.))
+	elif ratio is 'square':
+		r = 1.0
 	return r
 
 def res(w=1080., ratio='golden'):
 	h = w * metal_dim(ratio)
-	return (w, h)
+	return (h, w)
 
 def context(ctx='writeup'):
 	__context__.val = ctx
