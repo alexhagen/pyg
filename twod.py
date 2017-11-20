@@ -94,15 +94,27 @@ def load(fname, svg=False):
 
 class svg(object):
 	def __init__(self, filename):
-		self.filename = filename
+		from sys import platform
+		import os
+		if platform == "darwin":
+			self.filename = os.path.abspath(filename)
+		else:
+			self.filename = filename
 		self.loaded = False
 
 	@staticmethod
 	def get_width(fname):
+		from sys import platform
+		if platform == "linux" or platform == "linux2":
+		    command = 'inkscape'
+		elif platform == "darwin":
+		    command = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+		    pass
 		if 'png' in fname:
 			cmd = 'identify -format "%%[w]" %s' % fname
 		else:
-			cmd = 'inkscape --without-gui --query-width %s' % fname
+			cmd = '%s --without-gui --query-width %s' % (command, fname)
 		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
 							 stderr=subprocess.PIPE, shell=True)
 		(out, err) = p.communicate()
@@ -115,10 +127,17 @@ class svg(object):
 
 	@staticmethod
 	def get_height(fname):
+		from sys import platform
+		if platform == "linux" or platform == "linux2":
+		    command = 'inkscape'
+		elif platform == "darwin":
+		    command = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+		    pass
 		if 'png' in fname:
-			cmd = 'identify -format "%%[h]" %s' % fname
+			cmd = 'identify -format "%%[w]" %s' % fname
 		else:
-			cmd = 'inkscape --without-gui --query-height %s' % fname
+			cmd = '%s --without-gui --query-width %s' % (command, fname)
 		p = subprocess.Popen([cmd], stdout=subprocess.PIPE,
 							 stderr=subprocess.PIPE, shell=True)
 		(out, err) = p.communicate()
@@ -131,6 +150,13 @@ class svg(object):
 
 	def show(self, caption='', label=None, scale=None, width=None,
 			 convert=True, need_string=False, bbox=None):
+		from sys import platform
+		if platform == "linux" or platform == "linux2":
+		    command = 'inkscape'
+		elif platform == "darwin":
+		    command = '/Applications/Inkscape.app/Contents/Resources/bin/inkscape'
+		elif platform == "win32":
+		    pass
 		if label is not None and not self.loaded:
 			pickle.dump(self, file(os.path.expanduser('~') +
 									'/.pyg/%s.pickle' % label, 'w'))
@@ -181,14 +207,14 @@ class svg(object):
 			svg_filename = self.filename
 			pdf_filename = self.filename.replace('.svg', '.pdf')
 			if convert:
-				os.system('inkscape --without-gui -f {svg_filename} -A {pdf_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+				os.system('{command} --without-gui -f {svg_filename} -A {pdf_filename}'.format(command=command, pdf_filename=pdf_filename, svg_filename=svg_filename))
 				#os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
 			strlatex = r"""
 			\begin{figure}
 				\centering
 				\includegraphics[width=%.2fin]{%s}
 				\caption{%s\label{fig:%s}}
-			\end{figure}""" % (fig_width, pdf_filename, caption, label)
+			\end{figure}""" % (fig_width * 1.375, pdf_filename, caption, label)
 			__figures__.val[label] = bi.__figcount__
 			bi.__figcount__ += 1
 			if need_string:
@@ -990,6 +1016,15 @@ class pyg2d(object):
 							   alpha=alpha, label=name))
 		self.bars[name] = patch
 		self.allartists.append(patch)
+
+	def stackplot(self, x, y, baseline='zero', axes=None, name='stackplot',
+				  **kwargs):
+		if axes is None:
+			axes = self.ax
+		self.plotnum = self.plotnum + 1
+		if name is 'plot':
+			name = 'plot%d' % (self.plotnum)
+		stack = axes.stackplot(x, y, baseline=baseline, **kwargs)
 
 	def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
 				 linestyle=None, linecolor='black', legend=True, axes=None,
