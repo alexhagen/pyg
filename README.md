@@ -56,7 +56,7 @@ plot.show(caption='An arbitrary three dimensional surface')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?1537256014' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> An arbitrary three dimensional surface</div>
 				</div>
-			
+
 
 
 #### Two to Three Dimensional Plotting
@@ -92,7 +92,7 @@ plot.show('Using two dimensional annotations on a three dimensional geometric pl
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?1349914927' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 2:</b> Using two dimensional annotations on a three dimensional geometric plot</div>
 				</div>
-			
+
 
 
 #### Measurements
@@ -110,7 +110,7 @@ nur = [228, 160, 89, 58, 77, 38, 17, 10, 1, 0, 0, 0, 0]
 _med = []
 for m, g in zip(med, grades):
     _med += [g] * m
-    
+
 _nur = []
 for n, g in zip(nur, grades):
     _nur += [g] * n
@@ -145,7 +145,7 @@ plot.show(caption='Depiction of useful measurements on a two-d plot')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/measure.svg?588841327' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 3:</b> Depiction of useful measurements on a two-d plot</div>
 				</div>
-			
+
 
 
 ### Boring Examples
@@ -179,7 +179,7 @@ plot.show(caption='A line drawing with uncertainty in y')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?1713595283' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 4:</b> A line drawing with uncertainty in y</div>
 				</div>
-			
+
 
 
 
@@ -212,7 +212,7 @@ plot.show(caption='Sinusoid with uncertainty and a sparsely sampled sinusoid wit
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?530678635' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 5:</b> Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty</div>
 				</div>
-			
+
 
 
 #### Dual Axis Plotting
@@ -245,7 +245,7 @@ plot.show('Sinusoids with the same $x$ axis, on different $y$ axes')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?899447963' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 6:</b> Sinusoids with the same $x$ axis, on different $y$ axes</div>
 				</div>
-			
+
 
 
 The next figure shows how you can compare a single function against different ordinate axes.  This would be useful if you are comparing different units, but I particularly use it when there is some electrical measurement that is calibrated non-linearly (for example, in gamma spectroscopy).
@@ -277,5 +277,9 @@ plot.show('Sinusoid in terms of radians and in terms of $\pi$')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?990952284' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 7:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
 				</div>
-			
 
+## Coming Features and implementation details
+
+- [ ] SVG import for illustrating on charts
+	- SVG addition via post processing - only suitable for SVG export (https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure)[https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure]
+	- SVG conversion to matplotlib via regexing (https://matplotlib.org/examples/showcase/firefox.html)[https://matplotlib.org/examples/showcase/firefox.html]
