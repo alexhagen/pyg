@@ -144,6 +144,29 @@
 <span class="n">__context__</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;writeup&#39;</span>
 <span class="n">__figures__</span> <span class="o">=</span> <span class="n">psgv</span><span class="o">.</span><span class="n">psgv</span><span class="p">(</span><span class="s1">&#39;__lyxfigures__&#39;</span><span class="p">)</span>
 <span class="n">__figures__</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">__force__</span> <span class="o">=</span> <span class="n">psgv</span><span class="o">.</span><span class="n">psgv</span><span class="p">(</span><span class="s1">&#39;__pygforce__&#39;</span><span class="p">)</span>
+<span class="n">__force__</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">def</span> <span class="nf">metal_dim</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;golden&#39;</span><span class="p">):</span>
+	<span class="k">if</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;golden&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">5.</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;silver&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;bronze&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">13.</span><span class="p">))</span> <span class="o">/</span> <span class="mf">2.</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;invgolden&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">5.</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;invsilver&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s2">&quot;invbronze&quot;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">3.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">13.</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="n">ratio</span> <span class="ow">is</span> <span class="s1">&#39;square&#39;</span><span class="p">:</span>
+		<span class="n">r</span> <span class="o">=</span> <span class="mf">1.0</span>
+	<span class="k">return</span> <span class="n">r</span>
+
+<span class="k">def</span> <span class="nf">res</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="mf">1080.</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="s1">&#39;golden&#39;</span><span class="p">):</span>
+	<span class="n">h</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">metal_dim</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">context</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="s1">&#39;writeup&#39;</span><span class="p">):</span>
 	<span class="n">__context__</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">ctx</span>
@@ -168,6 +191,9 @@
 	<span class="s1">&#39;</span><span class="se">\\</span><span class="s1">providecommand{\unit}[1]{\ensuremath{</span><span class="se">\\</span><span class="s1">textcolor</span><span class="si">{grey60}</span><span class="s1">&#39;</span> <span class="o">+</span>
 	<span class="s1">&#39;{\mathrm{#1}}}}&#39;</span><span class="p">]</span>
 
+<span class="k">def</span> <span class="nf">force</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+	<span class="n">__force__</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+
 <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">svg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 	<span class="n">_fig</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">)</span> <span class="o">+</span>
 							<span class="s1">&#39;/.pyg/</span><span class="si">%s</span><span class="s1">.pickle&#39;</span> <span class="o">%</span> <span class="n">fname</span><span class="p">))</span>
@@ -183,15 +209,27 @@
 
 <span class="k">class</span> <span class="nc">svg</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+		<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+		<span class="kn">import</span> <span class="nn">os</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">loaded</span> <span class="o">=</span> <span class="kc">False</span>
 
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">get_width</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+		<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+		    <span class="k">pass</span>
 		<span class="k">if</span> <span class="s1">&#39;png&#39;</span> <span class="ow">in</span> <span class="n">fname</span><span class="p">:</span>
 			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;identify -format &quot;</span><span class="si">%%</span><span class="s1">[w]&quot; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;inkscape --without-gui --query-width </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span>
+			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-width </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
 							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
@@ -204,10 +242,17 @@
 
 	<span class="nd">@staticmethod</span>
 	<span class="k">def</span> <span class="nf">get_height</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+		<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+		    <span class="k">pass</span>
 		<span class="k">if</span> <span class="s1">&#39;png&#39;</span> <span class="ow">in</span> <span class="n">fname</span><span class="p">:</span>
-			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;identify -format &quot;</span><span class="si">%%</span><span class="s1">[h]&quot; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span>
+			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;identify -format &quot;</span><span class="si">%%</span><span class="s1">[w]&quot; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;inkscape --without-gui --query-height </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fname</span>
+			<span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> --without-gui --query-width </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 		<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="n">cmd</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
 							 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 		<span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
@@ -220,6 +265,13 @@
 
 	<span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 			 <span class="n">convert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">need_string</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">platform</span>
+		<span class="k">if</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span> <span class="ow">or</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;linux2&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+		    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;/Applications/Inkscape.app/Contents/Resources/bin/inkscape&#39;</span>
+		<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;win32&quot;</span><span class="p">:</span>
+		    <span class="k">pass</span>
 		<span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded</span><span class="p">:</span>
 			<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">)</span> <span class="o">+</span>
 									<span class="s1">&#39;/.pyg/</span><span class="si">%s</span><span class="s1">.pickle&#39;</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">))</span>
@@ -270,14 +322,14 @@
 			<span class="n">svg_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
 			<span class="n">pdf_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.svg&#39;</span><span class="p">,</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">convert</span><span class="p">:</span>
-				<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;inkscape --without-gui -f </span><span class="si">{svg_filename}</span><span class="s1"> -A </span><span class="si">{pdf_filename}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pdf_filename</span><span class="o">=</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">svg_filename</span><span class="o">=</span><span class="n">svg_filename</span><span class="p">))</span>
+				<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{command}</span><span class="s1"> --without-gui -f </span><span class="si">{svg_filename}</span><span class="s1"> -A </span><span class="si">{pdf_filename}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">pdf_filename</span><span class="o">=</span><span class="n">pdf_filename</span><span class="p">,</span> <span class="n">svg_filename</span><span class="o">=</span><span class="n">svg_filename</span><span class="p">))</span>
 				<span class="c1">#os.system(&#39;rsvg-convert -f pdf -o {pdf_filename} {svg_filename}&#39;.format(pdf_filename=pdf_filename, svg_filename=svg_filename))</span>
 			<span class="n">strlatex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">			\begin</span><span class="si">{figure}</span><span class="s2"></span>
 <span class="s2">				\centering</span>
 <span class="s2">				\includegraphics[width=</span><span class="si">%.2f</span><span class="s2">in]{</span><span class="si">%s</span><span class="s2">}</span>
 <span class="s2">				\caption{</span><span class="si">%s</span><span class="s2">\label{fig:</span><span class="si">%s</span><span class="s2">}}</span>
-<span class="s2">			\end</span><span class="si">{figure}</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">pdf_filename</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+<span class="s2">			\end</span><span class="si">{figure}</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fig_width</span> <span class="o">*</span> <span class="mf">1.375</span><span class="p">,</span> <span class="n">pdf_filename</span><span class="p">,</span> <span class="n">caption</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
 			<span class="n">__figures__</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">bi</span><span class="o">.</span><span class="n">__figcount__</span>
 			<span class="n">bi</span><span class="o">.</span><span class="n">__figcount__</span> <span class="o">+=</span> <span class="mi">1</span>
 			<span class="k">if</span> <span class="n">need_string</span><span class="p">:</span>
@@ -475,7 +527,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xlab</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">allartists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;xlab: &#39;</span> <span class="o">+</span> <span class="n">label</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="pyg2d.add_subplot"><a class="viewcode-back" href="../index.html#twod.pyg2d.add_subplot">[docs]</a>	<span class="k">def</span> <span class="nf">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subp</span><span class="o">=</span><span class="mi">121</span><span class="p">):</span>
+<div class="viewcode-block" id="pyg2d.add_subplot"><a class="viewcode-back" href="../index.html#twod.pyg2d.add_subplot">[docs]</a>	<span class="k">def</span> <span class="nf">add_subplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subp</span><span class="o">=</span><span class="mi">121</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; ``pyg2d.add_subplot`` adds a grid in which you can make subplots.</span>
 
 <span class="sd">		``pyg2d.add_subplot`` follows Matlab&#39;s lead and allows you to plot</span>
@@ -496,9 +548,15 @@
 		<span class="n">gsstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">subp</span><span class="p">)</span>
 		<span class="n">gs1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gsstr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 		<span class="n">gs2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gsstr</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subp</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">change_geometry</span><span class="p">(</span><span class="n">gs1</span><span class="p">,</span> <span class="n">gs2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">change_geometry</span><span class="p">(</span><span class="n">gs1</span><span class="p">,</span> <span class="n">gs2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subp</span><span class="p">))</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">change_geometry</span><span class="p">(</span><span class="n">gs1</span><span class="p">,</span> <span class="n">gs2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ax_subp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">subp</span><span class="p">))</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">tick_bottom</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">tick_left</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="pyg2d.title"><a class="viewcode-back" href="../index.html#twod.pyg2d.title">[docs]</a>	<span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; ``pyg2d.title`` adds a title to the plot.</span>
@@ -604,9 +662,9 @@
 		<span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
+			<span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+		<span class="n">axes</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+		<span class="n">axes</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg2d.yticks"><a class="viewcode-back" href="../index.html#twod.pyg2d.yticks">[docs]</a>	<span class="k">def</span> <span class="nf">yticks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; ``pyg2d.yticks`` changes the ticks and labels to provided values.</span>
@@ -624,9 +682,9 @@
 		<span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 			<span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
+			<span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+		<span class="n">axes</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+		<span class="n">axes</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="pyg2d.markers_on"><a class="viewcode-back" href="../index.html#twod.pyg2d.markers_on">[docs]</a>	<span class="k">def</span> <span class="nf">markers_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; ``pyg2d.markers_on`` turns on the data markers for all data sets.</span>
@@ -1074,6 +1132,15 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">bars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">patch</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">allartists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
 
+	<span class="k">def</span> <span class="nf">stackplot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">baseline</span><span class="o">=</span><span class="s1">&#39;zero&#39;</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;stackplot&#39;</span><span class="p">,</span>
+				  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">plotnum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotnum</span> <span class="o">+</span> <span class="mi">1</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="s1">&#39;plot&#39;</span><span class="p">:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;plot</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotnum</span><span class="p">)</span>
+		<span class="n">stack</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">stackplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">baseline</span><span class="o">=</span><span class="n">baseline</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">add_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 				 <span class="n">linestyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 				 <span class="n">error_fill</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1339,7 +1406,7 @@
 		<span class="k">elif</span> <span class="nb">format</span> <span class="ow">is</span> <span class="s1">&#39;svg&#39;</span><span class="p">:</span>
 			<span class="c1"># save as pdf, then pdf2svg</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.svg&#39;</span><span class="p">)</span> \
-				<span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_export</span><span class="p">:</span>
+				<span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_export</span> <span class="ow">or</span> <span class="n">__force__</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">,</span>
 							<span class="n">bbox_extra_artists</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
 							<span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
@@ -1352,7 +1419,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">svg_filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nb">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;svg&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;html&#39;</span><span class="p">):</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span><span class="p">)</span> \
-				<span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_export</span><span class="p">:</span>
+				<span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_export</span> <span class="ow">or</span> <span class="n">__force__</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizestring</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span><span class="p">,</span>
 							<span class="n">bbox_extra_artists</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">artists</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span>
 							<span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
