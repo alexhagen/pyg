@@ -277,9 +277,3 @@ plot.show('Sinusoid in terms of radians and in terms of $\pi$')
 					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?990952284' />
 					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 7:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
 				</div>
-
-## Coming Features and implementation details
-
-- [ ] SVG import for illustrating on charts
-	- SVG addition via post processing - only suitable for SVG export (https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure)[https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure]
-	- SVG conversion to matplotlib via regexing (https://matplotlib.org/examples/showcase/firefox.html)[https://matplotlib.org/examples/showcase/firefox.html]
