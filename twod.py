@@ -149,7 +149,10 @@ class svg(object):
 		return height
 
 	def show(self, caption='', label=None, scale=None, width=None,
-			 convert=True, need_string=False, bbox=None):
+			 convert=True, need_string=False, bbox=None, sideways=False,
+			 **kwargs):
+		if 'width' in kwargs and width is None:
+			width = kwargs['width']
 		from sys import platform
 		if platform == "linux" or platform == "linux2":
 		    command = 'inkscape'
@@ -209,23 +212,29 @@ class svg(object):
 			if convert:
 				os.system('{command} --without-gui -f {svg_filename} -A {pdf_filename}'.format(command=command, pdf_filename=pdf_filename, svg_filename=svg_filename))
 				#os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+			if sideways:
+				env = 'sidewaysfigure'
+			else:
+				env = 'figure'
 			strlatex = r"""
-			\begin{figure}
+			\begin{%s}
 				\centering
 				\includegraphics[width=%.2fin]{%s}
 				\caption{%s\label{fig:%s}}
-			\end{figure}""" % (fig_width * 1.375, pdf_filename, caption, label)
+			\end{%s}""" % (env, fig_width * 1.375, pdf_filename, caption, label,
+						   env)
 			__figures__.val[label] = bi.__figcount__
 			bi.__figcount__ += 1
+			fig = Latex(strlatex)
 			if need_string:
 				return strlatex
-			return Latex(strlatex)
+		display(fig)
 
 def svg_show(filename, caption='', label=None, scale=None, width=None,
-			 convert=True, need_string=False):
+			 convert=True, need_string=False, sideways=False):
 	_svg = svg(filename)
 	return _svg.show(caption=caption, label=label, scale=scale, width=width,
-					 convert=convert, need_string=need_string)
+					 convert=convert, need_string=need_string, sideways=sideways)
 
 
 # make the line graphing class
