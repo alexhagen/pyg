@@ -56,12 +56,15 @@ def res(w=1080., ratio='golden'):
 def context(ctx='writeup'):
 	__context__.val = ctx
 
-if "DISPLAY" not in os.environ.keys():
-	import matplotlib
-	matplotlib.use('Agg')
+if psgv.psgv('__pyginteractive__').val:
+	matplotlib.use('Qt5Agg')
 else:
-	import matplotlib
-	matplotlib.use('pgf')
+	if "DISPLAY" not in os.environ.keys():
+		import matplotlib
+		matplotlib.use('Agg')
+	else:
+		import matplotlib
+		matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
 
