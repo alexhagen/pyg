@@ -2,6 +2,7 @@ docs/readme.html
 .ipynb_checkpoints
 docs/readme_pyg.md
 */brender*.*
+docs/pyg.*.rst
 
 # mac files
 .DS_Store
