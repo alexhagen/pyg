@@ -12,7 +12,6 @@ import platform
 import shutil
 import time
 from copy import copy
-from IPython.display import SVG, display, Latex, HTML, display_latex
 import subprocess
 import sys
 import random
@@ -24,6 +23,9 @@ from itertools import count
 import psgv.psgv as psgv
 import pickle
 import os.path
+
+if lyx.run_from_ipython():
+    from IPython.display import SVG, display, Latex, HTML, display_latex
 
 __context__ = psgv.psgv('__context__')
 __context__.val = 'writeup'
@@ -1377,6 +1379,7 @@ class pyg2d(object):
         if interactive:
             plt.ion()
             plt.show(block=True)
+            return self
         elif not lyx.need_latex():
             __counter__ = random.randint(0, 2e9)
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
