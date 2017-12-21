@@ -4,8 +4,7 @@ from math import exp
 import matplotlib
 import string
 import os
-from matplotlib.patches import Ellipse, Polygon, Circle
-from matplotlib.lines import Line2D
+import gc
 from colour import Color
 import numpy as np
 import platform
@@ -58,9 +57,11 @@ def res(w=1080., ratio='golden'):
 def context(ctx='writeup'):
     __context__.val = ctx
 
-if psgv.psgv('__pyginteractive__').val:
+if bi.is_interactive():
+    print 'using interactive backend'
     matplotlib.use('Qt5Agg')
 else:
+    print 'using non interactive backend'
     if "DISPLAY" not in os.environ.keys():
         import matplotlib
         matplotlib.use('Agg')
@@ -69,6 +70,8 @@ else:
         matplotlib.use('pgf')
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse, Polygon, Circle
+from matplotlib.lines import Line2D
 
 plt.close("all")
 preamble = ['\usepackage{nicefrac}',
@@ -1499,3 +1502,15 @@ def commit_publications(message='automated commit'):
         for filename in val:
             os.system('git add %s' % filename)
         os.system('git commit -am "%s"' % message)
+
+plot = pyg2d()
+plt.cla()
+plt.clf()
+plt.close()
+plot.fig.clear()
+plt.close(plot.fig)
+plot.close()
+del plot.fig
+del plot
+plt.close()
+gc.collect(2)
