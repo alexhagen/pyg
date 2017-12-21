@@ -1114,9 +1114,12 @@ class pyg2d(object):
 
     def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True):
+                    legend=True, axes=None):
         # make new axis
-        self.ax2 = self.ax.twiny()
+        if axes is None:
+            self.ax2 = self.ax.twiny()
+        else:
+            self.ax2 = axes.twiny()
         line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
                                linewidth=linewidth,
                                linecolor=linecolor,
