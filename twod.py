@@ -58,10 +58,10 @@ def context(ctx='writeup'):
     __context__.val = ctx
 
 if bi.is_interactive():
-    print 'using interactive backend'
+    #print 'using interactive backend'
     matplotlib.use('Qt5Agg')
 else:
-    print 'using non interactive backend'
+    #print 'using non interactive backend'
     if "DISPLAY" not in os.environ.keys():
         import matplotlib
         matplotlib.use('Agg')
