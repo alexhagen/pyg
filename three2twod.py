@@ -13,6 +13,7 @@ class ann_im(twod.pyg2d):
 		self.ax.set_axis_off()
 		self.ax.set_facecolor('white')
 		self.ax.imshow(img, interpolation='gaussian')
+        #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
 		if proj_matrix is None:
 			self.get_proj_matrix()
 		else:

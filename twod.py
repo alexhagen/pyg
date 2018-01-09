@@ -1367,7 +1367,7 @@ class pyg2d(object):
             self.pgf_filename = filename + self.sizestring[size] + add
 
     def show(self, caption='', label=None, scale=None, interactive=False,
-             need_string=False):
+             need_string=False, span_columns=False):
         if label is not None and not self.loaded:
             plt.ioff()
             pickle.dump(self, file(os.path.expanduser('~') +
@@ -1413,7 +1413,10 @@ class pyg2d(object):
                 figfloat = 'marginfigure'
                 centering = ''
             else:
-                figfloat = 'figure'
+                if span_columns:
+                    figfloat = 'figure*'
+                else:
+                    figfloat = 'figure'
                 centering = r'\centering'
             strlatex = r"""
                 \begin{%s}
