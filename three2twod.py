@@ -59,12 +59,13 @@ class ann_im(twod.pyg2d):
         #ax.set_axis_off()
         ax.set_facecolor('white')
         img = mpimg.imread(im_filename)
+        img2 = np.zeros_like(img)
         ax.imshow(img, interpolation='gaussian')
-        #bbox_im = AxesImage(ax)
-        #print dir(BboxImage)
-        #bbox_im.set_data(img)
-        #ax.add_artist(bbox_im)
-        #print bbox_im.get_transform()
+        #print ax.get_position()
+        #print ax.get_axes_locator()
+        #x0 = 100.0
+        #y0 = 100.0
+        #self.fig.figimage(img, blx*100.0, bly*100.0, origin='upper')
         pmatrix = self.get_proj_matrix(fname=im_filename)
         self.axes_stack[name] = (ax, pmatrix)
         return self
