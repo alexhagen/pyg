@@ -30,16 +30,17 @@ class ann_im(twod.pyg2d):
     def __init__(self, im_filename, proj_matrix=None):
         super(ann_im, self).__init__()
         self.axes_stack = {}
-        img = mpimg.imread(im_filename)
-        self.im_filename = im_filename
-        #self.ax.set_axis_off()
-        self.ax.set_facecolor('white')
-        self.ax.imshow(img, interpolation='gaussian')
-        #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
-        if proj_matrix is None:
-            self.get_proj_matrix()
-        else:
-            self.proj_matrix = proj_matrix
+        if im_filename is not None:
+            img = mpimg.imread(im_filename)
+            self.im_filename = im_filename
+            #self.ax.set_axis_off()
+            self.ax.set_facecolor('white')
+            self.ax.imshow(img, interpolation='gaussian')
+            #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
+            if proj_matrix is None:
+                self.get_proj_matrix()
+            else:
+                self.proj_matrix = proj_matrix
         self.axes_stack['main'] = (self.ax, proj_matrix)
 
     def move_axis(self, ax, bl, tr):
@@ -56,7 +57,7 @@ class ann_im(twod.pyg2d):
         w = tr[0] - blx
         h = tr[1] - bly
         ax = self.fig.add_axes([blx, bly, w, h])
-        #ax.set_axis_off()
+        ax.set_axis_off()
         ax.set_facecolor('white')
         img = mpimg.imread(im_filename)
         img2 = np.zeros_like(img)
