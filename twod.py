@@ -158,6 +158,7 @@ class svg(object):
 
     def show(self, caption='', label=None, scale=None, width=None,
              convert=True, need_string=False, bbox=None, sideways=False,
+             only_graphic=False,
              **kwargs):
         if 'width' in kwargs and width is None:
             width = kwargs['width']
@@ -224,13 +225,18 @@ class svg(object):
                 env = 'sidewaysfigure'
             else:
                 env = 'figure'
-            strlatex = r"""
-            \begin{%s}
-                \centering
-                \includegraphics[width=%.2fin]{%s}
-                \caption{%s\label{fig:%s}}
-            \end{%s}""" % (env, fig_width * 1.375, pdf_filename, caption, label,
-                           env)
+            if not only_graphic:
+                strlatex = r"""
+                \begin{%s}
+                    \centering
+                    \includegraphics[width=%.2fin]{%s}
+                    \caption{%s\label{fig:%s}}
+                \end{%s}""" % (env, fig_width * 1.375, pdf_filename, caption, label,
+                               env)
+            else:
+                strlatex = r"""
+                    \includegraphics[width=%.2fin]{%s}
+                """ % (fig_width * 1.375, pdf_filename)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = Latex(strlatex)
