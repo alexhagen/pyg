@@ -79,9 +79,11 @@ class ann_im(twod.pyg2d):
         exec(proj_matrix.replace(" ", "").replace(":", "="))
         self.proj_matrix = proj_matrix
 
-    def convert_3d_to_2d(self, x, y, z):
+    def convert_3d_to_2d(self, x, y, z, proj_matrix=None):
+        if proj_matrix is None:
+            proj_matrix = self.proj_matrix
         arr = np.array([x, y, z, 1.])
-        mat = np.array(self.proj_matrix).T
+        mat = np.array(proj_matrix).T
         #print "array"
         #print arr
         #print "projection matrix"

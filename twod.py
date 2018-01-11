@@ -785,6 +785,40 @@ class pyg2d(object):
         h4 = self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string), axes=axes)
         self.allartists.append((h1, h2, h3, h4))
 
+    def add_detail_circ(self, x, y, r, string, r2=None, fc='0.5', axes=None):
+        if axes is None:
+            axes = self.ax
+        if r2 is None:
+            r1 = r
+            r2 = r
+        else:
+            r1 = r
+        ha='left'
+        # add one arrow from left around to right
+        axes.annotate('',
+                      xy=(x, y + r2), xycoords='data',
+                      xytext=(x - r1, y), textcoords='data',
+                      arrowprops=dict(arrowstyle='-', fc=fc, ec=fc,
+                                      connectionstyle="angle, angleA=-90, angleB=180, rad=%f" % (1.)))
+        axes.annotate(string,
+                      xy=(x, y + r2), xycoords='data',
+                      xytext=(x + r1, y), textcoords='data', color=fc,
+                      horizontalalignment=ha,
+                      arrowprops=dict(arrowstyle='<|-', fc=fc, ec=fc,
+                                      connectionstyle="angle, angleA=90, angleB=180, rad=%f" % (1.)))
+        # add another arrow from right around to bottom
+        axes.annotate(string,
+                      xy=(x, y - r2), xycoords='data',
+                      xytext=(x + r1, y), textcoords='data', color=fc,
+                      horizontalalignment=ha,
+                      arrowprops=dict(arrowstyle='<|-', fc=fc, ec=fc,
+                                      connectionstyle="angle, angleA=-90, angleB=180, rad=%f" % (1.)))
+        axes.annotate('',
+                      xy=(x, y - r2), xycoords='data',
+                      xytext=(x - r1, y), textcoords='data',
+                      arrowprops=dict(arrowstyle='-', fc=fc, ec=fc,
+                                      connectionstyle="angle, angleA=90, angleB=180, rad=%f" % (1.)))
+
     def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
                      axes=None, units='', log=False):
         if axes is None:
@@ -1373,7 +1407,7 @@ class pyg2d(object):
             self.pgf_filename = filename + self.sizestring[size] + add
 
     def show(self, caption='', label=None, scale=None, interactive=False,
-             need_string=False, span_columns=False):
+             need_string=False, span_columns=False, just_graphics=False):
         if label is not None and not self.loaded:
             plt.ioff()
             pickle.dump(self, file(os.path.expanduser('~') +
@@ -1424,13 +1458,16 @@ class pyg2d(object):
                 else:
                     figfloat = 'figure'
                 centering = r'\centering'
-            strlatex = r"""
-                \begin{%s}
-                    %s
-                    %s
-                    \caption{%s\label{fig:%s}}
-                \end{%s}""" % (figfloat, centering, include_line, self.caption,
-                               self.label, figfloat)
+            if just_graphics:
+                strlatex = include_line
+            else:
+                strlatex = r"""
+                    \begin{%s}
+                        %s
+                        %s
+                        \caption{%s\label{fig:%s}}
+                    \end{%s}""" % (figfloat, centering, include_line, self.caption,
+                                   self.label, figfloat)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = Latex(strlatex)
