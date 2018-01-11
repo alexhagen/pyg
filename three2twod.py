@@ -30,10 +30,10 @@ class ann_im(twod.pyg2d):
     def __init__(self, im_filename, proj_matrix=None):
         super(ann_im, self).__init__()
         self.axes_stack = {}
+        self.ax.set_axis_off()
         if im_filename is not None:
             img = mpimg.imread(im_filename)
             self.im_filename = im_filename
-            #self.ax.set_axis_off()
             self.ax.set_facecolor('white')
             self.ax.imshow(img, interpolation='gaussian')
             #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
