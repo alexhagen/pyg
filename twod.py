@@ -860,7 +860,7 @@ class pyg2d(object):
 
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', ha='left', axes=None, latex=True,
-                         fc='0.3'):
+                         fc='0.3', rel_place=False):
         if axes is None:
             axes = self.ax
         if curve is not None:
@@ -881,7 +881,10 @@ class pyg2d(object):
         elif place == 'down-left':
             curve_place = (2.0 * x / 4.0, 3.0 * y / 4.0)
         elif type(place) is tuple:
-            curve_place = place
+            if rel_place:
+                curve_place = (x + place[0], y + place[1])
+            else:
+                curve_place = place
         if latex:
             string = self.latex_string(string)
         ann = axes.annotate(string,
@@ -1085,7 +1088,7 @@ class pyg2d(object):
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', legend=True, axes=None,
-                 error_fill=False):
+                 alpha=1.0, error_fill=False):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
@@ -1097,7 +1100,7 @@ class pyg2d(object):
         else:
             _ls = linestyle
         if xerr is None and yerr is None:
-            line = axes.plot(x, y, label=name, color=linecolor,
+            line = axes.plot(x, y, label=name, color=linecolor, alpha=alpha,
                              marker=self.marker[self.plotnum % 5],
                              ls=_ls, lw=linewidth, solid_capstyle='butt')
             for i in range(0, len(line)):
@@ -1116,6 +1119,7 @@ class pyg2d(object):
                                                             color=linecolor,
                                                             xerr=xerr,
                                                             yerr=yerr,
+                                                            alpha=alpha,
                                                             marker=self.marker[self.plotnum % 5],
                                                             ls=_ls,
                                                             ecolor=ecolor,
@@ -1124,7 +1128,7 @@ class pyg2d(object):
                 self.lines[name] = (line)
             else:
                 self.add_line(x, y, xerr=None, yerr=None, name=name, linewidth=0.5,
-                              linestyle=linestyle, linecolor=linecolor,
+                              linestyle=linestyle, linecolor=linecolor, alpha=alpha,
                               legend=legend, axes=axes)
                 self.fill_between(x, np.array(y) - np.array(yerr),
                                   np.array(y) + np.array(yerr), leg=False,

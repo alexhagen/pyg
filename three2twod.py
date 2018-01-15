@@ -96,8 +96,18 @@ class ann_im(twod.pyg2d):
         return x, y
 
     def add_data_pointer(self, x, y, z, string='', place='down-right', **kwargs):
-        x,y = self.convert_3d_to_2d(x, y, z)
-        # print x,y
+        if 'axes' in kwargs:
+            if type('axes') is str:
+                axname = kwargs['axes']
+                print axname
+                axes = self.axes_stack[axname][0]
+                proj_matrix = self.axes_stack[axname][1]
+                kwargs['axes'] = axes
+        else:
+            axes = self.ax
+            proj_matrix = self.proj_matrix
+        x,y = self.convert_3d_to_2d(x, y, z, proj_matrix=proj_matrix)
+        print x, y, kwargs
         if isinstance(place, tuple):
             place = (x + place[0], y - place[1])
         elif 'up' in place:
