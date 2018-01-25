@@ -160,8 +160,16 @@ class svg(object):
              convert=True, need_string=False, bbox=None, sideways=False,
              only_graphic=False,
              **kwargs):
-        if 'width' in kwargs and width is None:
-            width = kwargs['width']
+        """Show an SVG as a figure or just as a picture
+
+        :param str caption: Caption to go under the figure
+        :param str label: Label to cross reference the figure
+        :param float scale: Ratio to scale the figure - useful in HTML contexts
+        :param width: Width in inches, or a string defining the number of
+            columns to span: ``'1'``, ``'2'``, or ``'fp'`` (full page)
+        :param bool convert: Whether to convert to PDF from SVG - default
+            ``True``
+        """
         from sys import platform
         if platform == "linux" or platform == "linux2":
             command = 'inkscape'
@@ -231,12 +239,12 @@ class svg(object):
                     \centering
                     \includegraphics[width=%.2fin]{%s}
                     \caption{%s\label{fig:%s}}
-                \end{%s}""" % (env, fig_width * 1.375, pdf_filename, caption, label,
+                \end{%s}""" % (env, fig_width, pdf_filename, caption, label,
                                env)
             else:
                 strlatex = r"""
                     \includegraphics[width=%.2fin]{%s}
-                """ % (fig_width * 1.375, pdf_filename)
+                """ % (fig_width, pdf_filename)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = Latex(strlatex)
