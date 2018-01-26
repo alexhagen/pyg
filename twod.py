@@ -1148,7 +1148,7 @@ class pyg2d(object):
 
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True, axes=None):
+                    legend=True, alpha=1.0, axes=None):
         # make new axis
         if axes is None:
             self.ax2 = self.ax.twinx()
@@ -1158,7 +1158,7 @@ class pyg2d(object):
                       linewidth=linewidth,
                       linecolor=linecolor,
                       linestyle=linestyle,
-                      legend=legend, axes=self.ax2)
+                      legend=legend, alpha=alpha, axes=self.ax2)
         self.allartists.append(line)
         if legend:
             self.add_line([0., 0.], [np.nan, np.nan], name=name, linewidth=linewidth,
