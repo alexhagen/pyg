@@ -57,7 +57,7 @@ def res(w=1080., ratio='golden'):
 def context(ctx='writeup'):
     __context__.val = ctx
 
-if bi.is_interactive():
+if False:#bi.is_interactive():
     #print 'using interactive backend'
     matplotlib.use('Qt5Agg')
 else:
@@ -158,7 +158,7 @@ class svg(object):
 
     def show(self, caption='', label=None, scale=None, width=None,
              convert=True, need_string=False, bbox=None, sideways=False,
-             only_graphic=False,
+             only_graphic=False, scalef=1.0,
              **kwargs):
         """Show an SVG as a figure or just as a picture
 
@@ -239,12 +239,12 @@ class svg(object):
                     \centering
                     \includegraphics[width=%.2fin]{%s}
                     \caption{%s\label{fig:%s}}
-                \end{%s}""" % (env, fig_width, pdf_filename, caption, label,
+                \end{%s}""" % (env, scalef * fig_width, pdf_filename, caption, label,
                                env)
             else:
                 strlatex = r"""
                     \includegraphics[width=%.2fin]{%s}
-                """ % (fig_width, pdf_filename)
+                """ % (scalef * fig_width, pdf_filename)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = Latex(strlatex)
@@ -253,10 +253,11 @@ class svg(object):
         display(fig)
 
 def svg_show(filename, caption='', label=None, scale=None, width=None,
-             convert=True, need_string=False, sideways=False):
+             convert=True, need_string=False, sideways=False, **kwargs):
     _svg = svg(filename)
     return _svg.show(caption=caption, label=label, scale=scale, width=width,
-                     convert=convert, need_string=need_string, sideways=sideways)
+                     convert=convert, need_string=need_string,
+                     sideways=sideways, **kwargs)
 
 
 # make the line graphing class
@@ -380,6 +381,8 @@ class pyg2d(object):
                 "pgf.preamble": preamble,
                 "text.latex.preamble": preamble
             }
+            if __context__.val == 'pres':
+                self.rcparamsarray["font.size"] = 14.0
         elif env is 'gui':
             self.rcparamsarray = {
                 "pgf.texsystem": "lualatex",
@@ -1145,6 +1148,10 @@ class pyg2d(object):
         self.markers_on()
         self.lines_on()
         self.allartists.append(line)
+
+    def y_axis_off(self):
+        self.ax.spines['left'].set_visible(False)
+        self.ax.spines['right'].set_visible(False)
 
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
