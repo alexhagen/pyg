@@ -91,6 +91,7 @@ def load(fname, svg=False):
     _fig = pickle.load(file(os.path.expanduser('~') +
                             '/.pyg/%s.pickle' % fname))
     if not svg:
+        _fig.set_rcparams('plot')
         _fig.fig._cachedRenderer = None
         for ax in [_fig.ax, _fig.ax2]:
             if ax is not None:
@@ -343,6 +344,9 @@ class pyg2d(object):
         else:
             import pyg.colors.pu as color
             self.colors = color.pu_colors
+        self.set_rcparams(env)
+
+    def set_rcparams(self, env):
         if env is 'plot':
             self.rcparamsarray = {
                 "pgf.texsystem": "lualatex",
