@@ -22,6 +22,9 @@ from itertools import count
 import psgv.psgv as psgv
 import pickle
 import os.path
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
 if lyx.run_from_ipython():
     from IPython.display import SVG, display, Latex, HTML, display_latex
@@ -59,15 +62,15 @@ def context(ctx='writeup'):
 
 if False:#bi.is_interactive():
     #print 'using interactive backend'
-    matplotlib.use('Qt5Agg')
+    matplotlib.use('Qt5Agg', warn=False)
 else:
     #print 'using non interactive backend'
     if "DISPLAY" not in os.environ.keys():
         import matplotlib
-        matplotlib.use('Agg')
+        matplotlib.use('Agg', warn=False)
     else:
         import matplotlib
-        matplotlib.use('pgf')
+        matplotlib.use('pgf', warn=False)
 
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon, Circle
