@@ -1102,12 +1102,14 @@ class pyg2d(object):
         stack = axes.stackplot(x, y, baseline=baseline, **kwargs)
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
-                 linestyle=None, linecolor='black', legend=True, axes=None,
+                 linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
                  alpha=1.0, error_fill=False):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
         self.plotnum = self.plotnum + 1
+        if markerstyle is None:
+            markerstyle = self.marker[self.plotnum % 5]
         if name == 'plot':
             name = 'plot%d' % (self.plotnum)
         if linestyle is None:
@@ -1116,7 +1118,7 @@ class pyg2d(object):
             _ls = linestyle
         if xerr is None and yerr is None:
             line = axes.plot(x, y, label=name, color=linecolor, alpha=alpha,
-                             marker=self.marker[self.plotnum % 5],
+                             marker=markerstyle,
                              ls=_ls, lw=linewidth, solid_capstyle='butt')
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
@@ -1135,7 +1137,7 @@ class pyg2d(object):
                                                             xerr=xerr,
                                                             yerr=yerr,
                                                             alpha=alpha,
-                                                            marker=self.marker[self.plotnum % 5],
+                                                            marker=markerstyle,
                                                             ls=_ls,
                                                             ecolor=ecolor,
                                                             lw=linewidth,
@@ -1143,7 +1145,7 @@ class pyg2d(object):
                 self.lines[name] = (line)
             else:
                 self.add_line(x, y, xerr=None, yerr=None, name=name, linewidth=0.5,
-                              linestyle=linestyle, linecolor=linecolor, alpha=alpha,
+                              linestyle=linestyle, linecolor=linecolor, marker=markerstyle,alpha=alpha,
                               legend=legend, axes=axes)
                 self.fill_between(x, np.array(y) - np.array(yerr),
                                   np.array(y) + np.array(yerr), leg=False,
