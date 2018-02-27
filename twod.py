@@ -1106,7 +1106,7 @@ class pyg2d(object):
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
-                 alpha=1.0, error_fill=False):
+                 alpha=1.0, error_fill=False, asymerr=False, differr=True):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
@@ -1147,11 +1147,22 @@ class pyg2d(object):
                                                             clip_on=True)
                 self.lines[name] = (line)
             else:
-                self.add_line(x, y, xerr=None, yerr=None, name=name, linewidth=0.5,
-                              linestyle=linestyle, linecolor=linecolor, marker=markerstyle,alpha=alpha,
-                              legend=legend, axes=axes)
-                self.fill_between(x, np.array(y) - np.array(yerr),
-                                  np.array(y) + np.array(yerr), leg=False,
+                self.add_line(x, y, xerr=None, yerr=None, name=name,
+                              linewidth=0.5, linestyle=linestyle,
+                              linecolor=linecolor, markerstyle=markerstyle,
+                              alpha=alpha, legend=legend, axes=axes)
+                if asymerr:
+                    if differr:
+                        yerr1 = yerr[:, 0]
+                        yerr2 = yerr[:, 1]
+                    else:
+                        yerr1 = y - yerr[:, 0]
+                        yerr2 = yerr[:, 1] - y
+                else:
+                    yerr1 = yerr
+                    yerr2 = yerr
+                self.fill_between(x, np.array(y) - np.array(yerr1),
+                                  np.array(y) + np.array(yerr2), leg=False,
                                   fc=linecolor, name=name + 'err')
                 line = self.lines[name + '0']
         self.markers_on()
