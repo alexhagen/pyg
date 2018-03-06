@@ -1,3 +1,4 @@
+from __future__ import print_function
 from scipy.optimize import curve_fit
 from scipy.odr import *
 from math import exp
@@ -77,15 +78,15 @@ from matplotlib.patches import Ellipse, Polygon, Circle
 from matplotlib.lines import Line2D
 
 plt.close("all")
-preamble = ['\usepackage{nicefrac}',
-    '\usepackage{gensymb}',
-    '\usepackage{xcolor}',
-    '\definecolor{grey60}{HTML}{746C66}',
-    '\definecolor{grey40}{HTML}{A7A9AC}',
+preamble = [r'\usepackage{nicefrac}',
+    r'\usepackage{gensymb}',
+    r'\usepackage{xcolor}',
+    r'\definecolor{grey60}{HTML}{746C66}',
+    r'\definecolor{grey40}{HTML}{A7A9AC}',
     r'\usepackage{amsmath, amssymb}',
     r'\usepackage{stackrel}',
-    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
-    '{\mathrm{#1}}}}']
+    r'\providecommand{\unit}[1]{\ensuremath{\textcolor{grey60}' +
+    r'{\mathrm{#1}}}}']
 
 def force(val=True):
     __force__.val = val
@@ -133,8 +134,8 @@ class svg(object):
         try:
             width = float(out)
         except ValueError:
-            print out
-            print err
+            print (out)
+            print (err)
         return width
 
     @staticmethod
@@ -156,8 +157,8 @@ class svg(object):
         try:
             height = float(out)
         except ValueError:
-            print out
-            print err
+            print (out)
+            print (err)
         return height
 
     def show(self, caption='', label=None, scale=None, width=None,
@@ -314,7 +315,7 @@ class pyg2d(object):
 
     def __init__(self, env='plot', polar=False, colors='purdue'):
         self.__class__.instances.append(weakref.proxy(self))
-        self.__counter__ = self._figcount.next()
+        self.__counter__ = next(self._figcount)
         self.fig = plt.figure(self.__counter__)
         self.ax = self.fig.add_subplot(111, polar=polar)
         self.ax_subp = []
@@ -931,13 +932,13 @@ class pyg2d(object):
         else:
             y_err_up = yerr[0, :]
             y_err_down = yerr[1, :]
-            print y_err_up
-            print y
+            print (y_err_up)
+            print (y)
         # determine the regression
         if regtype.isdigit():
             # determine the coefficients of degree regtype
             coeffs = np.polyfit(x,y,regtype);
-            print coeffs
+            print (coeffs)
             # determine a fine grid of values
             x_fit = np.linspace(min(x),max(x),num=1000);
             y_fit = np.polyval(coeffs,x_fit);
@@ -953,7 +954,7 @@ class pyg2d(object):
                     if i > 0:
                         name += 'x^{%d}' % (i);
             name += '$';
-            print name;
+            print (name)
         elif regtype is 'exp':
             x_np = np.array(x);
             x_err_np = np.array(xerr);
@@ -979,15 +980,15 @@ class pyg2d(object):
                 else:
                     y_err_up = None;
                     y_err_down = None;
-                    print "showing the exponential error will occlude data";
+                    print ("showing the exponential error will occlude data")
             else:
                 y_fit = None;
                 x_fit = None;
                 y_err_up = None;
                 y_err_down = None;
-                print "the exponential does not fit to the data";
+                print ("the exponential does not fit to the data")
         elif regtype is 'log':
-            print 'I haven\'t yet completed the log fitting!';
+            print ('I haven\'t yet completed the log fitting!')
             #do something;
         elif regtype is 'gaussian':
             def gaus(x,a,x0,sigma):
