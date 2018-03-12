@@ -1176,35 +1176,39 @@ class pyg2d(object):
 
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True, alpha=1.0, axes=None):
+                    legend=True, alpha=1.0, axes=None, markerstyle=None):
         # make new axis
         if axes is None:
             self.ax2 = self.ax.twinx()
         else:
             self.ax2 = axes.twinx()
         line = self.add_line(x, y, name=name + 'yy', xerr=xerr, yerr=yerr,
-                      linewidth=linewidth,
-                      linecolor=linecolor,
-                      linestyle=linestyle,
-                      legend=legend, alpha=alpha, axes=self.ax2)
+                             linewidth=linewidth,
+                             linecolor=linecolor,
+                             linestyle=linestyle,
+                             legend=legend, alpha=alpha, axes=self.ax2,
+                             markerstyle=markerstyle)
         self.allartists.append(line)
         if legend:
-            self.add_line([0., 0.], [np.nan, np.nan], name=name, linewidth=linewidth,
-                          linecolor=linecolor, linestyle=linestyle, axes=self.ax)
+            self.add_line([0., 0.], [np.nan, np.nan], name=name,
+                          linewidth=linewidth, linecolor=linecolor,
+                          linestyle=linestyle, axes=self.ax,
+                          markerstyle=markerstyle)
 
     def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True, axes=None):
+                    legend=True, axes=None, markerstyle=None):
         # make new axis
         if axes is None:
             self.ax2 = self.ax.twiny()
         else:
             self.ax2 = axes.twiny()
         line = self.add_line(x, y, name=name, xerr=xerr, yerr=yerr,
-                               linewidth=linewidth,
-                               linecolor=linecolor,
-                               linestyle=linestyle,
-                               legend=legend, axes=self.ax2)
+                             linewidth=linewidth,
+                             linecolor=linecolor,
+                             linestyle=linestyle,
+                             legend=legend, axes=self.ax2,
+                             markerstyle=markerstyle)
         self.allartists.append(line)
 
     def add_xx(self,calfunc):
