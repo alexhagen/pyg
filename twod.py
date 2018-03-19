@@ -18,7 +18,7 @@ import random
 import weakref
 import re
 import __builtins__ as bi
-import lyxithea.lyxithea as lyx
+from lyxithea import lyxithea as lyx
 from itertools import count
 import psgv.psgv as psgv
 import pickle
@@ -53,6 +53,17 @@ def metal_dim(ratio='golden'):
     elif ratio is 'square':
         r = 1.0
     return r
+
+def w(width):
+    if __context__.val == "writeup":
+        widths = {"1": 3.25, "2": 6.25, "4": 12.50, "fp": 10.0, "cs": 0.0}
+    elif __context__.val == "tufte":
+        widths = {"1": 2.00, "2": 4.30, "4": 6.30, "fp": 10.0, "cs": 0.0}
+    elif __context__.val == "thesis":
+        widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+    else:
+        widths = {"1": 3.0, "2": 6.0, "4": 12.00, "fp": 9.0, "cs": 0.0}
+    return widths[width]
 
 def res(w=1080., ratio='golden'):
     h = w * metal_dim(ratio)
@@ -893,12 +904,16 @@ class pyg2d(object):
             string = '$\left( %f,%f \\right)$' % (x, y)
         if place == 'up-right':
             curve_place = (4.0 * x / 3.0, 4.0 * y / 3.0)
+            ha = 'left'
         elif place == 'up-left':
             curve_place = (3.0 * x / 4.0, 4.0 * y / 3.0)
+            ha = 'right'
         elif place == 'down-right':
             curve_place = (4.0 * x / 3.0, 3.0 * y / 4.0)
+            ha = 'left'
         elif place == 'down-left':
             curve_place = (2.0 * x / 4.0, 3.0 * y / 4.0)
+            ha = 'right'
         elif type(place) is tuple:
             if rel_place:
                 curve_place = (x + place[0], y + place[1])

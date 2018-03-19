@@ -97,7 +97,7 @@ class ann_im(twod.pyg2d):
 
     def add_data_pointer(self, x, y, z, string='', place='down-right', **kwargs):
         if 'axes' in kwargs:
-            if type('axes') is str:
+            if isinstance(kwargs['axes'], str):
                 axname = kwargs['axes']
                 #print axname
                 axes = self.axes_stack[axname][0]
@@ -119,10 +119,48 @@ class ann_im(twod.pyg2d):
                                              place=place, **kwargs)
         return self
 
+    def add_2d_data_pointer(self, x, y,  string='', place='down-right',
+                            **kwargs):
+        if 'axes' in kwargs:
+            if isinstance(kwargs['axes'], str):
+                axname = kwargs['axes']
+                #print axname
+                axes = self.axes_stack[axname][0]
+                proj_matrix = self.axes_stack[axname][1]
+                kwargs['axes'] = axes
+        else:
+            axes = self.ax
+            proj_matrix = self.proj_matrix
+        if isinstance(place, tuple):
+            place = (x + place[0], y - place[1])
+        elif 'up' in place:
+            place = place.replace('up','down')
+        elif 'down' in place:
+            place = place.replace('down', 'up')
+
+        super(ann_im, self).add_data_pointer(x, point=y, string=string,
+                                             place=place, **kwargs)
+        return self
+
     def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
         x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
         x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
         super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+        return self
+
+    def add_text(self, x, y, z, string=None, **kwargs):
+        if 'axes' in kwargs:
+            if isinstance(kwargs['axes'], str):
+                axname = kwargs['axes']
+                #print axname
+                axes = self.axes_stack[axname][0]
+                proj_matrix = self.axes_stack[axname][1]
+                kwargs['axes'] = axes
+        else:
+            axes = self.ax
+            proj_matrix = self.proj_matrix
+        x, y = self.convert_3d_to_2d(x, y, z, proj_matrix=proj_matrix)
+        super(ann_im, self).add_text(x, y, string=string, **kwargs)
         return self
 
     def add_xmeasure(self, x1, x2, y1, z1, string=None, place=None, offset=0.01,
