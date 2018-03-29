@@ -1545,11 +1545,14 @@ class pyg2d(object):
 
     def export(self, filename, sizes=None, formats=None,
                customsize=None, legloc=None, tight=True, ratio="golden",
-               width=None, caption='', force_pdf=False, force=False):
+               width=None, caption='', force_pdf=False, force=False,
+               context=None):
         self.force_pdf = force_pdf
         self.force_export = force
         self.caption = caption
         #global __context__.val
+        if context is not None:
+            __context__.val = context
         if sizes is None:
             if __context__.val == "writeup":
                 sizes = ['1']
