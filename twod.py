@@ -174,7 +174,7 @@ class svg(object):
 
     def show(self, caption='', label=None, scale=None, width=None,
              convert=True, need_string=False, bbox=None, sideways=False,
-             only_graphic=False, scalef=1.0,
+             only_graphic=False, scalef=1.0, here_definitely=False,
              **kwargs):
         """Show an SVG as a figure or just as a picture
 
@@ -250,12 +250,18 @@ class svg(object):
             else:
                 env = 'figure'
             if not only_graphic:
+                if here_definitely:
+                    pos = '[H]'
+                else:
+                    pos = ''
                 strlatex = r"""
-                \begin{%s}
+                \begin{%s}%s
                     \centering
                     \includegraphics[width=%.2fin]{%s}
                     \caption{%s\label{fig:%s}}
-                \end{%s}""" % (env, scalef * fig_width, pdf_filename, caption, label,
+                \end{%s}""" % (env, pos,
+                               scalef * fig_width, pdf_filename,
+                               caption, label,
                                env)
             else:
                 strlatex = r"""

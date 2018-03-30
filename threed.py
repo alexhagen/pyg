@@ -107,6 +107,19 @@ class pyg3d(pyg2d.pyg2d):
         self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
         self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        self.ax.set_autoscale_on(True)
+
+    def xlim(self, x1, x2):
+        self.ax.set_xlim3d(x1, x2)
+        super(pyg3d, self).xlim(x1, x2)
+
+    def ylim(self, y1, y2):
+        self.ax.set_ylim3d(y1, y2)
+        super(pyg3d, self).ylim(y1, y2)
+
+    def zlim(self, z1, z2):
+        self.ax.set_zlim3d(z1, z2)
+        super(pyg3d, self).zlim(z1, z2)
 
     def orthogonal_proj(self, zfront, zback):
         a = (zfront+zback)/(zfront-zback)
@@ -485,6 +498,29 @@ class pyg3d(pyg2d.pyg2d):
                 .ColorbarBase(ax1, cmap=cm, norm=norm)
             ax1.set_ylabel(cmap_name)
     '''
+
+    def find_best_lims(self, xs, ys, ratio='golden'):
+        r = pyg2d.metal_dim(ratio)
+        xmin = np.min(xs)
+        xmax = np.max(xs)
+        dx = xmax - xmin
+        ymin = np.min(ys)
+        ymax = np.max(ys)
+        dy = ymax - ymin
+        xchange = -1.
+        ychange = -1.
+        perc = 0.
+        while xchange < 0. and ychange < 0.:
+            dx += dx * perc
+            xchange = (dy * r) - dx
+            ychange = (dx / r) - dy
+            if xchange > 0 and xchange < ychange:
+                dx = dx + xchange
+            elif ychange > 0:
+                dy = dy + ychange
+            perc += 0.1
+        self.xlim(xmin, xmin + dx)
+        self.ylim(ymin, ymin + dy)
 
     def zlabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
