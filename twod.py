@@ -1195,6 +1195,17 @@ class pyg2d(object):
         self.ax.spines['left'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
 
+    def surf(self, x, y, tri, vector=False):
+        """Create a surface plot on a two-d chart.
+        """
+        if vector:
+            triangles = tri.get_masked_triangles()
+            for _t in triangles:
+                self.add_line(x[_t], y[_t])
+        else:
+            pass
+        return self
+
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
                     legend=True, alpha=1.0, axes=None, markerstyle=None):
