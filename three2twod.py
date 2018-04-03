@@ -164,7 +164,7 @@ class ann_im(twod.pyg2d):
         return self
 
     def add_xmeasure(self, x1, x2, y1, z1, string=None, place=None, offset=0.01,
-                     axes=None, units=''):
+                     axes=None, units='', fc='black'):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -185,8 +185,8 @@ class ann_im(twod.pyg2d):
         #         y1 + offset * total_width + length * total_width) / 2.0
         z_mid = z1#(z1 + offset * total_width +
         #         z1 + offset * total_width + length * total_width) / 2.0
-        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, z_mid, z_mid, string=self.latex_string(string), axes=axes)
-        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, z_mid, z_mid, string=self.latex_string(string), axes=axes)
+        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, z_mid, z_mid, fc=fc, string=self.latex_string(string), axes=axes)
+        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, z_mid, z_mid, fc=fc, string=self.latex_string(string), axes=axes)
         self.allartists.append((h3, h4))
         return self
 
