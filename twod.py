@@ -939,6 +939,39 @@ class pyg2d(object):
                       )
         self.allartists.append(ann)
 
+
+    def callout(self, x, curve=None, point=None, string=None, place='up-right',
+                    ha='left', axes=None, latex=True, fc='0.3'):
+    	if axes is None:
+    		axes = self.ax
+        if point is None:
+    	    y = curve.at(x)
+        else:
+            y = point
+    	if string is None:
+    		string = curve.name
+    	if place == 'up-right':
+    		curve_place = (4.0 * x / 3.0, 4.0 * y / 3.0)
+    	elif place == 'up-left':
+    		curve_place = (3.0 * x / 4.0, 4.0 * y / 3.0)
+    	elif place == 'down-right':
+    		curve_place = (4.0 * x / 3.0, 3.0 * y / 4.0)
+    	elif place == 'down-left':
+    		curve_place = (2.0 * x / 4.0, 3.0 * y / 4.0)
+    	elif type(place) is tuple:
+    		curve_place = place
+    	if latex:
+    		string = self.latex_string(string)
+    	ann = axes.annotate(string,
+    				  xy=(x, y),
+    				  xytext=curve_place,
+    				  ha=ha, color=fc,
+    				  arrowprops=dict(arrowstyle='-', fc=fc, ec=fc,
+    								  connectionstyle="arc, rad=0, angleA=90")
+    				  )
+    	self.allartists.append(ann)
+
+
     def add_reg_line(self, x, y, regtype='lin', name='reg', xerr=None,
                      yerr=None, axes=None):
         if axes is None:
