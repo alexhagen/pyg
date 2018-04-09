@@ -1161,7 +1161,8 @@ class pyg2d(object):
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
-                 alpha=1.0, error_fill=False, asymerr=False, differr=True):
+                 alpha=1.0, error_fill=False, asymerr=False, differr=True,
+                 markevery=None):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
@@ -1177,7 +1178,8 @@ class pyg2d(object):
         if xerr is None and yerr is None:
             line = axes.plot(x, y, label=name, color=linecolor, alpha=alpha,
                              marker=markerstyle,
-                             ls=_ls, lw=linewidth, solid_capstyle='butt')
+                             ls=_ls, lw=linewidth, solid_capstyle='butt',
+                             markevery=markevery)
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
         else:
@@ -1199,13 +1201,15 @@ class pyg2d(object):
                                                             ls=_ls,
                                                             ecolor=ecolor,
                                                             lw=linewidth,
-                                                            clip_on=True)
+                                                            clip_on=True,
+                                                            markevery=markevery)
                 self.lines[name] = (line)
             else:
                 self.add_line(x, y, xerr=None, yerr=None, name=name,
                               linewidth=0.5, linestyle=linestyle,
                               linecolor=linecolor, markerstyle=markerstyle,
-                              alpha=alpha, legend=legend, axes=axes)
+                              alpha=alpha, legend=legend, axes=axes,
+                              markevery=markevery)
                 if asymerr:
                     if differr:
                         yerr1 = yerr[:, 0]
