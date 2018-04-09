@@ -447,6 +447,13 @@ class pyg2d(object):
             }
         matplotlib.rcParams.update(self.rcparamsarray)
 
+    def add_to_preamble(self, line):
+        preamble = self.rcparamsarray['pgf.preamble']
+        preamble += '\n' + line + '\n'
+        self.rcparamsarray['pgf.preamble'] = preamble
+        self.rcparamsarray['text.latex.preamble'] = preamble
+        matplotlib.rcParams.update(self.rcparamsarray)
+
     @staticmethod
     def change_context(context):
         __context__.val = context
