@@ -1527,7 +1527,8 @@ class pyg2d(object):
             self.pgf_filename = filename + self.sizestring[size] + add
 
     def show(self, caption='', label=None, scale=None, interactive=False,
-             need_string=False, span_columns=False, just_graphics=False):
+             need_string=False, span_columns=False, just_graphics=False,
+             here_definitely=False):
         if label is not None and not self.loaded:
             plt.ioff()
             pickle.dump(self, file(os.path.expanduser('~') +
@@ -1578,16 +1579,20 @@ class pyg2d(object):
                 else:
                     figfloat = 'figure'
                 centering = r'\centering'
+            if here_definitely:
+                pos = '[H]'
+            else:
+                pos = ''
             if just_graphics:
                 strlatex = include_line
             else:
                 strlatex = r"""
-                    \begin{%s}
+                    \begin{%s}%s
                         %s
                         %s
                         \caption{%s\label{fig:%s}}
-                    \end{%s}""" % (figfloat, centering, include_line, self.caption,
-                                   self.label, figfloat)
+                    \end{%s}""" % (figfloat, pos, centering, include_line,
+                                   self.caption, self.label, figfloat)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = Latex(strlatex)
