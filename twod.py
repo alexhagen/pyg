@@ -122,8 +122,10 @@ class svg(object):
         import os
         if platform == "darwin":
             self.filename = os.path.abspath(filename)
+            self.show_filename = filename
         else:
             self.filename = filename
+            self.show_filename = filename
         self.loaded = False
 
     @staticmethod
@@ -217,7 +219,7 @@ class svg(object):
                     <img style='margin: auto; max-width:800px; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption' name="%s"><b>Figure %d:</b> %s</div>
                 </div>
-            """ % (label, fig_width, self.filename, __counter__, label, bi.__figcount__, caption)
+            """ % (label, fig_width, self.show_filename, __counter__, label, bi.__figcount__, caption)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             return display(HTML(fig_html))
