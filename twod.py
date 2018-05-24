@@ -734,7 +734,7 @@ class pyg2d(object):
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
                   color='black', axes=None):
-        """ ``pyg2d.add_hline`` draws a horizontal line.
+        """``pyg2d.add_hline`` draws a horizontal line.
 
         ``pyg2d.add_hline`` draws a horizontal line from either the left axis
         to the right axis if ``xmin`` and ``xmax`` are not provided, otherwise
@@ -777,7 +777,8 @@ class pyg2d(object):
         matplotlib.rcParams.update(rcparamsarray)
 
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
-                  alpha=1.0, ha='center', va='center', arrowprops=None):
+                  alpha=1.0, ha='center', va='center', arrowprops=None,
+                  rotation=0):
         if arrowprops is None:
             arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc, alpha=alpha)
         if axes is None:
@@ -788,6 +789,7 @@ class pyg2d(object):
                       color=fc, alpha=alpha,
                       horizontalalignment=ha,
                       verticalalignment=va,
+                      rotation=rotation,
                       arrowprops=arrowprops)
         self.allartists.append(ann)
 
@@ -865,7 +867,7 @@ class pyg2d(object):
                                       connectionstyle="angle, angleA=90, angleB=180, rad=%f" % (1.)))
 
     def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
-                     axes=None, units='', log=False):
+                     axes=None, units='', log=False, rotation=0):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -887,8 +889,8 @@ class pyg2d(object):
             x_mid = (x2 + x1) / 2.0
         y_mid = (y1 + offset * total_width +
                  y1 + offset * total_width + length * total_width) / 2.0
-        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string), axes=axes)
-        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string), axes=axes)
+        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation)
+        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation)
         self.allartists.append((h1, h2, h3, h4))
 
     def equal_aspect_ratio(self):
@@ -1343,20 +1345,7 @@ class pyg2d(object):
         self.artists.append(leg)
 
     def det_height(self, ratio="golden"):
-        if ratio is "golden":
-            r = (1. + np.sqrt(5.)) / 2.
-        elif ratio is "silver":
-            r = 1. + np.sqrt(2.)
-        elif ratio is "bronze":
-            r = (3. + np.sqrt(13.)) / 2.
-        elif ratio is "invgolden":
-            r = 2. / (1. + np.sqrt(5.))
-        elif ratio is "invsilver":
-            r = 1. / (1. + np.sqrt(2.))
-        elif ratio is "invbronze":
-            r = 2. / (3. + np.sqrt(13.))
-        else:
-            r = float(ratio)
+        r = metal_dim(ratio)
         if self.landscape:
             self.height = self.width / r
         else:
