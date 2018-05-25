@@ -3,12 +3,17 @@ from colour import Color as _c
 pnnl_colors = {'black': '#000000',
                'white': '#ffffff',
                'orange': '#d57500',
+               'lightblue': '#748EB3',
                'blue': '#3b73af',
                'darkblue': '#0077a4',
                'gray': '#606060',
                'graydark': '#707276',
                'lightgray': '#eeeeee',
-               'green': '#719500'}
+               'lightgreen': '#68AE8C',
+               'green': '#719500',
+               'purple': '#9682B3',
+               'teal': '#66B6CD',
+               'red': '#D97985'}
 c = pnnl_colors
 '''
 black = pu_colors['black']
