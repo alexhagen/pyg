@@ -15,6 +15,9 @@ pnnl_colors = {'black': '#000000',
                'teal': '#66B6CD',
                'red': '#D97985'}
 c = pnnl_colors
+
+start_c = _c(pnnl_colors["gray"])
+brand_cmap = list(start_c.range_to(_c(pnnl_colors["orange"]), 256))
 '''
 black = pu_colors['black']
 gray = pu_colors['gray']

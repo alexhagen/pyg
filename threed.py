@@ -14,7 +14,7 @@ from mpl_toolkits.mplot3d import proj3d
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 import platform
 from matplotlib import cm
-from pyg.colors import pu as color
+from pyg.colors import pnnl as color
 from copy import copy
 from IPython.display import SVG, display, Latex, HTML, display_latex
 import subprocess
@@ -195,7 +195,8 @@ class pyg3d(pyg2d.pyg2d):
             axes = addto.ax
         X, Y = np.meshgrid(x, y)
         # z = np.nan_to_num(z)
-        m = np.ma.masked_where(np.isnan(z),z)
+        #m = np.ma.masked_where(np.isnan(z), z)
+        m = np.ma.masked_where(~np.isfinite(z), z)
         cmaplist = [_c.rgb for _c in cmap]
         cmap = matplotlib.colors.ListedColormap(cmaplist,
                                                 name='brand_cmap')
