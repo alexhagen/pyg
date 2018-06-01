@@ -908,6 +908,8 @@ class pyg2d(object):
     def add_data_pointer(self, x, curve=None, point=None, string=None,
                          place='up-right', ha='left', axes=None, latex=True,
                          fc='0.3', rel_place=False):
+        if isinstance(x, int):
+            x = float(x)
         if axes is None:
             axes = self.ax
         if curve is not None:
