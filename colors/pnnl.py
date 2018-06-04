@@ -18,6 +18,27 @@ c = pnnl_colors
 
 start_c = _c(pnnl_colors["gray"])
 brand_cmap = list(start_c.range_to(_c(pnnl_colors["orange"]), 256))
+
+from copy import copy, deepcopy
+import numpy as np
+start_c = _c(pnnl_colors["blue"])
+end_c = _c(pnnl_colors['orange'])
+first_half = []
+for s, l in zip(np.linspace(start_c.saturation, 0.0, 128),
+                np.linspace(start_c.luminance, 0.95, 128)):
+    __color__ = deepcopy(start_c)
+    __color__.saturation = s
+    __color__.luminance = l
+    first_half.append(deepcopy(__color__))
+second_half = []
+for s, l in zip(np.linspace(0.0, end_c.saturation, 128),
+                np.linspace(0.95, end_c.luminance, 128)):
+    __color__ = deepcopy(end_c)
+    __color__.saturation = s
+    __color__.luminance = l
+    second_half.append(deepcopy(__color__))
+#first_half = [copy(start_c).set_saturation(num) for num in np.linspace(start_c.saturation, 0.0, 128)]
+jet_cmap = first_half + second_half
 '''
 black = pu_colors['black']
 gray = pu_colors['gray']
