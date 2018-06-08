@@ -1079,6 +1079,27 @@ class pyg2d(object):
             axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
+    def contour(self, X, Y, Z, cmap, levels=25):
+        self.cmin = np.nanmin(Z)
+        self.cmax = np.nanmax(Z)
+        levels = np.linspace(self.cmin, self.cmax, levels)
+        self.cmap = cmap
+        plt.contourf(X, Y, Z, levels=levels, cmap=self.cmap)
+        return self
+
+    def colorbar(self):
+        self.cax = self.fig.add_axes([0.95, 0.05, 0.04, 0.9])
+        self.cax.set_position([1.02, 0., 0.04, 1.0])
+        norm = matplotlib.colors.Normalize(vmin=self.cmax,
+                                           vmax=self.cmin)
+        self.cb = matplotlib.colorbar.ColorbarBase(self.cax, cmap=self.cmap,
+                                                   norm=norm)
+        return self
+
+    def clabel(self, label):
+        self.ylabel(label, axes=self.cax)
+        return self
+
     def fill_under_curve(self, curve, scale=0., *args, **kwargs):
         if curve.data == 'binned':
             self.fill_between(curve.binned_data_x,
@@ -1087,20 +1108,36 @@ class pyg2d(object):
         else:
             self.fill_between(curve.x, scale * np.ones_like(curve.y), curve.y,
                               **kwargs)
+        return self
 
     def fill_between(self, x, y1, y2=None, fc='red', name='plot', ec='None', leg=True,
-                     axes=None, alpha=0.5, xmin=None, xmax=None, log=False):
+                     axes=None, alpha=0.5, xmin=None, xmax=None, log=False,
+                     hatch=None, **kwargs):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
-        self.allartists.append(p)
+        if hatch is None:
+            p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
+            self.allartists.append(p)
+        else:
+            _xb = x[-1::-1]
+            _x = np.append(x, _xb)
+            _x = np.append(_x, [x[0]])
+            _y = np.append(y2, y1)
+            _y = np.append(_y, [y2[0]])
+            if ec is not None:
+                kwargs['ec'] = ec
+            patch = Polygon([[__x, __y] for __x, __y in zip(_x, _y)],
+                            closed=True, fill=False, hatch=hatch,
+                            **kwargs)
+            p = axes.add_patch(patch)
         if leg:
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    facecolor=fc, alpha=alpha, label=name))
             self.bars[name] = patch
+        return self
 
 
     def add_to_legend(self, name=None, line=True, color=None, linestyle=None,

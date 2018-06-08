@@ -1,4 +1,5 @@
 from colour import Color as _c
+from matplotlib.colors import LinearSegmentedColormap
 
 pnnl_colors = {'black': '#000000',
                'white': '#ffffff',
@@ -18,6 +19,9 @@ c = pnnl_colors
 
 start_c = _c(pnnl_colors["gray"])
 brand_cmap = list(start_c.range_to(_c(pnnl_colors["orange"]), 256))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
+brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
+
 
 from copy import copy, deepcopy
 import numpy as np
