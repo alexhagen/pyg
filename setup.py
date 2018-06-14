@@ -20,7 +20,7 @@ AUTHOR = 'Alex Hagen'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-#    'IPython'
+    'IPython',
     'matplotlib',
     'numpy',
     'colour',
