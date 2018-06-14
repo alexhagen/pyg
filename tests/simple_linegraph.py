@@ -1,7 +1,4 @@
-import sys
-import os
-sys.path.append(os.environ['HOME'] + '/code')
-from pyg import twod as pyg2
+from pyg import twod as pyg2d
 import numpy as np
 
 # first lets make some data with a numpy gaussian function
@@ -13,7 +10,7 @@ y1 = np.exp(-np.power(x - mu, 2.) / (2. * np.power(sigma1, 2.)))
 y2 = np.exp(-np.power(x - mu, 2.) / (2. * np.power(sigma2, 2.)))
 
 # create a plot object
-plot = pyg2.ah2d()
+plot = pyg2d.pyg2d()
 
 # add both of our lines to this object
 plot.add_line(x, y1, linecolor='#285668', linestyle='-', name=r'$\sigma = 1$')
@@ -29,5 +26,5 @@ plot.ylabel(r'$ y = \exp \left[\frac{\left( x - \mu \right)^{2}}' +
 plot.legend()
 
 # export this to file
-plot.export('../images/simple_linegraph', sizes=['2'],
+plot.export('simple_linegraph', sizes=['2'],
             formats=['websvg', 'png'])
