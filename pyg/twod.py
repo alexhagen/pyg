@@ -17,8 +17,8 @@ import sys
 import random
 import weakref
 import re
-#import __builtins__ as bi
-import builtins as bi
+import __builtins__ as bi
+#import builtins as bi
 from lyxithea import lyxithea as lyx
 from itertools import count
 import psgv.psgv as psgv
