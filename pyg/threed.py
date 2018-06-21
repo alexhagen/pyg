@@ -24,6 +24,7 @@ import weakref
 import re
 import lyxithea.lyxithea as lyx
 from pyg import twod as pyg2d
+from mpl_toolkits.mplot3d import proj3d
 
 if "DISPLAY" not in os.environ.keys():
     import matplotlib
@@ -129,6 +130,16 @@ class pyg3d(pyg2d.pyg2d):
                          [0,0,a,b],
                          [0,0,-1.0e-9,zback]])
 
+    def add_line(self, x, y, z, name='', addto=None, axes=None, **kwargs):
+        if addto is None:
+            axes = self.ax
+        else:
+            axes = addto.ax
+        line = axes.plot(x, y, z, **kwargs)
+        for i in range(0, len(line)):
+            self.lines[name + '%d' % (i)] = (line[i])
+        self.allartists.append(line)
+
     def upright_orthogonal_proj(self, zfront, zback):
         a = (zfront+zback)/(zfront-zback)
         b = -2*(zfront*zback)/(zfront-zback)
@@ -233,6 +244,7 @@ class pyg3d(pyg2d.pyg2d):
             labels.extend([key])
             surfs.extend([val])
         self.ax.legend(surfs, labels, numpoints=1)
+
 
     def view(self, phi, theta, perspective=False, upright=False):
         if not perspective:
@@ -469,12 +481,13 @@ class pyg3d(pyg2d.pyg2d):
         return self
 
     def add_data_pointer(self, x, y, z, string=None,
-                         place='up-right', axes=None):
+                         place='up-right', axes=None, **kwargs):
         if axes is None:
             axes = self.ax
         _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
         super(pyg3d, self).add_data_pointer(_x, point=_y, string=string,
-                                            place='up-right', axes=None)
+                                            place='up-right', axes=None,
+                                            **kwargs)
 
     def update_data_pointers(self):
         for ann in self.annotations:

@@ -91,13 +91,14 @@ from matplotlib.lines import Line2D
 
 plt.close("all")
 preamble = [r'\usepackage{nicefrac}',
+    r'\usepackage{cmbright}',
 	r'\usepackage{gensymb}',
 	r'\usepackage{xcolor}',
 	r'\definecolor{grey60}{HTML}{746C66}',
 	r'\definecolor{grey40}{HTML}{A7A9AC}',
 	r'\usepackage{amsmath, amssymb}',
 	r'\usepackage{stackrel}',
-	r'\providecommand{\unit}[1]{\ensuremath{\textcolor{grey60}' +
+	r'\providecommand{\unit}[1]{\ensuremath{' +
 	r'{\mathrm{#1}}}}']
 
 def force(val=True):
@@ -601,7 +602,7 @@ class pyg2d(object):
 				inc_titles.append(legtitles[i])
 		axes.legend(inc_objs, inc_titles, loc=loc)
 
-	def xticks(self, ticks, labels, axes=None):
+	def xticks(self, ticks, labels, axes=None, rotation='horizontal'):
 		""" ``pyg2d.xticks`` changes the ticks and labels to provided values.
 
 		``pyg2d.xticks`` will move the ticks on the abscissa to the
@@ -619,7 +620,11 @@ class pyg2d(object):
 		else:
 			axes = self.ax
 		axes.set_xticks(ticks)
-		axes.set_xticklabels(labels)
+		axes.set_xticklabels(labels, rotation=rotation)
+		if rotation is 'vertical':
+			plt.margins(0.2)
+			# Tweak spacing to prevent clipping of tick-labels
+			plt.subplots_adjust(bottom=0.15)
 
 	def yticks(self, ticks, labels, axes=None):
 		""" ``pyg2d.yticks`` changes the ticks and labels to provided values.
@@ -1104,12 +1109,15 @@ class pyg2d(object):
 
 	def fill_under_curve(self, curve, scale=0., *args, **kwargs):
 		if curve.data == 'binned':
+			if curve.binned_data_x is None:
+				curve.prepare_binned_data()
 			self.fill_between(curve.binned_data_x,
 							  scale * np.ones_like(curve.binned_data_y),
-							  curve.binned_data_y, **kwargs)
+							  curve.binned_data_y, name=curve.name,
+							  **kwargs)
 		else:
 			self.fill_between(curve.x, scale * np.ones_like(curve.y), curve.y,
-							  **kwargs)
+							  name=curve.name, **kwargs)
 		return self
 
 	def fill_between(self, x, y1, y2=None, fc='red', name='plot', ec='None', leg=True,
@@ -1121,7 +1129,12 @@ class pyg2d(object):
 		if name is 'plot':
 			name = 'plot%d' % (self.plotnum)
 		if hatch is None:
-			p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha, edgecolor=ec, linewidth=0.001)
+			if ec is not 'None' and ec is not None:
+				lw = 0.5
+			else:
+				lw = 0.001
+			p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha,
+								  edgecolor=ec, linewidth=lw)
 			self.allartists.append(p)
 		else:
 			_xb = x[-1::-1]
@@ -1648,6 +1661,12 @@ class pyg2d(object):
 		self.force_pdf = force_pdf
 		self.force_export = force
 		self.caption = caption
+		'''ticks_font = 'Helvetica'
+		for label in ax.get_xticklabels():
+		    label.set_fontproperties(ticks_font)
+
+		for label in ax.get_yticklabels():
+		    label.set_fontproperties(ticks_font)'''
 		#global __context__.val
 		if context is not None:
 			__context__.val = context
