@@ -7,6 +7,10 @@ import os
 from colour import Color
 import numpy as np
 #matplotlib.use('pgf')
+if "DISPLAY" not in os.environ.keys():
+    matplotlib.use('Agg')
+else:
+    matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon
 from mpl_toolkits.mplot3d import Axes3D
@@ -26,12 +30,7 @@ import lyxithea.lyxithea as lyx
 from pyg import twod as pyg2d
 from mpl_toolkits.mplot3d import proj3d
 
-if "DISPLAY" not in os.environ.keys():
-    import matplotlib
-    matplotlib.use('Agg')
-else:
-    import matplotlib
-    matplotlib.use('pgf')
+
 
 import matplotlib.pyplot as plt
 
@@ -42,15 +41,15 @@ __figcount__ = 1
 exported_files = {}
 
 plt.close("all")
-preamble = ['\usepackage{nicefrac}',
-    '\usepackage{gensymb}',
-    '\usepackage{xcolor}',
-    '\definecolor{grey60}{HTML}{746C66}',
-    '\definecolor{grey40}{HTML}{A7A9AC}',
-    r'\usepackage{amsmath, amssymb}',
-    r'\usepackage{stackrel}',
-    '\\providecommand{\unit}[1]{\ensuremath{\\textcolor{grey60}' +
-    '{\mathrm{#1}}}}']
+preamble = [r'\usepackage{nicefrac}',
+	r'\usepackage{gensymb}',
+	r'\usepackage{xcolor}',
+	r'\definecolor{grey60}{HTML}{746C66}',
+	r'\definecolor{grey40}{HTML}{A7A9AC}',
+	r'\usepackage{amsmath, amssymb}',
+	r'\usepackage{stackrel}',
+	r'\providecommand{\unit}[1]{\ensuremath{' +
+	r'{\mathrm{#1}}}}']
 
 # make the line graphing class
 class pyg3d(pyg2d.pyg2d):
@@ -92,35 +91,55 @@ class pyg3d(pyg2d.pyg2d):
 
     def __init__(self, env='plot', colors='purdue'):
         super(pyg3d, self).__init__(env=env, polar=False, colors=colors)
+        self.rcparamsarray['_internal.classic_mode'] = True
+        self.rcparamsarray['grid.color'] = '#ffffff'
+        self.rcparamsarray['grid.alpha'] = 0.5
+        self.rcparamsarray['axes.grid'] = False
+        matplotlib.rcParams.update(self.rcparamsarray)
         matplotlib.rcParams['_internal.classic_mode'] = True
         self.ax = self.fig.gca(projection='3d')
         self.cax = []
         self.surfs = {}
         self.contours = {}
         self.annotations = []
-        self.ax.xaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.yaxis._axinfo['tick']['outward_factor'] = 0
-        self.ax.zaxis._axinfo['tick']['outward_factor'] = 0
         self.ax.view_init(30, 245)
-        self.ax.w_xaxis.gridlines.set_lw(0.1)
-        self.ax.w_yaxis.gridlines.set_lw(0.1)
-        self.ax.w_zaxis.gridlines.set_lw(0.1)
-        self.ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
-        self.ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+        #print dir(self.ax.w_zaxis.gridlines)
+        self.ax.w_xaxis.gridlines.set_lw(2)
+        self.ax.w_yaxis.gridlines.set_lw(2)
+        self.ax.w_zaxis.gridlines.set_lw(2)
+        for _ax in [self.ax.w_xaxis, self.ax.w_yaxis, self.ax.w_zaxis]:
+            _ax._axinfo[u'tick'] = {u'color': u'k', u'outward_factor': 0.1, u'linewidth': 0.5, u'inward_factor': 0.0}
+            _ax.set_clip_on(True)
+        self.ax.w_xaxis._axinfo['axisline'] = {u'color': (1, 1, 1, 1), u'linewidth': 0.5}
+        self.ax.w_yaxis._axinfo['axisline'] = {u'color': (1, 1, 1, 1), u'linewidth': 0.5}
+        self.ax.w_zaxis._axinfo['axisline'] = {u'color': (1, 1, 1, 1), u'linewidth': 0.5}
+        self.ax.w_xaxis._axinfo['grid'] = {u'color': (1.0, 1.0, 1.0, 1.0), u'linewidth': 1.0, u'linestyle': u'-'}
+        self.ax.w_yaxis._axinfo['grid'] = {u'color': (1.0, 1.0, 1.0, 1.0), u'linewidth': 1.0, u'linestyle': u'-'}
+        self.ax.w_zaxis._axinfo['grid'] = {u'color': (1.0, 1.0, 1.0, 1.0), u'linewidth': 1.0, u'linestyle': u'-'}
+        pane_color = (0.9, 0.9, 0.9, 0.1)
+        self.ax.w_xaxis.set_pane_color(pane_color)
+        self.ax.w_yaxis.set_pane_color(pane_color)
+        self.ax.w_zaxis.set_pane_color(pane_color)
         self.ax.set_autoscale_on(True)
+        self.ax.tick_params(pad=0.0)
 
     def xlim(self, x1, x2):
         self.ax.set_xlim3d(x1, x2)
         super(pyg3d, self).xlim(x1, x2)
+        self.xmin = x1
+        self.xmax = x2
 
     def ylim(self, y1, y2):
         self.ax.set_ylim3d(y1, y2)
         super(pyg3d, self).ylim(y1, y2)
+        self.ymin = y1
+        self.ymax = y2
 
     def zlim(self, z1, z2):
         self.ax.set_zlim3d(z1, z2)
         super(pyg3d, self).zlim(z1, z2)
+        self.zmin = z1
+        self.zmax = z2
 
     def orthogonal_proj(self, zfront, zback):
         a = (zfront+zback)/(zfront-zback)
