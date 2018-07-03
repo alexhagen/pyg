@@ -1171,7 +1171,7 @@ class pyg2d(object):
 
 
     def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
-                      alpha=1.0, axes=None):
+                      linewidth=0.5, alpha=1.0, axes=None):
         if axes is None:
             axes = self.ax
         if not line:
@@ -1181,7 +1181,8 @@ class pyg2d(object):
         else:
             line = axes.add_line(Line2D([0, 0], [0, 0],
                                  color=color, alpha=alpha,
-                                 linestyle=linestyle, label=name))
+                                 linestyle=linestyle, linewidth=linewidth,
+                                 label=name))
             self.lines[name] = line
 
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
