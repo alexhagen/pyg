@@ -1148,6 +1148,10 @@ class pyg2d(object):
                 lw = 0.5
             else:
                 lw = 0.001
+            mask = [np.isfinite(_y1) and np.isfinite(_y2) for _y1, _y2 in zip(y1, y2)]
+            x = [float(_x) for _x in x[mask]]
+            y1 = [float(_y1) for _y1 in y1[mask]]
+            y2 = [float(_y2) for _y2 in y2[mask]]
             p = axes.fill_between(x, y1, y2, facecolor=fc, alpha=alpha,
                                   edgecolor=ec, linewidth=lw)
             self.allartists.append(p)
