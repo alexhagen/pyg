@@ -1613,6 +1613,10 @@ class pyg2d(object):
             plt.show(block=True)
             return self
         elif not lyx.need_latex():
+            try:
+                use_filename = self.svg_filename
+            except AttributeError:
+                use_filename = self.png_filename
             __counter__ = random.randint(0, 2e9)
             fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
             fig_html = r"""
@@ -1620,7 +1624,7 @@ class pyg2d(object):
                     <img style='margin: auto; max-width:100%%; width:%fpx; height: auto;' src='%s?%d' />
                     <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                 </div>
-            """ % (label, fig_width, self.svg_filename, __counter__, bi.__figcount__, self.caption)
+            """ % (label, fig_width, use_filename, __counter__, bi.__figcount__, self.caption)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
             fig = HTML(fig_html)
