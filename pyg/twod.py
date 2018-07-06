@@ -661,14 +661,14 @@ class pyg2d(object):
         axes.set_yticks(ticks)
         axes.set_yticklabels(labels)
 
-    def markers_on(self):
+    def markers_on(self, markersize=1, alpha=1.0):
         """ ``pyg2d.markers_on`` turns on the data markers for all data sets.
 
         :return: None
         """
         for key in self.lines:
-            self.lines[key].set_alpha(1.0)
-            self.lines[key].set_markersize(6)
+            self.lines[key].set_alpha(alpha)
+            self.lines[key].set_markersize(markersize)
 
     def markers_off(self):
         """ ``pyg2d.markers_off`` turns off the data markers for all data sets.
@@ -1247,7 +1247,7 @@ class pyg2d(object):
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
                  alpha=1.0, error_fill=False, asymerr=False, differr=True,
-                 markevery=None):
+                 markevery=None, **kwargs):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
@@ -1264,7 +1264,7 @@ class pyg2d(object):
             line = axes.plot(x, y, label=name, color=linecolor, alpha=alpha,
                              marker=markerstyle,
                              ls=_ls, lw=linewidth, solid_capstyle='butt',
-                             markevery=markevery)
+                             markevery=markevery, **kwargs)
             for i in range(0, len(line)):
                 self.lines[name + '%d' % (i)] = (line[i])
         else:
@@ -1294,7 +1294,7 @@ class pyg2d(object):
                               linewidth=0.5, linestyle=linestyle,
                               linecolor=linecolor, markerstyle=markerstyle,
                               alpha=alpha, legend=legend, axes=axes,
-                              markevery=markevery)
+                              markevery=markevery, **kwargs)
                 if asymerr:
                     if differr:
                         yerr1 = yerr[:, 0]
@@ -1330,7 +1330,8 @@ class pyg2d(object):
 
     def add_line_yy(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True, alpha=1.0, axes=None, markerstyle=None):
+                    legend=True, alpha=1.0, axes=None, markerstyle=None,
+                    **kwargs):
         # make new axis
         if axes is None:
             self.ax2 = self.ax.twinx()
@@ -1341,17 +1342,17 @@ class pyg2d(object):
                              linecolor=linecolor,
                              linestyle=linestyle,
                              legend=legend, alpha=alpha, axes=self.ax2,
-                             markerstyle=markerstyle)
+                             markerstyle=markerstyle, **kwargs)
         self.allartists.append(line)
         if legend:
             self.add_line([0., 0.], [np.nan, np.nan], name=name,
                           linewidth=linewidth, linecolor=linecolor,
                           linestyle=linestyle, axes=self.ax,
-                          markerstyle=markerstyle)
+                          markerstyle=markerstyle, **kwargs)
 
     def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
-                    legend=True, axes=None, markerstyle=None):
+                    legend=True, axes=None, markerstyle=None, **kwargs):
         # make new axis
         if axes is None:
             self.ax2 = self.ax.twiny()
@@ -1362,7 +1363,7 @@ class pyg2d(object):
                              linecolor=linecolor,
                              linestyle=linestyle,
                              legend=legend, axes=self.ax2,
-                             markerstyle=markerstyle)
+                             markerstyle=markerstyle, **kwargs)
         self.allartists.append(line)
 
     def add_xx(self,calfunc):
