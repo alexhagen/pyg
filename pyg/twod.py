@@ -816,16 +816,48 @@ class pyg2d(object):
         self.allartists.append(ann)
 
     def add_text(self, x1, y1, string=None, ha='center', va='center',
-                 color="#746C66", rotation=0, axes=None, fontsize=None):
+                 color="#746C66", rotation=0, axes=None, fontsize=None,
+                 backgroundcolor=None, backgroundalpha=None):
+        """Add text at a specified spot on the axis.
+
+        inputs:
+            - `x1`: the location in data units of the horizontal anchor of the
+                text
+            - `y1`: the location in data units of the vertical anchor of the
+                text
+            - `string`: the string to print at the location `(x1, y1)`
+            - `ha`: horizontal alignment relative to `x1` - default `'center'`
+            - `va`: vertical alignment relative to `y1` - default `'center'`
+            - `color`: a string specifying the text color - default `'#746C66'`
+            - `rotation`: the rotation of the text relative to horizontal -
+                default `0`
+            - `axes`: the axes object to add this text to - default current
+                axes
+            - `fontsize`: the size of the text font - default from `rcparams`
+            - `backgroundcolor`: the color of the background of the text box -
+                default `None`
+            - `backgroundalpha`: the transparency of the background of the text
+                box - default `None`
+
+        outputs:
+            - the modified plot
+        """
         if axes is None:
             axes = self.ax
+        if backgroundcolor is None and backgroundalpha is None:
+            backgroundcolor = '#FFFFFF00'
+        if backgroundcolor is not None and backgroundalpha is not None:
+            _bgc = colour(backgroundcolor).hex
+            backgroundcolor = _bgc + hex(int(255 * backgroundalpha))[-2:]
         if fontsize is not None:
-            ann = axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va, color=color,
-                      rotation=rotation)
+            ann = axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va,
+                            color=color, rotation=rotation,
+                            backgroundcolor=backgroundcolor)
         else:
             ann = axes.text(x1, y1, string, ha=ha, va=va, color=color,
-                      rotation=rotation)
+                            rotation=rotation, backgroundcolor=backgroundcolor)
         self.allartists.append(ann)
+        return self
 
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
                      axes=None, units='', log=False):
@@ -1160,6 +1192,7 @@ class pyg2d(object):
                                   edgecolor=ec, linewidth=lw)
             self.allartists.append(p)
         else:
+            # TODO: this does not work for things without a flat baseline
             _xb = x[-1::-1]
             _x = np.append(x, _xb)
             _x = np.append(_x, [x[0]])
@@ -1172,8 +1205,13 @@ class pyg2d(object):
                             **kwargs)
             p = axes.add_patch(patch)
         if leg:
-            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
-                                   facecolor=fc, alpha=alpha, label=name))
+            if hatch is None:
+                patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                       facecolor=fc, alpha=alpha, label=name))
+            else:
+                patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                       closed=True, fill=False, hatch=hatch,
+                                       ec=ec, alpha=1.0, label=name))
             self.bars[name] = patch
         return self
 
