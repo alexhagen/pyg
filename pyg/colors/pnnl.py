@@ -1,5 +1,19 @@
 from colour import Color as _c
 from matplotlib.colors import LinearSegmentedColormap
+'''
+'copper80': '#DF9453',
+'copper70': '#E2A169',
+'copper60': '#E7AF7E',
+'copper50': '#EBBB93',
+'copper40': '#F0C9AA',
+'silver80': '#818284',
+'silver70': '#919294',
+'silver60': '#A0A1A3',
+'silver50': '#B0B1B3',
+'silver40': '#C1C1C1',
+'''
+
+
 
 pnnl_colors = {'black': '#000000',
                'white': '#ffffff',
@@ -14,11 +28,16 @@ pnnl_colors = {'black': '#000000',
                'green': '#719500',
                'purple': '#9682B3',
                'teal': '#66B6CD',
-               'red': '#D97985'}
+               'red': '#D97985',
+               'copper': '#D77600',
+               'silver': '#616265',
+               'bronze': '#A63F1E',
+               'gold': '#F4AA00'
+               }
 c = pnnl_colors
 
-start_c = _c(pnnl_colors["gray"])
-brand_cmap = list(start_c.range_to(_c(pnnl_colors["orange"]), 256))
+start_c = _c(pnnl_colors["silver"])
+brand_cmap = list(start_c.range_to(_c(pnnl_colors["copper"]), 256))
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
 brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
 
