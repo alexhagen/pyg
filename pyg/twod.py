@@ -1286,6 +1286,59 @@ class pyg2d(object):
             name = 'plot%d' % (self.plotnum)
         stack = axes.stackplot(x, y, baseline=baseline, **kwargs)
 
+    def req_nparr(self, x):
+        """Require x be a numpy array."""
+        if isinstance(x, np.ndarray):
+            return x
+        elif isinstance(x, list):
+            return np.array(x)
+
+    def is_num(self, x):
+        try:
+            float(x)
+        except:
+            return False
+        return True
+
+    def violin(self, x, y, points=20, widths=None, showmeans=True,
+               showextrema=True, fc=None, ec=None, lw=0.5, axes=None,
+               name='', **kwargs):
+        """Add a violin plot.
+        """
+        if axes is None:
+            axes = self.ax
+        # case 1 - x and y points of matching lengths
+        if (len(x) == len(y)):
+            x = self.req_nparr(x)
+            y = self.req_nparr(y)
+            # mask out untenable values
+            bool_arr = [self.is_num(_y) for _y in y]
+            idx = np.argwhere(bool_arr)
+            y = y[idx]
+            x = x[idx]
+            uni_x = np.unique(x)
+            case_separation = np.min(uni_x[1:] - uni_x[:-1])
+            if widths is None:
+                widths = 0.5 * case_separation
+            data = []
+            for _x in uni_x:
+                bool_arr = [__x == float(_x) for __x in x]
+                idx = np.argwhere(bool_arr)
+                data.append(list(y[idx].flatten()))
+            #print (data)
+            #print (x)
+            vres = axes.violinplot(data, uni_x, points=points, widths=widths,
+                                   showmeans=showmeans,
+                                   showextrema=showextrema)
+        for _vres in vres['bodies']:
+            _vres.set_color(fc)
+            _vres.set_lw(0.5)
+        for _vres in [vres['cmeans'], vres['cmins'], vres['cmaxes'], vres['cbars']]:
+            _vres.set_lw(lw)
+            _vres.set_color(ec)
+        self.add_to_legend(name=name, line=False, color=fc)
+        return self
+
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
                  alpha=1.0, error_fill=False, asymerr=False, differr=True,
