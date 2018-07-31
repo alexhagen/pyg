@@ -1,5 +1,5 @@
-pyg\.threed module
-==================
+pyg.threed module
+=================
 
 .. automodule:: pyg.threed
     :members:

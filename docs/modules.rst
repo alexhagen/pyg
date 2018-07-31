@@ -5,3 +5,4 @@ pyg
    :maxdepth: 4
 
    pyg
+   setup

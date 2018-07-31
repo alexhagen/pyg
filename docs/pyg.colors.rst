@@ -1,5 +1,5 @@
-pyg\.colors package
-===================
+pyg.colors package
+==================
 
 .. automodule:: pyg.colors
     :members:
@@ -11,5 +11,6 @@ Submodules
 
 .. toctree::
 
+   pyg.colors.pnnl
    pyg.colors.pu
 

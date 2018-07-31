@@ -50,13 +50,17 @@ plot.export('_static/threed_surf')
 plot.show(caption='An arbitrary three dimensional surface')
 ```
 
+    /Users/hage581/code/pyg/pyg/threed.py:100: UserWarning: Requested projection is different from current axis projection, creating new axis with requested projection.
+      self.ax = self.fig.gca(projection='3d')
 
 
-				<div class='pygfigure' name='['Anarbitrarythreedimensionalsurface']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?209289235' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> An arbitrary three dimensional surface</div>
-				</div>
-			
+
+
+                <div class='pygfigure' name='['Anarbitrarythreedimensionalsurface']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/threed_surf.svg?794197054' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 1:</b> An arbitrary three dimensional surface</div>
+                </div>
+            
 
 
 #### Two to Three Dimensional Plotting
@@ -88,11 +92,11 @@ plot.show('Using two dimensional annotations on a three dimensional geometric pl
 
 
 
-				<div class='pygfigure' name='['Usingtwodimensionalannotationsonathreedimensionalgeometricplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?471680233' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 2:</b> Using two dimensional annotations on a three dimensional geometric plot</div>
-				</div>
-			
+                <div class='pygfigure' name='['Usingtwodimensionalannotationsonathreedimensionalgeometricplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/ann_im.svg?1938495231' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 2:</b> Using two dimensional annotations on a three dimensional geometric plot</div>
+                </div>
+            
 
 
 #### Measurements
@@ -141,11 +145,11 @@ plot.show(caption='Depiction of useful measurements on a two-d plot')
 
 
 
-				<div class='pygfigure' name='['Depictionofusefulmeasurementsonatwodplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/measure.svg?1571579053' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 3:</b> Depiction of useful measurements on a two-d plot</div>
-				</div>
-			
+                <div class='pygfigure' name='['Depictionofusefulmeasurementsonatwodplot']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/measure.svg?442736828' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 3:</b> Depiction of useful measurements on a two-d plot</div>
+                </div>
+            
 
 
 ### Boring Examples
@@ -175,11 +179,11 @@ plot.show(caption='A line drawing with uncertainty in y')
 
 
 
-				<div class='pygfigure' name='['Alinedrawingwithuncertaintyiny']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?1708006390' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 4:</b> A line drawing with uncertainty in y</div>
-				</div>
-			
+                <div class='pygfigure' name='['Alinedrawingwithuncertaintyiny']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/line.svg?1326500369' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 4:</b> A line drawing with uncertainty in y</div>
+                </div>
+            
 
 
 
@@ -208,11 +212,11 @@ plot.show(caption='Sinusoid with uncertainty and a sparsely sampled sinusoid wit
 
 
 
-				<div class='pygfigure' name='['Sinusoidwithuncertaintyandasparselysampledsinusoidwithuncertainty']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?1476075781' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 5:</b> Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty</div>
-				</div>
-			
+                <div class='pygfigure' name='['Sinusoidwithuncertaintyandasparselysampledsinusoidwithuncertainty']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/err.svg?1944181666' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 5:</b> Sinusoid with uncertainty and a sparsely sampled sinusoid with uncertainty</div>
+                </div>
+            
 
 
 #### Dual Axis Plotting
@@ -241,11 +245,11 @@ plot.show('Sinusoids with the same $x$ axis, on different $y$ axes')
 
 
 
-				<div class='pygfigure' name='['Sinusoidswiththesamexaxisondifferentyaxes']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?1816804174' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 6:</b> Sinusoids with the same $x$ axis, on different $y$ axes</div>
-				</div>
-			
+                <div class='pygfigure' name='['Sinusoidswiththesamexaxisondifferentyaxes']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dual.svg?1592495023' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 6:</b> Sinusoids with the same $x$ axis, on different $y$ axes</div>
+                </div>
+            
 
 
 The next figure shows how you can compare a single function against different ordinate axes.  This would be useful if you are comparing different units, but I particularly use it when there is some electrical measurement that is calibrated non-linearly (for example, in gamma spectroscopy).
@@ -273,20 +277,16 @@ plot.show('Sinusoid in terms of radians and in terms of $\pi$')
 
 
 
-				<div class='pygfigure' name='['Sinusoidintermsofradiansandintermsofpi']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-					<img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?14341905' />
-					<div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 7:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
-				</div>
-			
+                <div class='pygfigure' name='['Sinusoidintermsofradiansandintermsofpi']' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                    <img style='margin: auto; max-width:100%; width:1250.000000px; height: auto;' src='_static/dualx.svg?244575124' />
+                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure 7:</b> Sinusoid in terms of radians and in terms of $\pi$</div>
+                </div>
+            
 
 
 ## Coming Features and implementation details
 
 - SVG import for illustrating on charts
-	- SVG addition via post processing - only suitable for SVG export (https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure)[https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure]
-	- SVG conversion to matplotlib via regexing (https://matplotlib.org/examples/showcase/firefox.html)[https://matplotlib.org/examples/showcase/firefox.html]
-
-
-```python
-
-```
+	- SVG addition via post processing - only suitable for SVG export [https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure](https://stackoverflow.com/questions/31452451/importing-an-svg-file-a-matplotlib-figure)
+	- SVG conversion to matplotlib via regexing [https://matplotlib.org/examples/showcase/firefox.html](https://matplotlib.org/examples/showcase/firefox.html)
+- HTML interactivity for websites [http://jakevdp.github.io/blog/2014/01/10/d3-plugins-truly-interactive/](http://jakevdp.github.io/blog/2014/01/10/d3-plugins-truly-interactive/)

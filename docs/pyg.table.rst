@@ -1,5 +1,5 @@
-pyg\.table module
-=================
+pyg.table module
+================
 
 .. automodule:: pyg.table
     :members:
