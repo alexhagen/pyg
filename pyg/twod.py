@@ -348,11 +348,15 @@ class pyg2d(object):
         self.loaded = False
         self.ax2 = None
         self.polar = polar
+        self.env = env
         if not self.polar:
             self.ax.spines['top'].set_visible(False)
             self.ax.spines['right'].set_visible(False)
         self.ax.get_xaxis().tick_bottom()
         self.ax.get_yaxis().tick_left()
+        if 'bruce' in env:
+            self.ax.spines['top'].set_visible(True)
+            self.ax.spines['right'].set_visible(True)
         self.artists = []
         self.landscape = True
         self.width = 3.25
@@ -417,12 +421,14 @@ class pyg2d(object):
             fsize = 10
             mathfont = 'cm'
             labelsize='medium'
+            ticksize='small'
             if 'bruce' in env:
                 preamble.append(r'\usepackage{sansmath}')
                 preamble.append(r'\sansmath')
                 preamble.append(r'\usepackage{helvet}')
                 fsize = 12
                 labelsize='large'
+                ticksize='large'
                 mathfont = 'stixsans'
             self.rcparamsarray = {
                 "font.sans-serif": "Helvetica",
@@ -445,8 +451,8 @@ class pyg2d(object):
                 "axes.facecolor": "none",
                 "figure.facecolor": "none",
                 "axes.labelcolor": "#000000",
-                "xtick.labelsize": "small",
-                "ytick.labelsize": "small",
+                "xtick.labelsize": ticksize,
+                "ytick.labelsize": ticksize,
                 "axes.labelsize": labelsize,
                 "legend.fontsize": "small",
                 "legend.frameon": False,
@@ -592,7 +598,7 @@ class pyg2d(object):
             axes = self.ax
         axes.set_ylim([miny, maxy])
 
-    def legend(self, loc=1, exclude='saljfdaljdfaslkjfd', axes=None):
+    def legend(self, loc=1, exclude='saljfdaljdfaslkjfd', axes=None, **kwargs):
         """ ``pyg2d.legend`` shows the legend on the plot.
 
         ``pyg2d.legend`` toggles the legend showing on.  This is done by getting
@@ -607,7 +613,7 @@ class pyg2d(object):
         """
         if axes is None:
             axes = self.ax
-        self.leg = axes.legend(loc=loc)
+        self.leg = axes.legend(loc=loc, **kwargs)
         (legobjs, legtitles) = axes.get_legend_handles_labels()
         inc_objs = []
         inc_titles = []
@@ -615,7 +621,7 @@ class pyg2d(object):
             if 'connector' not in legtitles[i] and exclude not in legtitles[i]:
                 inc_objs.append(legobjs[i])
                 inc_titles.append(legtitles[i])
-        axes.legend(inc_objs, inc_titles, loc=loc)
+        axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
 
     def xticks(self, ticks, labels, axes=None, rotation='horizontal'):
         """ ``pyg2d.xticks`` changes the ticks and labels to provided values.
@@ -1303,7 +1309,31 @@ class pyg2d(object):
     def violin(self, x, y, points=20, widths=None, showmeans=True,
                showextrema=True, fc=None, ec=None, lw=0.5, axes=None,
                name='', **kwargs):
-        """Add a violin plot.
+        """Plot the distributions of points along the `y` axis that are grouped
+        by the `x` axis.
+
+        inputs:
+            - `x`: The locations of each distribution on the `x` axis - a 1-D
+                list or array.
+            - `y`: The point distributions of each violin.  Must be a 2-D list
+                or array whos first axis has the same size as that of `x`.
+            - `points`: The number of points to evaluate the pdf at for each
+                violin
+            - `widths`: The width of each violin, or a single value for global
+                violin width. Default `0.5 * minimum separation of cases`
+            - `showmeans`: Whether to put a tick for the mean of the
+                distribution. Default `True`.
+            - `showextrema`: Whether to put ticks for the extrema of the
+                distribution. Default `True`.
+            - `fc`: Color of the shaded part of the violin. Default `None`.
+            - `ec`: Edge color of the edges and ticks of the violin. Default
+                `None`.
+            - `lw`: Line width for the edges and ticks of the violins. Default
+                `0.5` pt.
+            - `axes`: The `axes` object to add this to.  Default `gca()`.
+            - `name`: Name of violin plot to add to legend.
+            - Also takes `**kwargs` that are passed to
+                `matplotlib.Axes.violinplot`.
         """
         if axes is None:
             axes = self.ax
@@ -1329,7 +1359,7 @@ class pyg2d(object):
             #print (x)
             vres = axes.violinplot(data, uni_x, points=points, widths=widths,
                                    showmeans=showmeans,
-                                   showextrema=showextrema)
+                                   showextrema=showextrema, **kwargs)
         for _vres in vres['bodies']:
             _vres.set_color(fc)
             _vres.set_lw(0.5)
