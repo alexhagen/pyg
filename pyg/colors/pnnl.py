@@ -1,5 +1,7 @@
 from colour import Color as _c
 from matplotlib.colors import LinearSegmentedColormap
+from copy import copy, deepcopy
+import numpy as np
 '''
 'copper80': '#DF9453',
 'copper70': '#E2A169',
@@ -40,10 +42,18 @@ start_c = _c(pnnl_colors["silver"])
 brand_cmap = list(start_c.range_to(_c(pnnl_colors["copper"]), 256))
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
 brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
+brand_cmap = []
+end_c = _c(pnnl_colors['orange'])
+for s, l in zip(np.linspace(0.0, end_c.saturation, 256),
+                np.linspace(0.97, end_c.luminance, 256)):
+    __color__ = deepcopy(end_c)
+    __color__.saturation = s
+    __color__.luminance = l
+    brand_cmap.append(deepcopy(__color__))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
+brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
 
 
-from copy import copy, deepcopy
-import numpy as np
 start_c = _c(pnnl_colors["blue"])
 end_c = _c(pnnl_colors['orange'])
 first_half = []
