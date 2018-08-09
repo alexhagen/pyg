@@ -508,6 +508,31 @@ class pyg3d(pyg2d.pyg2d):
                                             place='up-right', axes=None,
                                             **kwargs)
 
+    def add_text(self, x, y, z, string=None, ha='center', va='center',
+                 color="#746C66", rotation=0, axes=None, fontsize=None,
+                 backgroundcolor=None, backgroundalpha=None):
+        if axes is None:
+            axes = self.ax
+        if axes is None:
+            axes = self.ax
+        if backgroundcolor is None and backgroundalpha is None:
+            backgroundcolor = '#FFFFFF00'
+        if backgroundcolor is not None and backgroundalpha is not None:
+            _bgc = colour(backgroundcolor).hex
+            backgroundcolor = _bgc + hex(int(255 * backgroundalpha))[-2:]
+        if fontsize is not None:
+            ann = axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va,
+                            color=color, rotation=rotation,
+                            backgroundcolor=backgroundcolor)
+        else:
+            ann = axes.text(x, y, z, string, ha=ha, va=va, color=color,
+                            rotation=rotation, backgroundcolor=backgroundcolor)
+        self.allartists.append(ann)
+        return self
+        #_x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
+        #super(pyg3d, self).add_text(_x, _y, string=string,
+        #                                    axes=None, **kwargs)
+
     def update_data_pointers(self):
         for ann in self.annotations:
             x = ann[0]

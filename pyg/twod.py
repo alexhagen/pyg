@@ -1667,7 +1667,8 @@ class pyg2d(object):
                             transparent=True, dpi=1200)
                 os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
                           filename + self.sizestring[size] + '.svg')
-                os.remove(filename + self.sizestring[size] + '.pdf')
+                if 'pdf' not in self.formats:
+                    os.remove(filename + self.sizestring[size] + '.pdf')
             self.svg_filename = filename + self.sizestring[size] + '.svg'
         elif format is 'websvg':
             add = 'web.svg'
@@ -1831,12 +1832,15 @@ class pyg2d(object):
             if formats is None:
                 if lyx.run_from_ipython():
                     formats = ['svg']
+                    self.formats = formats
                     if lyx.need_latex() and not force_pdf:
                         formats = ['pgf']
                     elif lyx.need_latex() and force_pdf:
                         formats = ['pdf']
                 else:
                     formats = ['pdf']
+            else:
+                self.formats = formats
             for format in formats:
                 if format == 'html':
                     tight = False
