@@ -2,24 +2,10 @@ from colour import Color as _c
 from matplotlib.colors import LinearSegmentedColormap
 from copy import copy, deepcopy
 import numpy as np
-'''
-'copper80': '#DF9453',
-'copper70': '#E2A169',
-'copper60': '#E7AF7E',
-'copper50': '#EBBB93',
-'copper40': '#F0C9AA',
-'silver80': '#818284',
-'silver70': '#919294',
-'silver60': '#A0A1A3',
-'silver50': '#B0B1B3',
-'silver40': '#C1C1C1',
-'''
-
-
 
 pnnl_colors = {'black': '#000000',
                'white': '#ffffff',
-               'orange': '#d57500',
+               'orange': '#D77600',
                'lightblue': '#748EB3',
                'blue': '#3b73af',
                'darkblue': '#0077a4',
@@ -32,7 +18,17 @@ pnnl_colors = {'black': '#000000',
                'teal': '#66B6CD',
                'red': '#D97985',
                'copper': '#D77600',
+               'copper80': '#DF9453',
+               'copper70': '#E2A169',
+               'copper60': '#E7AF7E',
+               'copper50': '#EBBB93',
+               'copper40': '#F0C9AA',
                'silver': '#616265',
+               'silver80': '#818284',
+               'silver70': '#919294',
+               'silver60': '#A0A1A3',
+               'silver50': '#B0B1B3',
+               'silver40': '#C1C1C1',
                'bronze': '#A63F1E',
                'gold': '#F4AA00'
                }
