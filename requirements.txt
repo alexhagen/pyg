@@ -10,3 +10,4 @@ beautifulsoup4>=4.6.0
 mathutils>=2.79.1
 mpld3>=0.3
 svgutils>=0.3.0
+bibtexparser

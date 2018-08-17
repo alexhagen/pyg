@@ -3,7 +3,10 @@ from IPython.display import SVG, display, Latex, HTML, display_latex
 import sys
 import os
 import subprocess
-import __builtins__ as bi
+try:
+    import __builtins__ as bi
+except ModuleNotFoundError:
+    from . import bi as bi
 
 def get_pname(id):
     p = subprocess.Popen(["ps -o cmd= {}".format(id)], stdout=subprocess.PIPE, shell=True)

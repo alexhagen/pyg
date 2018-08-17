@@ -29,9 +29,6 @@ import re
 import lyxithea.lyxithea as lyx
 from pyg import twod as pyg2d
 from mpl_toolkits.mplot3d import proj3d
-
-
-
 import matplotlib.pyplot as plt
 
 global context

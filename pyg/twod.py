@@ -36,8 +36,10 @@ import sys
 import random
 import weakref
 import re
-import __builtins__ as bi
-#import builtins as bi
+try:
+    import __builtins__ as bi
+except ModuleNotFoundError:
+    from . import bi as bi
 from lyxithea import lyxithea as lyx
 from itertools import count
 
