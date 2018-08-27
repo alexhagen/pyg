@@ -505,6 +505,7 @@ class pyg2d(object):
         xlab = axes.set_xlabel(label)
         self.artists.append(xlab)
         self.allartists.append('xlab: ' + label)
+        return self
 
     def add_subplot(self, subp=121, polar=False):
         """ ``pyg2d.add_subplot`` adds a grid in which you can make subplots.
@@ -571,6 +572,7 @@ class pyg2d(object):
         ylab = axes.set_ylabel(label)
         self.artists.append(ylab)
         self.allartists.append('ylab: ' + label)
+        return self
 
     def xlim(self, minx, maxx, axes=None):
         """ ``pyg2d.xlim`` limits the view of the x-axis to limits.

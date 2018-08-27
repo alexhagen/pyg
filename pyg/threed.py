@@ -332,20 +332,20 @@ class pyg3d(pyg2d.pyg2d):
         if h[0] > h[1] and h[0] > h[2]:
             top = axes.plot_surface(Zc, Yc, Xc, alpha=planes_alpha, rstride=100,
                                     cstride=100, color=color, shade=False,
-                                    linewidth=linewidth)
+                                    linewidth=linewidth, edgecolor='black')
         elif h[2] > h[1] and h[2] > h[0]:
             top = axes.plot_surface(Xc, Yc, Zc, alpha=planes_alpha, rstride=100,
                                     cstride=100, color=color, shade=False,
-                                    linewidth=linewidth)
+                                    linewidth=linewidth, edgecolor='black')
         Zc = cz - np.max(h) / 2.0
         if h[0] > h[1] and h[0] > h[2]:
             bottom = axes.plot_surface(Zc, Yc, Xc, alpha=planes_alpha, rstride=100,
                                     cstride=100, color=color, shade=False,
-                                    linewidth=linewidth)
+                                    linewidth=linewidth, edgecolor='black')
         elif h[2] > h[1] and h[2] > h[0]:
             bottom = axes.plot_surface(Xc, Yc, Zc, alpha=planes_alpha, rstride=100,
                                     cstride=100, color=color, shade=False,
-                                    linewidth=linewidth)
+                                    linewidth=linewidth, edgecolor='black')
         return self
 
     def sphere(self, center, r, color='gray', planes=True, lines=False,
@@ -439,6 +439,38 @@ class pyg3d(pyg2d.pyg2d):
         #top = axes.plot_surface(Xc, Yc, )
         return self
 
+    def add_plane(self, xmin=None, xmax=None, ymin=None, ymax=None,
+                  zmin=None, zmax=None, axes=None):
+        if axes is None:
+            axes = self.ax
+        if zmax is None:
+            dir = 'z'
+            args = [0, 1, 2, 3]
+            dims = [0, 1]
+            z = 2
+        elif ymax is None:
+            dir = 'y'
+            args = [0, 1, 4, 5]
+            dims = [0, 2]
+            z = 1
+        elif xmax is None:
+            dir = 'x'
+            args = [2, 3, 4, 5]
+            dims = [1, 2]
+            z = 0
+        maxes = [xmin, xmax, ymin, ymax, zmin, zmax]
+        chis, etas = np.meshgrid(np.linspace(maxes[args[0]],
+                                         maxes[args[1]], 3),
+                             np.linspace(maxes[args[2]],
+                                         maxes[args[3]], 3))
+        phis = maxes[2*z] * np.ones_like(etas)
+        surf = [[], [], []]
+        surf[dims[0]] = chis
+        surf[dims[1]] = etas
+        surf[z] = phis
+        top = axes.plot_surface(*surf,
+                                color='none', shade=False,
+                                linewidth=0.5, edgecolor='black')
 
     def cube(self, center, dx, dy, dz, color='gray', planes=True, lines=False,
              axes=None):
@@ -462,38 +494,38 @@ class pyg3d(pyg2d.pyg2d):
                                          center[0] + dx/2., 100),
                              np.linspace(center[1] - dy/2.,
                                          center[1] + dy/2., 100))
-        top = axes.plot_surface(Xc, Yc, center[2] + dz/2.,
+        top = axes.plot_surface(Xc, Yc, (center[2] + dz/2.) * np.ones_like(Yc),
                                 rstride=cstride, cstride=rstride,
                                 color=color, alpha=planes_alpha, shade=False,
-                                linewidth=linewidth)
-        bottom = axes.plot_surface(Xc, Yc, center[2] - dz/2.,
+                                linewidth=linewidth, edgecolor='black')
+        bottom = axes.plot_surface(Xc, Yc, (center[2] - dz/2.) * np.ones_like(Yc),
                                    rstride=cstride, cstride=rstride,
                                    color=color, alpha=planes_alpha, shade=False,
-                                   linewidth=linewidth)
+                                   linewidth=linewidth, edgecolor='black')
         Xc, Zc = np.meshgrid(np.linspace(center[0] - dx/2.,
                                          center[0] + dx/2., 100),
                              np.linspace(center[2] - dz/2.,
                                          center[2] + dz/2., 100))
-        left = axes.plot_surface(Xc, center[1] + dy/2., Zc,
+        left = axes.plot_surface(Xc, (center[1] + dy/2.) * np.ones_like(Xc), Zc,
                                 rstride=cstride, cstride=rstride,
                                 color=color, alpha=planes_alpha, shade=False,
-                                linewidth=linewidth)
-        right = axes.plot_surface(Xc, center[1] - dy/2., Zc,
+                                linewidth=linewidth, edgecolor='black')
+        right = axes.plot_surface(Xc, (center[1] - dy/2.) * np.ones_like(Xc), Zc,
                                    rstride=cstride, cstride=rstride,
                                    color=color, alpha=planes_alpha, shade=False,
-                                   linewidth=linewidth)
+                                   linewidth=linewidth, edgecolor='black')
         Yc, Zc = np.meshgrid(np.linspace(center[1] - dy/2.,
                                          center[1] + dy/2., 100),
                              np.linspace(center[2] - dz/2.,
                                          center[2] + dz/2., 100))
-        front = axes.plot_surface(center[0] + dx/2., Yc, Zc,
+        front = axes.plot_surface((center[0] + dx/2.) * np.ones_like(Yc), Yc, Zc,
                                 rstride=cstride, cstride=rstride,
                                 color=color, alpha=planes_alpha, shade=False,
-                                linewidth=linewidth)
-        back = axes.plot_surface(center[0] - dx/2., Yc, Zc,
+                                linewidth=linewidth, edgecolor='black')
+        back = axes.plot_surface((center[0] - dx/2.) * np.ones_like(Yc), Yc, Zc,
                                    rstride=cstride, cstride=rstride,
                                    color=color, alpha=planes_alpha, shade=False,
-                                   linewidth=linewidth)
+                                   linewidth=linewidth, edgecolor='black')
         return self
 
     def add_data_pointer(self, x, y, z, string=None,
@@ -595,6 +627,7 @@ class pyg3d(pyg2d.pyg2d):
             axes = self.ax
         zlab = axes.set_zlabel(label)
         self.artists.append(zlab)
+        return self
 
     def clabel(self, label, axes=None):
         r""" ``pyg2d.xlabel`` adds a label to the x-axis.
