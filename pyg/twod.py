@@ -1223,6 +1223,36 @@ class pyg2d(object):
             self.bars[name] = patch
         return self
 
+    def highlight_region(self, xmin=0.0, xmax=None, ymin=0.0, ymax=None,
+                         fc=None, axes=None, alpha=0.5,  hatch=None,
+                         name='plot', **kwargs):
+        """Highlight a rectangular region with corners at (xmin, ymin) and
+        (xmax, ymax)."""
+        if axes is None:
+            axes = self.ax
+        if xmax is None:
+            xmax = axes.get_xlim()[1]
+        if ymax is None:
+            ymax = axes.get_ylim()[1]
+        if hatch is None:
+            patch = Polygon([[xmin, ymin], [xmin, ymax],
+                             [xmax, ymax], [xmax, ymin]],
+                            closed=True, facecolor=fc, alpha=alpha,
+                            **kwargs)
+            p = axes.add_patch(patch)
+            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                   facecolor=fc, alpha=alpha, label=name))
+        else:
+            patch = Polygon([[xmin, ymin], [xmin, ymax],
+                             [xmax, ymax], [xmax, ymin]],
+                            closed=True, fill=False, hatch=hatch,
+                            **kwargs)
+            p = axes.add_patch(patch)
+            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+                                   closed=True, fill=False, hatch=hatch,
+                                   ec=ec, alpha=1.0, label=name))
+
+
 
     def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
                       linewidth=0.5, alpha=1.0, axes=None):
