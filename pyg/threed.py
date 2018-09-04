@@ -661,3 +661,28 @@ class pyg3d(pyg2d.pyg2d):
         if axes is None:
             axes = self.ax
         axes.set_zlim([minz, maxz])
+
+    def zticks(self, ticks, labels, axes=None, rotation='horizontal'):
+        """ ``pyg2d.zticks`` changes the ticks and labels to provided values.
+
+        ``pyg2d.zticks`` will move the ticks on the abscissa to the
+        locations given in ``ticks`` and place the labels in list ``labels`` at
+        those locations, repsectively.
+
+        :param list ticks: The values where the new tick labels will be placed
+            on the z-axis.
+        :param list labels: The string labels for each tick.
+        :param axes axes: An axes to append these ticks to, if not current.
+        :return: None
+        """
+        if axes is not None:
+            plt.sca(axes)
+        else:
+            axes = self.ax
+        axes.set_zticks(ticks)
+        axes.set_zticklabels(labels, rotation=rotation)
+        if rotation is 'vertical':
+            plt.margins(0.2)
+            # Tweak spacing to prevent clipping of tick-labels
+            plt.subplots_adjust(bottom=0.15)
+        return self

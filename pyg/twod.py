@@ -1254,8 +1254,6 @@ class pyg2d(object):
                                    closed=True, fill=False, hatch=hatch,
                                    ec=ec, alpha=1.0, label=name))
 
-
-
     def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
                       linewidth=0.5, alpha=1.0, axes=None):
         if axes is None:
@@ -1274,20 +1272,20 @@ class pyg2d(object):
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
                       leg=True, axes=None, alpha=0.5):
         if axes is None:
-            axes = self.ax;
-        self.plotnum=self.plotnum+1;
+            axes = self.ax
+        self.plotnum = self.plotnum + 1
         if name is 'plot':
-            name = 'plot%d' % (self.plotnum);
-        idx = np.argsort(x1);
-        x1 = np.array(x1);
-        x2 = np.array(x2);
-        y = np.array(y);
-        x1 = x1[idx];
-        x2 = x2[idx];
-        y = y[idx];
-        p = axes.fill_betweenx(y,x1,x2,facecolor=fc,edgecolor=ec,alpha=alpha)
+            name = 'plot%d' % (self.plotnum)
+        idx = np.argsort(x1)
+        x1 = np.array(x1)
+        x2 = np.array(x2)
+        y = np.array(y)
+        x1 = x1[idx]
+        x2 = x2[idx]
+        y = y[idx]
+        p = axes.fill_betweenx(y, x1, x2, facecolor=fc, edgecolor=ec,
+                               alpha=alpha)
         self.allartists.append(p)
-
 
     def semi_log_y(self, axes=None):
         if axes is None:
@@ -1325,6 +1323,19 @@ class pyg2d(object):
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
         stack = axes.stackplot(x, y, baseline=baseline, **kwargs)
+        return self
+
+    def pie(self, axes=None, **kwargs):
+        if axes is None:
+            axes = self.ax
+        self.plotnum = self.plotnum + 1
+        if name is 'plot':
+            name = 'plot%d' % (self.plotnum)
+        pie = axes.pie(data, radius=radius, colors=colors,
+                       wedgeprops=dict(width=radius - ir, edgecolor='w'))
+        self.bars[name] = pie
+        self.allartists.append(pie)
+        return self
 
     def req_nparr(self, x):
         """Require x be a numpy array."""
@@ -1902,15 +1913,19 @@ class pyg2d(object):
         if hasattr(self, 'pgf_filename'):
             self.add_metadata(self.pgf_filename)
             shutil.copy(self.pgf_filename, directory)
-            bi.__exported_files__[directory].extend([os.path.basename(self.pgf_filename)])
+            bi.__exported_files__[directory] \
+                .extend([os.path.basename(self.pgf_filename)])
         if hasattr(self, 'pdf_filename'):
             self.add_metadata(self.pdf_filename)
             shutil.copy(self.pdf_filename, directory)
-            bi.__exported_files__[directory].extend([os.path.basename(self.pdf_filename)])
+            bi.__exported_files__[directory] \
+                .extend([os.path.basename(self.pdf_filename)])
         if hasattr(self, 'png_filename'):
             self.add_metadata(self.png_filename)
             shutil.copy(self.png_filename, directory)
-            bi.__exported_files__[directory].extend([os.path.basename(self.png_filename)])
+            bi.__exported_files__[directory] \
+                .extend([os.path.basename(self.png_filename)])
+
 
 def commit_publications(message='automated commit'):
     for key, val in bi.__exported_files__.iteritems():
@@ -1918,6 +1933,7 @@ def commit_publications(message='automated commit'):
         for filename in val:
             os.system('git add %s' % filename)
         os.system('git commit -am "%s"' % message)
+
 
 plot = pyg2d()
 plt.cla()
