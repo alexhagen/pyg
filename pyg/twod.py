@@ -1204,10 +1204,16 @@ class pyg2d(object):
         else:
             # TODO: this does not work for things without a flat baseline
             _xb = x[-1::-1]
+            #_y1 = np.array(y) - np.array(y1)
+            #print (y1, y2)
             _x = np.append(x, _xb)
             _x = np.append(_x, [x[0]])
             _y = np.append(y2, y1)
             _y = np.append(_y, [y2[0]])
+            _x = np.append(x, x[-1::-1])
+            _y = np.append(y2, y1[-1::-1])
+            _y = np.append(_y, y2[0])
+            _x = np.append(_x, x[0])
             if ec is not None:
                 kwargs['ec'] = ec
             patch = Polygon([[__x, __y] for __x, __y in zip(_x, _y)],
@@ -1417,7 +1423,7 @@ class pyg2d(object):
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
                  linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
                  alpha=1.0, error_fill=False, asymerr=False, differr=True,
-                 markevery=None, **kwargs):
+                 markevery=None, fillkwargs={}, **kwargs):
         if axes is None:
             axes = self.ax
         self.data.extend([[x, y]])
@@ -1477,7 +1483,7 @@ class pyg2d(object):
                     yerr2 = yerr
                 self.fill_between(x, np.array(y) - np.array(yerr1),
                                   np.array(y) + np.array(yerr2), leg=False,
-                                  fc=linecolor, name=name + 'err')
+                                  fc=linecolor, name=name + 'err', **fillkwargs)
                 line = self.lines[name + '0']
         self.markers_on()
         self.lines_on()
