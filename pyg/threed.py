@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 from scipy.optimize import curve_fit
 from scipy.odr import *
 from math import exp
@@ -177,21 +178,21 @@ class pyg3d(pyg2d.pyg2d):
         m = np.ma.masked_where(np.isnan(c), c)
         levels = np.linspace(np.min(c), np.max(c), 50)
         if len(x) == 1:
-            print 'x'
+            #print 'x'
             Y, Z = np.meshgrid(y, z)
             zdir = 'x'
             zs = x[0]
             self.cax.extend([axes.contourf(c, Y, Z, cmap=self.cmap, offset=zs, zdir='x',
                                      levels=levels, linestyle='-', **kwargs)])
         elif len(y) == 1:
-            print 'y'
+            #print 'y'
             Z, X = np.meshgrid(z, x)
             zdir = 'y'
             zs = y[0]
             self.cax.extend([axes.contourf(X, c.T, Z, cmap=self.cmap, offset=zs, zdir='y',
                                      levels=levels, linestyle='-', **kwargs)])
         elif len(z) == 1:
-            print 'z'
+            #print 'z'
             X, Y = np.meshgrid(x, y)
             zdir = 'z'
             zs = z[0]
