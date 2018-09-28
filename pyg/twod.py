@@ -1562,7 +1562,8 @@ class pyg2d(object):
         self.ax2.set_ylim(mini,maxi);
         self.ax2.get_yaxis().tick_right();
 
-    def add_hist(self, y, bins, facecolor='gray', alpha=0.5, name='plot'):
+    def add_hist(self, y, bins, facecolor='gray', alpha=0.5, name='plot',
+                 **kwargs):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
@@ -1574,7 +1575,7 @@ class pyg2d(object):
         return n, bins
 
     def add_bar(self, x, y, hold=True, facecolor='gray', alpha=0.5,
-                name='plot'):
+                name='plot', **kwargs):
         self.plotnum = self.plotnum + 1
         self.data.extend([[x, y]])
         if name is 'plot':
@@ -1583,7 +1584,7 @@ class pyg2d(object):
         delta.append(delta[-1])
         # x = [j - (i/2) for i, j in zip(delta, x)];
         patches = self.ax.bar(x, y, width=delta, label=name, facecolor=facecolor,
-                          alpha=alpha)
+                              alpha=alpha, **kwargs)
         self.bars[name] = patches
         self.allartists.append(self.bars[name])
         return x, y, delta
