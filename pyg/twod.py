@@ -44,6 +44,7 @@ from lyxithea import lyxithea as lyx
 from itertools import count
 
 import pickle
+#import dill as pickle
 import os.path
 import warnings
 
@@ -111,8 +112,8 @@ def force(val=True):
 
 
 def load(fname, svg=False):
-    _fig = pickle.load(file(os.path.expanduser('~') +
-                            '/.pyg/%s.pickle' % fname))
+    _fig = pickle.load(open(os.path.expanduser('~') +
+                            '/.pyg/%s.pickle' % fname, 'rb'), encoding='latin1')
     if not svg:
         _fig.set_rcparams('plot')
         _fig.fig._cachedRenderer = None
@@ -1775,8 +1776,8 @@ class pyg2d(object):
              here_definitely=False):
         if label is not None and not self.loaded:
             plt.ioff()
-            pickle.dump(self, file(os.path.expanduser('~') +
-                                    '/.pyg/%s.pickle' % label, 'w'))
+            pickle.dump(self, open(os.path.expanduser('~') +
+                                    '/.pyg/%s.pickle' % label, 'wb'))
         fig = None
         if label is None:
             label = str([''.join(ch for ch in caption if ch.isalnum())])
