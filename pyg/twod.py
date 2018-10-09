@@ -6,7 +6,8 @@ __context__.val = 'writeup'
 def context(ctx='writeup'):
     __context__.val = ctx
 import matplotlib
-if False:#bi.is_interactive():
+import bi
+if bi.is_interactive():
     #print 'using interactive backend'
     matplotlib.use('Qt5Agg', warn=False)
 else:
@@ -107,13 +108,25 @@ preamble = [
             r'{\mathrm{#1}}}}'
            ]
 
+gui_preamble = [
+            r'\usepackage{nicefrac}',
+            r'\usepackage{gensymb}',
+            r'\usepackage{xcolor}',
+            r'\definecolor{grey60}{HTML}{746C66}',
+            r'\definecolor{grey40}{HTML}{A7A9AC}',
+            r'\usepackage{amsmath, amssymb}',
+            r'\usepackage{stackrel}',
+            r'\providecommand{\unit}[1]{\ensuremath{' +
+            r'{\mathrm{#1}}}}'
+           ]
+
 def force(val=True):
     __force__.val = val
 
 
 def load(fname, svg=False):
     _fig = pickle.load(open(os.path.expanduser('~') +
-                            '/.pyg/%s.pickle' % fname, 'rb'), encoding='latin1')
+                            '/.pyg/%s.pickle' % fname, 'rb'))
     if not svg:
         _fig.set_rcparams('plot')
         _fig.fig._cachedRenderer = None
@@ -385,7 +398,7 @@ class pyg2d(object):
     def set_rcparams(self, env):
         if env is 'gui':
             self.rcparamsarray = {
-                "pgf.texsystem": "lualatex",
+                "pgf.texsystem": "pdflatex",
                 "pgf.rcfonts": False,
                 "font.family": "sans",
                 "font.size": 18.0,
@@ -417,8 +430,8 @@ class pyg2d(object):
                 "grid.alpha": 0.5,     # transparency, between 0.0 and 1.0
                 "savefig.transparent": True,
                 "path.simplify": True,
-                "pgf.preamble": preamble,
-                "text.latex.preamble": preamble
+                "pgf.preamble": gui_preamble,
+                "text.latex.preamble": gui_preamble
             }
         else:
             fsize = 10
