@@ -6,7 +6,7 @@ __context__.val = 'writeup'
 def context(ctx='writeup'):
     __context__.val = ctx
 import matplotlib
-import bi
+#import bi
 if False: #bi.is_interactive():
     #print 'using interactive backend'
     matplotlib.use('Qt5Agg', warn=False)
