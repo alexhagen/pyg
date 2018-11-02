@@ -1345,14 +1345,34 @@ class pyg2d(object):
         stack = axes.stackplot(x, y, baseline=baseline, **kwargs)
         return self
 
-    def pie(self, axes=None, **kwargs):
+    def pie(self, data, labels, radius=0.5, ir=100., axes=None, name='plot', **kwargs):
         if axes is None:
             axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        pie = axes.pie(data, radius=radius, colors=colors,
-                       wedgeprops=dict(width=radius - ir, edgecolor='w'))
+        def pct_label(pct):
+            if pct > 5.0:
+                return "{:.1f}%".format(pct)
+            else:
+                return ""
+        pie, texts, autotexts = axes.pie(data, radius=0.625,
+                              wedgeprops=dict(width=0.375, edgecolor='w'),
+                              autopct=lambda pct: pct_label(pct),
+                              pctdistance=0.75)
+        bbox_props = dict(boxstyle="square,pad=0.3", fc="none", ec="k",
+                          lw=0.72)
+        kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
+                  bbox=bbox_props, zorder=0, va="center")
+        for i, p in enumerate(pie):
+            ang = (p.theta2 - p.theta1)/2. + p.theta1
+            y = 0.625 * np.sin(np.deg2rad(ang))
+            x = 0.625 * np.cos(np.deg2rad(ang))
+            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+            kw["arrowprops"].update({"connectionstyle": connectionstyle})
+            axes.annotate(labels[i], xy=(x, y), xytext=(0.75*np.sign(x), 0.75*y),
+                         horizontalalignment=horizontalalignment, **kw)
         self.bars[name] = pie
         self.allartists.append(pie)
         return self
