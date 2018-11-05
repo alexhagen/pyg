@@ -1365,14 +1365,19 @@ class pyg2d(object):
         kw = dict(xycoords='data', textcoords='data', arrowprops=dict(arrowstyle="-"),
                   bbox=bbox_props, zorder=0, va="center")
         for i, p in enumerate(pie):
-            ang = (p.theta2 - p.theta1)/2. + p.theta1
-            y = 0.625 * np.sin(np.deg2rad(ang))
-            x = 0.625 * np.cos(np.deg2rad(ang))
-            horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-            connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-            kw["arrowprops"].update({"connectionstyle": connectionstyle})
-            axes.annotate(labels[i], xy=(x, y), xytext=(0.75*np.sign(x), 0.75*y),
-                         horizontalalignment=horizontalalignment, **kw)
+            if data[i] > 0.05 * np.sum(data):
+                ang = (p.theta2 - p.theta1)/2. + p.theta1
+                y = 0.625 * np.sin(np.deg2rad(ang))
+                x = 0.625 * np.cos(np.deg2rad(ang))
+                horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                kw["arrowprops"].update({"connectionstyle": connectionstyle})
+                axes.annotate(labels[i], xy=(x, y), xytext=(0.75*np.sign(x), 0.75*y),
+                             horizontalalignment=horizontalalignment, **kw)
+            else:
+                name = labels[i]
+                fc = p.get_facecolor()
+                self.add_to_legend(name=name, line=False, color=fc)
         self.bars[name] = pie
         self.allartists.append(pie)
         return self
