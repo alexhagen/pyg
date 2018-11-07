@@ -496,6 +496,18 @@ class pyg2d(object):
         self.rcparamsarray['text.latex.preamble'] = preamble
         matplotlib.rcParams.update(self.rcparamsarray)
 
+    def pnnl_color_cycle(self):
+        from cycler import cycler
+        from .colors import pnnl as pnnl
+        self.rcparamsarray['axes.prop_cycle'] = \
+            cycler(color=[pnnl.c['copper40'], pnnl.c['silver40'],
+                          pnnl.c['topaz40'], pnnl.c['emerald40'],
+                          pnnl.c['ruby40'], pnnl.c['gold40'], pnnl.c['amethyst40'],
+                          pnnl.c['bronze40'], pnnl.c['mercury40'],
+                          pnnl.c['sapphire40'], pnnl.c['emslgreen40'],
+                          pnnl.c['garnet40']])
+        matplotlib.rcParams.update(self.rcparamsarray)
+
     @staticmethod
     def change_context(context):
         __context__.val = context
@@ -1368,11 +1380,16 @@ class pyg2d(object):
             if data[i] > 0.05 * np.sum(data):
                 ang = (p.theta2 - p.theta1)/2. + p.theta1
                 y = 0.625 * np.sin(np.deg2rad(ang))
+                y2 = 0.75 * np.power(np.sin(np.deg2rad(ang)), 1)
                 x = 0.625 * np.cos(np.deg2rad(ang))
+                x2 = 0.75 * np.power(np.cos(np.deg2rad(ang)), 1)
                 horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-                connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+                anglein = 0
+                if x > 0:
+                    anglein = 180
+                connectionstyle = "angle,angleA={0},angleB={1}".format(anglein, ang)
                 kw["arrowprops"].update({"connectionstyle": connectionstyle})
-                axes.annotate(labels[i], xy=(x, y), xytext=(0.75*np.sign(x), 0.75*y),
+                axes.annotate(labels[i], xy=(x, y), xytext=(x2, y2),
                              horizontalalignment=horizontalalignment, **kw)
             else:
                 name = labels[i]
@@ -1380,6 +1397,7 @@ class pyg2d(object):
                 self.add_to_legend(name=name, line=False, color=fc)
         self.bars[name] = pie
         self.allartists.append(pie)
+        self.equal_aspect_ratio()
         return self
 
     def req_nparr(self, x):
