@@ -142,11 +142,11 @@ class ann_im(twod.pyg2d):
                                              place=place, **kwargs)
         return self
 
-    def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
-        x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
-        x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
-        super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
-        return self
+    #def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
+    #    x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
+    #    x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
+    #    super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+    #    return self
 
     def add_text(self, x, y, z, string=None, **kwargs):
         if 'axes' in kwargs:
