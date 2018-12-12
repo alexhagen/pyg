@@ -48,6 +48,7 @@ import pickle
 #import dill as pickle
 import os.path
 import warnings
+from pym import func as pym
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
@@ -1169,7 +1170,9 @@ class pyg2d(object):
             axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
-    def contour(self, X, Y, Z, cmap, levels=25):
+    def contour(self, X, Y, Z, cmap, levels=25, log=False):
+        if log:
+            Z = np.log(Z)
         self.cmin = np.nanmin(Z)
         self.cmax = np.nanmax(Z)
         levels = np.linspace(self.cmin, self.cmax, levels)
