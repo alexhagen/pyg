@@ -76,6 +76,8 @@ def metal_dim(ratio='golden'):
         r = 2. / (3. + np.sqrt(13.))
     elif ratio is 'square':
         r = 1.0
+    elif isinstance(ratio, float):
+        r = ratio
     return r
 
 def w(width):
