@@ -48,7 +48,7 @@ import pickle
 #import dill as pickle
 import os.path
 import warnings
-from pym import func as pym
+#from pym import func as pym
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
@@ -745,13 +745,14 @@ class pyg2d(object):
         for key in self.lines:
             self.lines[key].set_linewidth(1.0)
 
-    def lines_off(self):
+    def lines_off(self, exclude='saljfdaljdfaslkjfd'):
         """ ``pyg2d.lines_off`` turns off the connector lines for all data sets.
 
         :return: None
         """
         for key in self.lines:
-            self.lines[key].set_linewidth(0.0)
+            if exclude not in key:
+                self.lines[key].set_linewidth(0.0)
 
     def add_vline(self, x, ymin=None, ymax=None, ls='solid', lw=1.5,
                   color='black', name=None, axes=None):
