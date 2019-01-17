@@ -502,6 +502,7 @@ class pyg2d(object):
                 "path.simplify": True,
                 "text.usetex": True,
                 "text.latex.unicode": False,
+                'axes.unicode_minus': False,
                 "pgf.preamble": preamble,
                 "text.latex.preamble": preamble,
                 "pgf.texsystem": "lualatex",
