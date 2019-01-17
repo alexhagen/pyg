@@ -1797,6 +1797,7 @@ class pyg2d(object):
             add = '.pdf'
         elif format is 'svg':
             # save as pdf, then pdf2svg
+            print('format svg')
             if not os.path.isfile(filename + self.sizestring[size] + '.svg') \
                 or self.force_export or __force__.val:
                 self.fig.savefig(filename + self.sizestring[size] + '.pdf',
