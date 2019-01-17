@@ -126,6 +126,23 @@ gui_preamble = [
 def force(val=True):
     __force__.val = val
 
+def which(program):
+    import os
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 
 def load(fname, svg=False):
     _fig = pickle.load(open(os.path.expanduser('~') +
@@ -1209,6 +1226,10 @@ class pyg2d(object):
                               name=curve.name, **kwargs)
         return self
 
+    def fill_between_curves(self, curve1, curve2, *args, **kwargs):
+        """Fill between the two curves given."""
+        pass
+
     def fill_between(self, x, y1, y2=None, fc='red', name='plot', ec='None', leg=True,
                      axes=None, alpha=0.5, xmin=None, xmax=None, log=False,
                      hatch=None, **kwargs):
@@ -1780,8 +1801,12 @@ class pyg2d(object):
                 self.fig.savefig(filename + self.sizestring[size] + '.pdf',
                             bbox_extra_artists=self.artists, bbox_inches='tight',
                             transparent=True, dpi=1200)
-                os.system('pdf2svg ' + filename + self.sizestring[size] + '.pdf ' +
-                          filename + self.sizestring[size] + '.svg')
+                pdf_file = filename + self.sizestring[size] + '.pdf'
+                svg_file = filename + self.sizestring[size] + '.svg'
+                if which('pdf2svg') is not None:
+                    os.system('pdf2svg {pdf_file} {svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
+                elif which('inkscape') is not None:
+                    os.system('inkscape --without-gui --file {pdf_file} --export-text-to-path --export-plain-svg={svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
                 if 'pdf' not in self.formats:
                     os.remove(filename + self.sizestring[size] + '.pdf')
             self.svg_filename = filename + self.sizestring[size] + '.svg'
