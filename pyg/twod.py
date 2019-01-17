@@ -1808,7 +1808,7 @@ class pyg2d(object):
                 logging.warning('inkscape: %s' % which('inkscape'))
                 if which('pdf2svg') is not None:
                     os.system('pdf2svg {pdf_file} {svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
-                elif which('inkscape') is not None:
+                else:
                     os.system('inkscape --without-gui --file {pdf_file} --export-text-to-path --export-plain-svg={svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
                 if 'pdf' not in self.formats:
                     os.remove(filename + self.sizestring[size] + '.pdf')
