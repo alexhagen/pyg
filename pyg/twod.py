@@ -98,9 +98,9 @@ def res(w=1080., ratio='golden'):
 
 plt.close("all")
 preamble = [
-            r"\usepackage{fontspec}",
-            r"\setmainfont{AvenirLTStd-Light.otf}",
-            r"\setsansfont{AvenirLTStd-Light.otf}",
+            #r"\usepackage{fontspec}",
+            #r"\setmainfont{AvenirLTStd-Light.otf}",
+            #r"\setsansfont{AvenirLTStd-Light.otf}",
             r'\usepackage{nicefrac}',
             r'\usepackage{gensymb}',
             r'\usepackage{xcolor}',
