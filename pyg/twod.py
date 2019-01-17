@@ -501,6 +501,7 @@ class pyg2d(object):
                 "savefig.transparent": True,
                 "path.simplify": True,
                 "text.usetex": True,
+                "text.latex.unicode": True,
                 "pgf.preamble": preamble,
                 "text.latex.preamble": preamble,
                 "pgf.texsystem": "lualatex",
