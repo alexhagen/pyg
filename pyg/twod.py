@@ -37,6 +37,7 @@ import sys
 import random
 import weakref
 import re
+import logging
 try:
     import __builtins__ as bi
 except ModuleNotFoundError:
@@ -1803,8 +1804,8 @@ class pyg2d(object):
                             transparent=True, dpi=1200)
                 pdf_file = filename + self.sizestring[size] + '.pdf'
                 svg_file = filename + self.sizestring[size] + '.svg'
-                print('pdf2svg: ', which('pdf2svg'))
-                print('inkscape: ', which('inkscape'))
+                logging.warning('pdf2svg: %s' % which('pdf2svg'))
+                logging.warning('inkscape: %s' % which('inkscape'))
                 if which('pdf2svg') is not None:
                     os.system('pdf2svg {pdf_file} {svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
                 elif which('inkscape') is not None:
