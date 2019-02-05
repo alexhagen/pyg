@@ -165,7 +165,7 @@ class svg(object):
         import os
         if platform == "darwin":
             self.filename = os.path.abspath(filename)
-            self.show_filename = filename
+            self.show_filename = filename#os.path.abspath(filename)
         else:
             self.filename = filename
             self.show_filename = filename
@@ -775,7 +775,7 @@ class pyg2d(object):
                 self.lines[key].set_linewidth(0.0)
 
     def add_vline(self, x, ymin=None, ymax=None, ls='solid', lw=1.5,
-                  color='black', name=None, axes=None):
+                  color='black', name=None, alpha=1.0, axes=None):
         """ ``pyg2d.add_vline`` draws a vertical line.
 
         ``pyg2d.add_vline`` draws a vertical line from either the bottom axis
@@ -812,10 +812,10 @@ class pyg2d(object):
         if name is not None:
             self.add_to_legend(name=name, color=color, linestyle=ls)
         return axes.vlines(x, ymin, ymax, linestyles=ls, linewidths=lw,
-                           color=color)
+                           color=color, alpha=alpha)
 
     def add_hline(self, y, xmin=None, xmax=None, ls='solid', lw=1.5,
-                  color='black', axes=None):
+                  color='black', alpha=1.0, axes=None):
         """``pyg2d.add_hline`` draws a horizontal line.
 
         ``pyg2d.add_hline`` draws a horizontal line from either the left axis
@@ -846,7 +846,7 @@ class pyg2d(object):
         if xmax == None:
             xmax = np.max(axes.get_xlim())
         return axes.hlines(y, xmin=xmin, xmax=xmax, linestyle=ls,
-                              linewidth=lw, color=color)
+                              linewidth=lw, color=color, alpha=alpha)
 
     def add_label(self, x, y, string, color='black'):
         curve_place = (x, y)
