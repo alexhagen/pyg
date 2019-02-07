@@ -580,7 +580,7 @@ class pyg2d(object):
         self.ax2 = self.fig.add_subplot(subp, polar=polar, **kwargs)
         self.ax.change_geometry(gs1, gs2, 1)
         self.ax2.change_geometry(gs1, gs2, 2)
-        self.ax_subp.append(self.fig.add_subplot(subp))
+        self.ax_subp.append(self.ax2)
         if not self.polar:
             self.ax2.spines['top'].set_visible(False)
             self.ax2.spines['right'].set_visible(False)
