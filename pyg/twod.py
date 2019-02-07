@@ -556,7 +556,7 @@ class pyg2d(object):
         self.allartists.append('xlab: ' + label)
         return self
 
-    def add_subplot(self, subp=121, polar=False):
+    def add_subplot(self, subp=121, polar=False, **kwargs):
         """ ``pyg2d.add_subplot`` adds a grid in which you can make subplots.
 
         ``pyg2d.add_subplot`` follows Matlab's lead and allows you to plot
@@ -577,7 +577,7 @@ class pyg2d(object):
         gsstr = str(subp)
         gs1 = int(gsstr[0])
         gs2 = int(gsstr[1])
-        self.ax2 = self.fig.add_subplot(subp, polar=polar)
+        self.ax2 = self.fig.add_subplot(subp, polar=polar, **kwargs)
         self.ax.change_geometry(gs1, gs2, 1)
         self.ax2.change_geometry(gs1, gs2, 2)
         self.ax_subp.append(self.fig.add_subplot(subp))
