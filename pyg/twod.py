@@ -1800,7 +1800,6 @@ class pyg2d(object):
             add = '.pdf'
         elif format is 'svg':
             # save as pdf, then pdf2svg
-            print('format svg')
             if not os.path.isfile(filename + self.sizestring[size] + '.svg') \
                 or self.force_export or __force__.val:
                 self.fig.savefig(filename + self.sizestring[size] + '.pdf',
@@ -1808,8 +1807,8 @@ class pyg2d(object):
                             transparent=True, dpi=1200)
                 pdf_file = filename + self.sizestring[size] + '.pdf'
                 svg_file = filename + self.sizestring[size] + '.svg'
-                logging.warning('pdf2svg: %s' % which('pdf2svg'))
-                logging.warning('inkscape: %s' % which('inkscape'))
+                logging.debug('pdf2svg: %s' % which('pdf2svg'))
+                logging.debug('inkscape: %s' % which('inkscape'))
                 if which('pdf2svg') is not None:
                     os.system('pdf2svg {pdf_file} {svg_file}'.format(pdf_file=pdf_file, svg_file=svg_file))
                 else:
