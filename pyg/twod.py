@@ -771,7 +771,7 @@ class pyg2d(object):
 
         :return: None
         """
-        for key in self.lines:
+        for key, _ in self.lines.items():
             if exclude not in key:
                 self.lines[key].set_linewidth(0.0)
 
@@ -1698,7 +1698,7 @@ class pyg2d(object):
         f=open(filename,'w')
         fstring=fstring.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
         fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")
-        fstring = filter(lambda x: x in string.printable, fstring);
+        fstring = ''.join(list(filter(lambda x: x in string.printable, fstring)))
         f.write(fstring)
         f.close()
 

@@ -122,6 +122,25 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 256),
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
 brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
 
+start_c = _c(pnnl_colors["sapphire"])
+mid_c = _c(pnnl_colors['silver'])
+end_c = _c(pnnl_colors["gold"])
+
+brand_dark_cmap = list(start_c.range_to(mid_c, 128)) + \
+    list(mid_c.range_to(end_c, 128))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_dark_cmap]
+'''brand_dark_cmap_mpl = LinearSegmentedColormap.from_list('brand_dark_cmap', cmap_tuple_list)
+brand_dark_cmap = []
+end_c = _c(pnnl_colors['copper'])
+for s, l in zip(np.linspace(0.0, end_c.saturation, 256),
+                np.linspace(0.5, end_c.luminance, 256)):
+    __color__ = deepcopy(end_c)
+    __color__.saturation = s
+    __color__.luminance = l
+    brand_dark_cmap.append(deepcopy(__color__))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_dark_cmap]'''
+brand_dark_cmap_mpl = LinearSegmentedColormap.from_list('brand_dark_cmap', cmap_tuple_list)
+
 start_c = _c(pnnl_colors["white"])
 brandw_cmap = list(start_c.range_to(_c(pnnl_colors["copper"]), 256))
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brandw_cmap]
@@ -156,9 +175,11 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 128),
 #first_half = [copy(start_c).set_saturation(num) for num in np.linspace(start_c.saturation, 0.0, 128)]
 jet_cmap = first_half + second_half
 
-start_c = _c(pnnl_colors["blue"])
+start_c = _c(pnnl_colors["white"])
+mid_c = _c(pnnl_colors["gold"])
 end_c = _c(pnnl_colors['copper'])
-first_half = []
+jet_gray_cmap = list(start_c.range_to(mid_c, 128)) + list(mid_c.range_to(end_c, 128))
+'''first_half = []
 for s, l in zip(np.linspace(start_c.saturation, 0.0, 128),
                 np.linspace(start_c.luminance, 0.375, 128)):
     __color__ = deepcopy(start_c)
@@ -173,4 +194,6 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 128),
     __color__.luminance = l
     second_half.append(deepcopy(__color__))
 #first_half = [copy(start_c).set_saturation(num) for num in np.linspace(start_c.saturation, 0.0, 128)]
-jet_gray_cmap = first_half + second_half
+jet_gray_cmap = first_half + second_half'''
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in jet_gray_cmap]
+jet_cmap_mpl = LinearSegmentedColormap.from_list('jet_cmap', cmap_tuple_list)
