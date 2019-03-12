@@ -176,9 +176,12 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 128),
 jet_cmap = first_half + second_half
 
 start_c = _c(pnnl_colors["white"])
-mid_c = _c(pnnl_colors["gold"])
+start1_c = _c(pnnl_colors['silver'])
+mid1_c = _c(pnnl_colors['sapphire'])
+mid_c = _c(pnnl_colors["topaz"])
 end_c = _c(pnnl_colors['copper'])
-jet_gray_cmap = list(start_c.range_to(mid_c, 128)) + list(mid_c.range_to(end_c, 128))
+N = 8
+jet_gray_cmap = list(start_c.range_to(start1_c, N)) + list(mid1_c.range_to(mid_c, 128 - N//2)) + list(mid_c.range_to(end_c, 128 - N//2))
 '''first_half = []
 for s, l in zip(np.linspace(start_c.saturation, 0.0, 128),
                 np.linspace(start_c.luminance, 0.375, 128)):

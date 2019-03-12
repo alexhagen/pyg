@@ -1194,14 +1194,21 @@ class pyg2d(object):
             axes.fill_between(x_fit,y_err_up,y_err_down,facecolor='#D1D3D4',alpha=0.5,lw=0.0);
             # add the regression to the dict of regressions
 
-    def contour(self, X, Y, Z, cmap, levels=25, log=False):
+    def contour(self, X, Y, Z, cmap, levels=25, log=False, fill=True,
+                axes=None, **kwargs):
+        if axes is None:
+            axes = self.ax
         if log:
             Z = np.log(Z)
         self.cmin = np.nanmin(Z)
         self.cmax = np.nanmax(Z)
         levels = np.linspace(self.cmin, self.cmax, levels)
         self.cmap = cmap
-        plt.contourf(X, Y, Z, levels=levels, cmap=self.cmap)
+        if fill:
+            cfunction = axes.contourf
+        else:
+            cfunction = axes.contour
+        self.contours = cfunction(X, Y, Z, levels=levels, cmap=self.cmap, **kwargs)
         return self
 
     def colorbar(self):
@@ -1613,6 +1620,7 @@ class pyg2d(object):
                           linewidth=linewidth, linecolor=linecolor,
                           linestyle=linestyle, axes=self.ax,
                           markerstyle=markerstyle, **kwargs)
+        return self
 
     def add_line_xx(self, x, y, name='plot', xerr=None, yerr=None,
                     linecolor='black', linewidth=0.5, linestyle=None,
@@ -1629,6 +1637,16 @@ class pyg2d(object):
                              legend=legend, axes=self.ax2,
                              markerstyle=markerstyle, **kwargs)
         self.allartists.append(line)
+        return self
+
+    def squeeze(self):
+        plt.subplots_adjust(hspace=.0)
+        axes = self.ax
+        xts = axes.get_xticks()
+        self.xticks(xts, ['' for _x in xts])
+        for axes in self.ax_subp[:-1]:
+            xts = axes.get_xticks()
+            self.xticks(xts, ['' for _x in xts])
 
     def add_xx(self,calfunc):
         self.ax2 = self.ax.twiny()
