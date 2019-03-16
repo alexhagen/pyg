@@ -49,6 +49,8 @@ import pickle
 #import dill as pickle
 import os.path
 import warnings
+import __init__
+_c = __init__.__builtins__['colors']
 #from pym import func as pym
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
@@ -378,6 +380,7 @@ class pyg2d(object):
     def __init__(self, env='plot', polar=False, colors='purdue'):
         self.__class__.instances.append(weakref.proxy(self))
         self.__counter__ = next(self._figcount)
+        self.temp_name = '~{:08d}'.format(random.randint(1E8, 9E8))
         self.fig = plt.figure(self.__counter__)
         self.ax = self.fig.add_subplot(111, polar=polar)
         self.ax_subp = []
@@ -1516,11 +1519,13 @@ class pyg2d(object):
         return self
 
     def add_line(self, x, y, name='plot', xerr=None, yerr=None, linewidth=0.5,
-                 linestyle=None, linecolor='black', markerstyle=None, legend=True, axes=None,
+                 linestyle=None, linecolor=None, markerstyle=None, legend=True, axes=None,
                  alpha=1.0, error_fill=False, asymerr=False, differr=True,
                  markevery=None, fillkwargs={}, **kwargs):
         if axes is None:
             axes = self.ax
+        if linecolor is None:
+            linecolor = _c.c['copper']
         self.data.extend([[x, y]])
         self.plotnum = self.plotnum + 1
         if markerstyle is None:
@@ -2021,6 +2026,11 @@ class pyg2d(object):
 
     def close(self):
         plt.close(self.fig)
+
+    def __call__(self):
+
+        self.export(self.temp_name, force=True)
+        self.show('Temporary figure %s' % self.temp_name)
 
     def add_metadata(self, filename):
         os.system("setfattr -n user.creation_script -v \'%s\' %s" % (__file__, filename))

@@ -8,3 +8,7 @@ elif __pygtemplate__ is 'pu':
     from .colors import pu as c
 elif __pygtemplate__ is 'pnnl':
     from .colors import pnnl as c
+else:
+    from .colors import pnnl as c
+
+__builtins__['colors'] = c

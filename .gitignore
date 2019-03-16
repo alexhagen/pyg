@@ -4,6 +4,8 @@ docs/readme_pyg.md
 */brender*.*
 docs/pyg.*.rst
 ._.DS_Store
+*/~*
+
 
 # mac files
 .DS_Store
