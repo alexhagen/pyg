@@ -241,8 +241,8 @@ class svg(object):
         elif platform == "win32":
             pass
         if label is not None and not self.loaded:
-            pickle.dump(self, file(os.path.expanduser('~') +
-                                    '/.pyg/%s.pickle' % label, 'w'))
+            pickle.dump(self, open(os.path.expanduser('~') +
+                                    '/.pyg/%s.pickle' % label, 'wb'))
         fig = None
         if label is None:
             label = caption
