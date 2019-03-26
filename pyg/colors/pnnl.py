@@ -200,3 +200,28 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 128),
 jet_gray_cmap = first_half + second_half'''
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in jet_gray_cmap]
 jet_cmap_mpl = LinearSegmentedColormap.from_list('jet_cmap', cmap_tuple_list)
+
+c1 = _c(pnnl_colors["onyx"])
+n1 = 160
+c2 = _c(pnnl_colors['garnet'])
+n2 = 16
+c25 = _c(pnnl_colors['ruby'])
+n25 = 16
+c3 = _c(pnnl_colors['bronze'])
+n3 = 16
+c4 = _c(pnnl_colors["copper"])
+n4 = 24
+c5 = _c(pnnl_colors['gold'])
+n5 = 24
+c6 = _c(pnnl_colors['white'])
+flame_cmap = list(c1.range_to(c2, n1)) + \
+             list(c2.range_to(c25, n2)) + \
+             list(c25.range_to(c3, n25)) + \
+             list(c3.range_to(c4, n3)) + \
+             list(c4.range_to(c5, n4)) + \
+             list(c5.range_to(c6, n5)) + \
+             list(c6.range_to(c6, 1))
+
+print("flame_cmap")
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in flame_cmap]
+flame_cmap_mpl = LinearSegmentedColormap.from_list('flame_cmap', cmap_tuple_list)

@@ -1214,9 +1214,22 @@ class pyg2d(object):
         self.contours = cfunction(X, Y, Z, levels=levels, cmap=self.cmap, **kwargs)
         return self
 
+    def surf(self, X, Y, Z, cmap, axes=None, **kwargs):
+        if axes is None:
+            axes = self.ax
+        self.cmin = np.nanmin(Z)
+        self.cmax = np.nanmax(Z)
+        self.cmap = cmap
+        axes.imshow(Z, cmap=cmap, interpolation='bilinear',
+                    vmin=self.cmin, vmax=self.cmax, origin='lower',
+                    extent=[np.nanmin(X), np.nanmax(X),
+                            np.nanmin(Y), np.nanmax(Y)],
+                    aspect='auto')
+        return self
+
     def colorbar(self):
-        self.cax = self.fig.add_axes([0.95, 0.05, 0.04, 0.9])
-        self.cax.set_position([1.02, 0., 0.04, 1.0])
+        self.cax = self.fig.add_axes([0.95, 0.05, 0.25, 0.50])
+        self.cax.set_position([1.02, 0.08, 0.04, 0.87])
         norm = matplotlib.colors.Normalize(vmin=self.cmax,
                                            vmax=self.cmin)
         self.cb = matplotlib.colorbar.ColorbarBase(self.cax, cmap=self.cmap,
@@ -1593,7 +1606,7 @@ class pyg2d(object):
         self.ax.spines['left'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
 
-    def surf(self, x, y, tri, vector=False):
+    def trisurf(self, x, y, tri, vector=False):
         """Create a surface plot on a two-d chart.
         """
         if vector:
