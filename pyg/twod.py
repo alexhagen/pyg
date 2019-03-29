@@ -377,12 +377,16 @@ class pyg2d(object):
                   'none': ''}
     _figcount = count(0)
 
-    def __init__(self, env='plot', polar=False, colors='purdue'):
+    def __init__(self, env='plot', polar=False, colors='purdue',
+                 bounds=None):
         self.__class__.instances.append(weakref.proxy(self))
         self.__counter__ = next(self._figcount)
         self.temp_name = '~{:08d}'.format(random.randint(1E8, 9E8))
         self.fig = plt.figure(self.__counter__)
-        self.ax = self.fig.add_subplot(111, polar=polar)
+        if bounds is None:
+            self.ax = self.fig.add_subplot(111, polar=polar)
+        else:
+            self.ax = self.fig.add_axes(bounds)
         self.ax_subp = []
         self.leg = False
         self.loaded = False
