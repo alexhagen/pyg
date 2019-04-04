@@ -222,7 +222,6 @@ flame_cmap = list(c1.range_to(c2, n1)) + \
              list(c5.range_to(c6, n5)) + \
              list(c6.range_to(c6, 1))
 
-print("flame_cmap")
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in flame_cmap]
 flame_cmap_mpl = LinearSegmentedColormap.from_list('flame_cmap', cmap_tuple_list)
 
