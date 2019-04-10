@@ -16,9 +16,8 @@ else:
         matplotlib.use('Agg', warn=False)
     else:
         matplotlib.use('pgf', warn=False)
-
 import matplotlib.pyplot as plt
-from matplotlib.patches import Ellipse, Polygon, Circle
+from matplotlib.patches import Ellipse, Polygon, Circle, Arrow, FancyArrowPatch
 from matplotlib.lines import Line2D
 from scipy.optimize import curve_fit
 from scipy.odr import *
@@ -1269,6 +1268,9 @@ class pyg2d(object):
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
+        y1 = np.array(y1)
+        if y2 is None:
+            y2 = np.zeros_like(y1)
         if hatch is None:
             if ec is not 'None' and ec is not None:
                 lw = 0.5
@@ -1277,6 +1279,7 @@ class pyg2d(object):
             x = np.array(x)
             y1 = np.array(y1)
             y2 = np.array(y2)
+
             mask = [np.isfinite(_y1) and np.isfinite(_y2) for _y1, _y2 in zip(y1, y2)]
             if len(mask) > 0:
                 x = [float(_x) for _x in x[mask]]
@@ -1288,8 +1291,6 @@ class pyg2d(object):
         else:
             # TODO: this does not work for things without a flat baseline
             _xb = x[-1::-1]
-            #_y1 = np.array(y) - np.array(y1)
-            #print (y1, y2)
             _x = np.append(x, _xb)
             _x = np.append(_x, [x[0]])
             _y = np.append(y2, y1)
@@ -1304,6 +1305,7 @@ class pyg2d(object):
                             closed=True, fill=False, hatch=hatch,
                             **kwargs)
             p = axes.add_patch(patch)
+            self.bars[name] = p
         if leg:
             if hatch is None:
                 patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
@@ -1344,7 +1346,7 @@ class pyg2d(object):
                                    closed=True, fill=False, hatch=hatch,
                                    ec=ec, alpha=1.0, label=name))
 
-    def add_to_legend(self, name=None, line=True, color=None, linestyle=None,
+    def add_to_legend(self, name=None, line=True, arrow=False, color=None, linestyle=None,
                       linewidth=0.5, alpha=1.0, axes=None):
         if axes is None:
             axes = self.ax
@@ -1352,12 +1354,18 @@ class pyg2d(object):
             patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
                                    color=color, alpha=alpha, label=name))
             self.bars[name] = patch
-        else:
+        elif not arrow:
             line = axes.add_line(Line2D([0, 0], [0, 0],
                                  color=color, alpha=alpha,
                                  linestyle=linestyle, linewidth=linewidth,
                                  label=name))
             self.lines[name] = line
+        elif arrow:
+            line = axes.add_patch(Arrow(np.nan, np.nan, np.nan, np.nan,
+                                 color=color, alpha=alpha,
+                                 linestyle=linestyle, linewidth=linewidth,
+                                 label=name))
+            self.bars[name] = line
 
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
                       leg=True, axes=None, alpha=0.5):
@@ -1662,13 +1670,19 @@ class pyg2d(object):
         return self
 
     def squeeze(self):
-        plt.subplots_adjust(hspace=.0)
         axes = self.ax
         xts = axes.get_xticks()
-        self.xticks(xts, ['' for _x in xts])
+        #self.xticks(xts, ['' for _x in xts])
+        for xlabel_i in axes.get_xticklabels():
+            xlabel_i.set_visible(False)
+            xlabel_i.set_fontsize(0.0)
         for axes in self.ax_subp[:-1]:
             xts = axes.get_xticks()
-            self.xticks(xts, ['' for _x in xts])
+            #self.xticks(xts, ['' for _x in xts], axes=axes)
+            for xlabel_i in axes.get_xticklabels():
+                xlabel_i.set_visible(False)
+                xlabel_i.set_fontsize(0.0)
+        self.fig.subplots_adjust(bottom=-0.15, hspace=0.0, wspace=0.0)
 
     def add_xx(self,calfunc):
         self.ax2 = self.ax.twiny()
