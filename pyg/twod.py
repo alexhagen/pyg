@@ -673,7 +673,13 @@ class pyg2d(object):
         """
         if axes is None:
             axes = self.ax
-        self.leg = axes.legend(loc=loc, **kwargs)
+        if loc == 'out':
+            self.leg = \
+                axes.legend(loc='lower center', bbox_to_anchor=(0.5, 1.02),
+                               ncol=2, mode="expand",
+                               borderaxespad=0., **kwargs)
+        else:
+            self.leg = axes.legend(loc=loc, **kwargs)
         (legobjs, legtitles) = axes.get_legend_handles_labels()
         inc_objs = []
         inc_titles = []
@@ -681,7 +687,13 @@ class pyg2d(object):
             if 'connector' not in legtitles[i] and exclude not in legtitles[i]:
                 inc_objs.append(legobjs[i])
                 inc_titles.append(legtitles[i])
-        axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
+        if loc == 'out':
+            lobj = axes.legend(inc_objs, inc_titles, loc='lower center',
+                               bbox_to_anchor=(0.5, 1.00), ncol=2, mode="expand",
+                               borderaxespad=0., **kwargs)
+            self.artists.append(lobj)
+        else:
+            axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
 
     def xticks(self, ticks, labels, axes=None, rotation='horizontal'):
         """ ``pyg2d.xticks`` changes the ticks and labels to provided values.
