@@ -1955,18 +1955,25 @@ class pyg2d(object):
             try:
                 use_filename = self.svg_filename
             except AttributeError:
-                use_filename = self.png_filename
-            __counter__ = random.randint(0, 2e9)
-            fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
-            fig_html = r"""
-                <div class='pygfigure' name='%s' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-                    <img style='margin: auto; max-width:100%%; width:%fpx; height: auto;' src='%s?%d' />
-                    <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
-                </div>
-            """ % (label, fig_width, use_filename, __counter__, bi.__figcount__, self.caption)
-            __figures__.val[label] = bi.__figcount__
-            bi.__figcount__ += 1
-            fig = HTML(fig_html)
+                try:
+                    use_filename = self.png_filename
+                except AttributeError:
+                    use_filename = self.pdf_filename
+            if lyx.run_from_ipython():
+                __counter__ = random.randint(0, 2e9)
+                fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
+                fig_html = r"""
+                    <div class='pygfigure' name='%s' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
+                        <img style='margin: auto; max-width:100%%; width:%fpx; height: auto;' src='%s?%d' />
+                        <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
+                    </div>
+                """ % (label, fig_width, use_filename, __counter__, bi.__figcount__, self.caption)
+                __figures__.val[label] = bi.__figcount__
+                bi.__figcount__ += 1
+                fig = HTML(fig_html)
+            else:
+                os.system('open ' + use_filename)
+                return
             self.close()
             if need_string:
                 return fig_html
