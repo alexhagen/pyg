@@ -1696,6 +1696,21 @@ class pyg2d(object):
                 xlabel_i.set_fontsize(0.0)
         self.fig.subplots_adjust(bottom=-0.15, hspace=0.0, wspace=0.0)
 
+    def squeezex(self):
+        axes = self.ax
+        yts = axes.get_yticks()
+        #self.xticks(xts, ['' for _x in xts])
+        for ylabel_i in axes.get_yticklabels():
+            ylabel_i.set_visible(False)
+            ylabel_i.set_fontsize(0.0)
+        for axes in self.ax_subp[1:]:
+            yts = axes.get_yticks()
+            #self.xticks(xts, ['' for _x in xts], axes=axes)
+            for ylabel_i in axes.get_yticklabels():
+                ylabel_i.set_visible(False)
+                ylabel_i.set_fontsize(0.0)
+        self.fig.subplots_adjust(left=-0.15, hspace=0.0, wspace=0.0)
+
     def add_xx(self,calfunc):
         self.ax2 = self.ax.twiny()
         mini = calfunc(np.min(self.ax.get_xlim()))
