@@ -30,6 +30,8 @@ import re
 import lyxithea.lyxithea as lyx
 from pyg import twod as pyg2d
 from mpl_toolkits.mplot3d import proj3d
+from mpl_toolkits.mplot3d import axes3d
+from mpl_toolkits.mplot3d import art3d
 import matplotlib.pyplot as plt
 
 global context
@@ -199,7 +201,7 @@ class pyg3d(pyg2d.pyg2d):
             self.cax.extend([axes.contourf(X, Y, c, cmap=self.cmap, offset=zs, zdir='z',
                                      levels=levels, linestyle='-', **kwargs)])
 
-    def colorbar(self):
+    def colorbar2(self):
         self.norm = self.cax[0].norm
         maxes = []
         mins = []
@@ -238,6 +240,44 @@ class pyg3d(pyg2d.pyg2d):
                                  vmin=zmin, vmax=zmax,
                                  **kwargs)
         self.surfs[name] = surf
+        return self
+
+    def wireframe(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None,
+                  name='surf', zmin=None, zmax=None, stride=10, **kwargs):
+        if addto is None:
+            axes = self.ax
+        else:
+            axes = addto.ax
+        X, Y = np.meshgrid(x, y)
+        Z = z
+        wire = axes.plot_wireframe(X, Y, Z, rstride=stride, cstride=stride,
+                                   **kwargs)
+
+        # Retrive data from internal storage of plot_wireframe, then delete it
+        nx, ny, _  = np.shape(wire._segments3d)
+        wire_x = np.array(wire._segments3d)[:, :, 0].ravel()
+        wire_y = np.array(wire._segments3d)[:, :, 1].ravel()
+        wire_z = np.array(wire._segments3d)[:, :, 2].ravel()
+        wire.remove()
+
+        # create data for a LineCollection
+        wire_x1 = np.vstack([wire_x, np.roll(wire_x, 1)])
+        wire_y1 = np.vstack([wire_y, np.roll(wire_y, 1)])
+        wire_z1 = np.vstack([wire_z, np.roll(wire_z, 1)])
+        to_delete = np.arange(0, nx*ny, ny)
+        wire_x1 = np.delete(wire_x1, to_delete, axis=1)
+        wire_y1 = np.delete(wire_y1, to_delete, axis=1)
+        wire_z1 = np.delete(wire_z1, to_delete, axis=1)
+        scalars = np.delete(wire_z, to_delete)
+
+        segs = [list(zip(xl, yl, zl)) for xl, yl, zl in \
+                         zip(wire_x1.T, wire_y1.T, wire_z1.T)]
+
+        # Plots the wireframe by a  a line3DCollection
+        my_wire = art3d.Line3DCollection(segs, cmap=cmap)
+        my_wire.set_array(scalars)
+        axes.add_collection(my_wire)
+
         return self
 
     def contour(self, x, y, z, name='countour', addto=None, **kwargs):
@@ -533,9 +573,9 @@ class pyg3d(pyg2d.pyg2d):
                          place='up-right', axes=None, **kwargs):
         if axes is None:
             axes = self.ax
-        _x, _y, _ = proj3d.proj_transform(x, y, z, self.ax.get_proj())
+        _x, _y, _ = proj3d.proj_transform(x, y, z, axes.get_proj())
         super(pyg3d, self).add_data_pointer(_x, point=_y, string=string,
-                                            place='up-right', axes=None,
+                                            place=place, axes=None,
                                             **kwargs)
 
     def add_text(self, x, y, z, string=None, ha='center', va='center',

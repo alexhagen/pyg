@@ -1,11 +1,11 @@
-import twod
+from . import twod
 import matplotlib.image as mpimg
 import numpy as np
 from matplotlib.patches import Ellipse, Polygon, Circle
 from matplotlib.image import BboxImage, AxesImage
 from colour import Color
 import os
-import copy_reg
+import copyreg
 import types
 
 def _pickle_method(method):
@@ -24,7 +24,7 @@ def _unpickle_method(func_name, obj, cls):
             break
         return func.__get__(obj, cls)
 
-copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
+copyreg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 
 class ann_im(twod.pyg2d):
     def __init__(self, im_filename, proj_matrix=None):
@@ -62,11 +62,6 @@ class ann_im(twod.pyg2d):
         img = mpimg.imread(im_filename)
         img2 = np.zeros_like(img)
         ax.imshow(img, interpolation='gaussian')
-        #print ax.get_position()
-        #print ax.get_axes_locator()
-        #x0 = 100.0
-        #y0 = 100.0
-        #self.fig.figimage(img, blx*100.0, bly*100.0, origin='upper')
         pmatrix = self.get_proj_matrix(fname=im_filename)
         self.axes_stack[name] = (ax, pmatrix)
         return self
@@ -76,18 +71,16 @@ class ann_im(twod.pyg2d):
             fname = self.im_filename
         proj_matrix = \
             os.popen("identify -verbose %s | grep proj_matrix" % fname).read()
-        exec(proj_matrix.replace(" ", "").replace(":", "="))
-        self.proj_matrix = proj_matrix
+        namespace = {}
+        exec(proj_matrix.replace(" ", "").replace(":", "="), namespace)
+        self.proj_matrix = namespace['proj_matrix']
 
     def convert_3d_to_2d(self, x, y, z, proj_matrix=None):
         if proj_matrix is None:
             proj_matrix = self.proj_matrix
         arr = np.array([x, y, z, 1.])
         mat = np.array(proj_matrix).T
-        #print "array"
-        #print arr
-        #print "projection matrix"
-        #print mat
+        mat = mat.astype(float)
         pcam = np.matmul(arr, mat)
         pcam /= pcam[2]
         # print pcam
