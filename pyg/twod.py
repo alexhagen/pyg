@@ -25,7 +25,7 @@ from math import exp
 import matplotlib
 import string
 import gc
-from colour import Color
+from colour.colour import Color
 import numpy as np
 import platform
 import shutil
