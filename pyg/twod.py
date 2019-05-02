@@ -1882,6 +1882,8 @@ class pyg2d(object):
             add = '.pgf'
         elif format is 'pdf':
             add = '.pdf'
+        elif (format is 'jpeg') or (format is 'jpg'):
+            add = '.jpg'
         elif format is 'svg':
             # save as pdf, then pdf2svg
             if not os.path.isfile(filename + self.sizestring[size] + '.svg') \
