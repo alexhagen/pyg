@@ -1241,11 +1241,15 @@ class pyg2d(object):
                     aspect='auto')
         return self
 
-    def colorbar(self):
-        self.cax = self.fig.add_axes([0.95, 0.05, 0.25, 0.50])
-        self.cax.set_position([1.02, 0.08, 0.04, 0.87])
-        norm = matplotlib.colors.Normalize(vmin=self.cmax,
-                                           vmax=self.cmin)
+    def colorbar(self, loc1=None, loc2=None):
+        if loc1 is None:
+            loc1 = [0.95, 0.05, 0.25, 0.50]
+        self.cax = self.fig.add_axes(loc1)
+        if loc2 is None:
+            loc2 = [0.95, 0.08, 0.04, 0.87]
+        self.cax.set_position(loc2)
+        norm = matplotlib.colors.Normalize(vmax=self.cmax,
+                                           vmin=self.cmin)
         self.cb = matplotlib.colorbar.ColorbarBase(self.cax, cmap=self.cmap,
                                                    norm=norm)
         return self
