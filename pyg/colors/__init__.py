@@ -1,4 +1,5 @@
-from colour import Color as _c
+
+from colour.colour import Color as _c
 
 
 class palette(dict):

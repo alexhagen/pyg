@@ -1,4 +1,5 @@
-from colour import Color as _c
+#from colour import Color as _c
+from colour.colour import Color as _c
 from matplotlib.colors import LinearSegmentedColormap
 #import matplotlib.pyplot as plt
 from copy import copy, deepcopy
