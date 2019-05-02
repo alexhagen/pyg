@@ -1,4 +1,4 @@
-from colour import Color as c
+from colour.colour import Color as c
 
 pu_colors = {'black': '#000000',
              'white': '#ffffff',
