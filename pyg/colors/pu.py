@@ -1,4 +1,9 @@
-from colour.colour import Color as c
+#from colour.colour import Color as c
+
+try:
+    from colour.colour import Color as c
+except ModuleNotFoundError:
+    from colour import Color as c
 
 pu_colors = {'black': '#000000',
              'white': '#ffffff',

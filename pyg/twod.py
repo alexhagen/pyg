@@ -25,7 +25,10 @@ from math import exp
 import matplotlib
 import string
 import gc
-from colour.colour import Color
+try:
+    from colour.colour import Color
+except ModuleNotFoundError:
+    from colour import Color
 import numpy as np
 import platform
 import shutil
