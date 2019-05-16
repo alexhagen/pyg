@@ -1231,13 +1231,21 @@ class pyg2d(object):
         self.contours = cfunction(X, Y, Z, levels=levels, cmap=self.cmap, **kwargs)
         return self
 
-    def surf(self, X, Y, Z, cmap, axes=None, **kwargs):
+    def surf(self, X, Y, Z, cmap, axes=None, interpolation='bilinear',
+             **kwargs):
+        """Plot the a three dimensional function's output with colormap `cmap`.
+
+        :param: X
+        :param: Y
+        :param: Z
+        :returns: plot with added surface
+        """
         if axes is None:
             axes = self.ax
         self.cmin = np.nanmin(Z)
         self.cmax = np.nanmax(Z)
         self.cmap = cmap
-        axes.imshow(Z, cmap=cmap, interpolation='bilinear',
+        axes.imshow(Z, cmap=cmap, interpolation=interpolation,
                     vmin=self.cmin, vmax=self.cmax, origin='lower',
                     extent=[np.nanmin(X), np.nanmax(X),
                             np.nanmin(Y), np.nanmax(Y)],
