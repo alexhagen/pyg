@@ -1286,6 +1286,19 @@ class pyg2d(object):
                                                    norm=norm)
         return self
 
+    def colorbar2(self, cmin, cmax, cmap, loc1=None, loc2=None):
+        if loc1 is None:
+            loc1 = [0.95, 0.05, 0.25, 0.50]
+        self.cax2 = self.fig.add_axes(loc1)
+        if loc2 is None:
+            loc2 = [0.95, 0.08, 0.04, 0.87]
+        self.cax2.set_position(loc2)
+        norm = matplotlib.colors.Normalize(vmax=cmax,
+                                           vmin=cmin)
+        self.cb2 = matplotlib.colorbar.ColorbarBase(self.cax2, cmap=cmap,
+                                                   norm=norm)
+        return self
+
     def clabel(self, label):
         self.ylabel(label, axes=self.cax)
         return self
