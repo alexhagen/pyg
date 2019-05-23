@@ -583,11 +583,11 @@ class pyg2d(object):
             postition ``(2,1)``).
         :return: None
         """
-        gsstr = str(subp)
+        gsstr = str(subp).replace('(', '').replace(')', '').split(',')
         gs1 = int(gsstr[0])
         gs2 = int(gsstr[1])
         gs3 = int(gsstr[2])
-        self.ax2 = self.fig.add_subplot(subp, polar=polar, **kwargs)
+        self.ax2 = self.fig.add_subplot(*subp, polar=polar, **kwargs)
         self.ax.change_geometry(gs1, gs2, 1)
         self.ax2.change_geometry(gs1, gs2, gs3)
         self.ax_subp.append(self.ax2)
