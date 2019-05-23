@@ -1270,7 +1270,7 @@ class pyg2d(object):
                     vmin=self.cmin, vmax=self.cmax, origin='lower',
                     extent=[np.nanmin(X), np.nanmax(X),
                             np.nanmin(Y), np.nanmax(Y)],
-                    aspect='auto')
+                    aspect='auto', **kwargs)
         return self
 
     def colorbar(self, loc1=None, loc2=None):

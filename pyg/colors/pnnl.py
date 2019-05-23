@@ -128,6 +128,25 @@ for s, l in zip(np.linspace(0.0, end_c.saturation, 256),
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
 brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
 
+def brand_blue(mpl=True, a_low=0.2, a_high=1.0):
+    start_c = _c(pnnl_colors["white"])
+    brand_blue_cmap = list(start_c.range_to(_c(pnnl_colors["sapphire"]), 256))
+    cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_blue_cmap]
+    brand_blue_cmap_mpl = LinearSegmentedColormap.from_list('brand_blue_cmap', cmap_tuple_list)
+    alphas = np.linspace(a_low, a_high, len(cmap_tuple_list))
+    cmap_tuple_list = [(__c.red, __c.green, __c.blue, a) for __c, a in zip(brand_blue_cmap, alphas)]
+    return LinearSegmentedColormap.from_list('brand_blue_cmap', cmap_tuple_list)
+
+def brand(mpl=True, a_low=0.2, a_high=1.0):
+    start_c = _c(pnnl_colors["white"])
+    brand_cmap = list(start_c.range_to(_c(pnnl_colors["copper"]), 256))
+    cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in brand_cmap]
+    brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
+    alphas = np.linspace(a_low, a_high, len(cmap_tuple_list))
+    cmap_tuple_list = [(__c.red, __c.green, __c.blue, a) for __c, a in zip(brand_cmap, alphas)]
+    return LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list)
+
+
 start_c = _c(pnnl_colors["sapphire"])
 mid_c = _c(pnnl_colors['silver'])
 end_c = _c(pnnl_colors["gold"])
