@@ -697,7 +697,8 @@ class pyg2d(object):
         else:
             axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
 
-    def xticks(self, ticks, labels, axes=None, rotation='horizontal'):
+    def xticks(self, ticks=None, labels=None, axes=None, rotation='horizontal',
+               log=False, fmt=None):
         """ ``pyg2d.xticks`` changes the ticks and labels to provided values.
 
         ``pyg2d.xticks`` will move the ticks on the abscissa to the
@@ -714,14 +715,22 @@ class pyg2d(object):
             plt.sca(axes)
         else:
             axes = self.ax
-        axes.set_xticks(ticks)
-        axes.set_xticklabels(labels, rotation=rotation)
-        if rotation is 'vertical':
-            plt.margins(0.2)
-            # Tweak spacing to prevent clipping of tick-labels
-            plt.subplots_adjust(bottom=0.15)
+        if not log:
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(labels, rotation=rotation)
+            if rotation is 'vertical':
+                plt.margins(0.2)
+                # Tweak spacing to prevent clipping of tick-labels
+                plt.subplots_adjust(bottom=0.15)
+        else:
+            if fmt is None:
+                fmt = r'$10^{{{.2f}}}$'
+            xts = axes.get_xticks()
+            labels = [fmt.format(_t) for _t in xts]
+            axes.set_xticklabels(labels, rotation=rotation)
 
-    def yticks(self, ticks, labels, axes=None):
+    def yticks(self, ticks=None, labels=None, axes=None,
+               log=False, fmt=None):
         """ ``pyg2d.yticks`` changes the ticks and labels to provided values.
 
         ``pyg2d.yticks`` will move the ticks on the ordinate axis to the
@@ -738,8 +747,20 @@ class pyg2d(object):
             plt.sca(axes)
         else:
             axes = self.ax
-        axes.set_yticks(ticks)
-        axes.set_yticklabels(labels)
+        if not log:
+            axes.set_yticks(ticks)
+            axes.set_yticklabels(labels)
+        else:
+            if fmt is None:
+                fmt = r'$10^{{{.2f}}}$'
+            yts = axes.get_yticks()
+            labels = [fmt.format(_t) for _t in yts]
+            axes.set_yticklabels(labels)
+        return self
+
+    def cticks(self, *args, **kwargs):
+        self.yticks(*args, axes=self.cax, **kwargs)
+        return self
 
     def markers_on(self, markersize=1, alpha=1.0):
         """ ``pyg2d.markers_on`` turns on the data markers for all data sets.
