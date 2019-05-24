@@ -1253,7 +1253,7 @@ class pyg2d(object):
         return self
 
     def surf(self, X, Y, Z, cmap, axes=None, interpolation='bilinear',
-             **kwargs):
+             vmin=None, vmax=None, **kwargs):
         """Plot the a three dimensional function's output with colormap `cmap`.
 
         :param: X
@@ -1266,8 +1266,12 @@ class pyg2d(object):
         self.cmin = np.nanmin(Z)
         self.cmax = np.nanmax(Z)
         self.cmap = cmap
+        if vmin is None:
+            vmin = self.cmin
+        if vmax is None:
+            vmax = self.cmax
         axes.imshow(Z, cmap=cmap, interpolation=interpolation,
-                    vmin=self.cmin, vmax=self.cmax, origin='lower',
+                    vmin=vmin, vmax=vmax, origin='lower',
                     extent=[np.nanmin(X), np.nanmax(X),
                             np.nanmin(Y), np.nanmax(Y)],
                     aspect='auto', **kwargs)
