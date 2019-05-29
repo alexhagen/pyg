@@ -216,6 +216,13 @@ class pyg3d(pyg2d.pyg2d):
         self.cbar = self.fig.colorbar(self.cax[0])
     #self.artists.append(self.cbar)
 
+    def add_arrow(self, x1, x2, y1, y2, z1, z2, *args, axes=None, **kwargs):
+        if axes is None:
+            axes = self.ax
+        _x1, _y1, _ = proj3d.proj_transform(x1, y1, z1, axes.get_proj())
+        _x2, _y2, _ = proj3d.proj_transform(x2, y2, z2, axes.get_proj())
+        super(pyg3d, self).add_arrow(_x1, _x2, _y1, _y2, *args, **kwargs)
+
 
     def surf(self, x, y, z, c=None, cmap=color.brand_cmap, addto=None,
              name='surf', zmin=None, zmax=None, **kwargs):
