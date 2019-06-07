@@ -686,7 +686,15 @@ class pyg2d(object):
         inc_objs = []
         inc_titles = []
         for i in range(0, len(legtitles)):
-            if 'connector' not in legtitles[i] and exclude not in legtitles[i]:
+            _include = True
+            if isinstance(exclude, list):
+                for _exclude in exclude:
+                    if _exclude in legtitles[i]:
+                        _include = False
+            elif isinstance(exclude, str):
+                if exclude in legtitles[i]:
+                    _include = False
+            if 'connector' not in legtitles[i] and _include:
                 inc_objs.append(legobjs[i])
                 inc_titles.append(legtitles[i])
         if loc == 'out':
@@ -1061,7 +1069,7 @@ class pyg2d(object):
             pass
         return string
 
-    def add_data_pointer(self, x, curve=None, point=None, string=None,
+    def add_data_pointer(self, x, curve=None, string=None, point=None,
                          place='up-right', ha='left', axes=None, latex=True,
                          fc='0.3', rel_place=False):
         if isinstance(x, int):
@@ -1069,7 +1077,10 @@ class pyg2d(object):
         if axes is None:
             axes = self.ax
         if curve is not None:
-            y = curve.at(x)
+            if isinstance(curve, float) or isinstance(curve, int):
+                y = curve
+            else:
+                y = curve.at(x)
         elif point is not None:
             y = point
         else:

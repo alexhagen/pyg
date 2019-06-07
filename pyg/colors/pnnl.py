@@ -120,7 +120,7 @@ brand_cmap_mpl = LinearSegmentedColormap.from_list('brand_cmap', cmap_tuple_list
 brand_cmap = []
 end_c = _c(pnnl_colors['copper'])
 for s, l in zip(np.linspace(0.0, end_c.saturation, 256),
-                np.linspace(0.97, end_c.luminance, 256)):
+                np.linspace(0.80, end_c.luminance, 256)):
     __color__ = deepcopy(end_c)
     __color__.saturation = s
     __color__.luminance = l
