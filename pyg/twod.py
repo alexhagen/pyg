@@ -807,13 +807,18 @@ class pyg2d(object):
             if "fit" in key:
                 self.lines[key].set_linewidth(1.0)
 
-    def lines_on(self):
+    def lines_on(self, include=None):
         """ ``pyg2d.lines_on`` turns on the connector lines for all data sets.
 
         :return: None
         """
-        for key in self.lines:
-            self.lines[key].set_linewidth(1.0)
+        if include is not None:
+            for key in self.lines:
+                if include in key:
+                    self.lines[key].set_linewidth(1.)
+        else:
+            for key in self.lines:
+                self.lines[key].set_linewidth(1.0)
 
     def lines_off(self, exclude='saljfdaljdfaslkjfd'):
         """ ``pyg2d.lines_off`` turns off the connector lines for all data sets.
@@ -2042,12 +2047,16 @@ class pyg2d(object):
             if lyx.run_from_ipython():
                 __counter__ = random.randint(0, 2e9)
                 fig_width = self.fig.get_figwidth() * self.fig.dpi * scale
+                if not os.path.isfile('/tmp/NBCONVERT'):
+                    filename_for_html = "%s?%d" % (use_filename, __counter__)
+                else:
+                    filename_for_html = use_filename
                 fig_html = r"""
                     <div class='pygfigure' name='%s' style='text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;'>
-                        <img style='margin: auto; max-width:100%%; width:%fpx; height: auto;' src='%s?%d' />
+                        <img style='margin: auto; max-width:100%%; width:%fpx; height: auto;' src='%s' />
                         <div style='margin: auto; text-align: center;' class='figurecaption'><b>Figure %d:</b> %s</div>
                     </div>
-                """ % (label, fig_width, use_filename, __counter__, bi.__figcount__, self.caption)
+                """ % (label, fig_width, filename_for_html, bi.__figcount__, self.caption)
                 __figures__.val[label] = bi.__figcount__
                 bi.__figcount__ += 1
                 fig = HTML(fig_html)
