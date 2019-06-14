@@ -1472,9 +1472,9 @@ class pyg2d(object):
         axes.set_xscale('log', nonposx='mask')
         self.allartists.append('logx')
 
-    def log_log(self):
-        self.semi_log_x()
-        self.semi_log_y()
+    def log_log(self, axes=None):
+        self.semi_log_x(axes=axes)
+        self.semi_log_y(axes=axes)
 
     def add_circle(self, x, y, r, fc='red', ec='None', alpha=0.5, axes=None,
                    name='plot'):
