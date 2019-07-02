@@ -1260,12 +1260,12 @@ class pyg2d(object):
         self.cmin = np.nanmin(Z)
         self.cmax = np.nanmax(Z)
         levels = np.linspace(self.cmin, self.cmax, levels)
-        self.cmap = cmap
+        #self.cmap = cmap
         if fill:
             cfunction = axes.contourf
         else:
             cfunction = axes.contour
-        self.contours = cfunction(X, Y, Z, levels=levels, cmap=self.cmap, **kwargs)
+        self.contours = cfunction(X, Y, Z, levels=levels, cmap=cmap, **kwargs)
         return self
 
     def surf(self, X, Y, Z, cmap, axes=None, interpolation='bilinear',
