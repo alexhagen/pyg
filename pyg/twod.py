@@ -779,13 +779,14 @@ class pyg2d(object):
             self.lines[key].set_alpha(alpha)
             self.lines[key].set_markersize(markersize)
 
-    def markers_off(self):
+    def markers_off(self, exclude='afsljkdsal;jfda'):
         """ ``pyg2d.markers_off`` turns off the data markers for all data sets.
 
         :return: None
         """
         for key in self.lines:
-            self.lines[key].set_markersize(0)
+            if exclude not in key:
+                self.lines[key].set_markersize(0)
 
     def fit_markers_off(self):
         """ ``pyg2d.fit_markers_off`` turns off the data markers for any
