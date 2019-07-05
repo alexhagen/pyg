@@ -283,10 +283,19 @@ cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in flame_lowcon_rev_cm
 flame_lowcon_rev_cmap_mpl = LinearSegmentedColormap.from_list('flame_lowcon_rev_cmap', cmap_tuple_list)
 
 
-c1 = _c(pnnl_colors["platinum40"])
+c1 = _c(pnnl_colors["white"])
 n1 = 256
-c2 = _c(pnnl_colors['silver'])
+c2 = _c(pnnl_colors['platinum40'])
 gray_cmap = list(c1.range_to(c2, n1))
 
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in gray_cmap]
 gray_cmap_mpl = LinearSegmentedColormap.from_list('gray_cmap', cmap_tuple_list)
+
+c1 = _c(pnnl_colors["silver40"])
+n1 = 128
+c2 = _c(pnnl_colors['platinum40'])
+n2 = 128
+c3 = _c(pnnl_colors['silver40'])
+mid_cmap = list(c1.range_to(c2, n1)) + list(c2.range_to(c3, n2))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in mid_cmap]
+mid_cmap_mpl = LinearSegmentedColormap.from_list('mid_cmap', cmap_tuple_list)

@@ -1077,7 +1077,7 @@ class pyg2d(object):
 
     def add_data_pointer(self, x, curve=None, string=None, point=None,
                          place='up-right', ha='left', axes=None, latex=True,
-                         fc='0.3', rel_place=False):
+                         fc='0.3', rel_place=False, **kwargs):
         if isinstance(x, int):
             x = float(x)
         if axes is None:
@@ -1116,7 +1116,7 @@ class pyg2d(object):
         ann = axes.annotate(string,
                       xy=(x, y),
                       xytext=curve_place,
-                      ha=ha, color=fc,
+                      ha=ha, color=fc, **kwargs,
                       arrowprops=dict(arrowstyle="fancy",
                                       fc=fc, ec="none",
                                       patchB=Ellipse((2, -1), 0.5, 0.5),
@@ -1258,9 +1258,10 @@ class pyg2d(object):
             axes = self.ax
         if log:
             Z = np.log(Z)
-        self.cmin = np.nanmin(Z)
-        self.cmax = np.nanmax(Z)
-        levels = np.linspace(self.cmin, self.cmax, levels)
+        if isinstance(levels, int):
+            self.cmin = np.nanmin(Z)
+            self.cmax = np.nanmax(Z)
+            levels = np.linspace(self.cmin, self.cmax, levels)
         #self.cmap = cmap
         if fill:
             cfunction = axes.contourf
