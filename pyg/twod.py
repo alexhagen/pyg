@@ -678,8 +678,8 @@ class pyg2d(object):
             axes = self.ax
         if loc == 'out':
             self.leg = \
-                axes.legend(loc='lower center', bbox_to_anchor=(0.5, 1.00),
-                            mode="expand", borderaxespad=0., **kwargs)
+                axes.legend(loc='lower center', bbox_to_anchor=(0.05, 1.00, 0.9, 0.1),
+                            borderaxespad=0., **kwargs)
         else:
             self.leg = axes.legend(loc=loc, **kwargs)
         (legobjs, legtitles) = axes.get_legend_handles_labels()
@@ -699,7 +699,7 @@ class pyg2d(object):
                 inc_titles.append(legtitles[i])
         if loc == 'out':
             lobj = axes.legend(inc_objs, inc_titles, loc='lower center',
-                               bbox_to_anchor=(0.5, 1.00), mode="expand",
+                               bbox_to_anchor=(0.05, 1.00, 0.9, 0.1),
                                borderaxespad=0., **kwargs)
             self.artists.append(lobj)
         else:
