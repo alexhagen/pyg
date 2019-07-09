@@ -261,29 +261,29 @@ class pyg3d(pyg2d.pyg2d):
                                    **kwargs)
 
         # Retrive data from internal storage of plot_wireframe, then delete it
-        nx, ny, _  = np.shape(wire._segments3d)
-        wire_x = np.array(wire._segments3d)[:, :, 0].ravel()
-        wire_y = np.array(wire._segments3d)[:, :, 1].ravel()
-        wire_z = np.array(wire._segments3d)[:, :, 2].ravel()
-        wire.remove()
-
-        # create data for a LineCollection
-        wire_x1 = np.vstack([wire_x, np.roll(wire_x, 1)])
-        wire_y1 = np.vstack([wire_y, np.roll(wire_y, 1)])
-        wire_z1 = np.vstack([wire_z, np.roll(wire_z, 1)])
-        to_delete = np.arange(0, nx*ny, ny)
-        wire_x1 = np.delete(wire_x1, to_delete, axis=1)
-        wire_y1 = np.delete(wire_y1, to_delete, axis=1)
-        wire_z1 = np.delete(wire_z1, to_delete, axis=1)
-        scalars = np.delete(wire_z, to_delete)
-
-        segs = [list(zip(xl, yl, zl)) for xl, yl, zl in \
-                         zip(wire_x1.T, wire_y1.T, wire_z1.T)]
-
-        # Plots the wireframe by a  a line3DCollection
-        my_wire = art3d.Line3DCollection(segs, cmap=cmap)
-        my_wire.set_array(scalars)
-        axes.add_collection(my_wire)
+        #nx, ny, _  = np.shape(wire._segments3d)
+        #wire_x = np.array(wire._segments3d)[:, :, 0].ravel()
+        #wire_y = np.array(wire._segments3d)[:, :, 1].ravel()
+        #wire_z = np.array(wire._segments3d)[:, :, 2].ravel()
+        #wire.remove()
+#
+        ## create data for a LineCollection
+        #wire_x1 = np.vstack([wire_x, np.roll(wire_x, 1)])
+        #wire_y1 = np.vstack([wire_y, np.roll(wire_y, 1)])
+        #wire_z1 = np.vstack([wire_z, np.roll(wire_z, 1)])
+        #to_delete = np.arange(0, nx*ny, ny)
+        #wire_x1 = np.delete(wire_x1, to_delete, axis=1)
+        #wire_y1 = np.delete(wire_y1, to_delete, axis=1)
+        #wire_z1 = np.delete(wire_z1, to_delete, axis=1)
+        #scalars = np.delete(wire_z, to_delete)
+#
+        #segs = [list(zip(xl, yl, zl)) for xl, yl, zl in \
+        #                 zip(wire_x1.T, wire_y1.T, wire_z1.T)]
+#
+        ## Plots the wireframe by a  a line3DCollection
+        #my_wire = art3d.Line3DCollection(segs, cmap=cmap)
+        #my_wire.set_array(scalars)
+        #axes.add_collection(my_wire)
 
         return self
 
