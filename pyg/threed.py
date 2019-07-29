@@ -258,7 +258,7 @@ class pyg3d(pyg2d.pyg2d):
         X, Y = np.meshgrid(x, y)
         Z = z
         wire = axes.plot_wireframe(X, Y, Z, rstride=stride, cstride=stride,
-                                   **kwargs)
+                                   cmap=cmap, **kwargs)
 
         # Retrive data from internal storage of plot_wireframe, then delete it
         #nx, ny, _  = np.shape(wire._segments3d)
