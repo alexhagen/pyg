@@ -287,7 +287,6 @@ c1 = _c(pnnl_colors["white"])
 n1 = 256
 c2 = _c(pnnl_colors['platinum40'])
 gray_cmap = list(c1.range_to(c2, n1))
-
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in gray_cmap]
 gray_cmap_mpl = LinearSegmentedColormap.from_list('gray_cmap', cmap_tuple_list)
 
@@ -299,3 +298,17 @@ c3 = _c(pnnl_colors['silver40'])
 mid_cmap = list(c1.range_to(c2, n1)) + list(c2.range_to(c3, n2))
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in mid_cmap]
 mid_cmap_mpl = LinearSegmentedColormap.from_list('mid_cmap', cmap_tuple_list)
+
+c1 = _c(pnnl_colors["white"])
+n1 = 256
+c2 = _c(pnnl_colors['bronze'])
+bronze_cmap = list(c1.range_to(c2, n1))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in bronze_cmap]
+bronze_cmap_mpl = LinearSegmentedColormap.from_list('bronze_cmap', cmap_tuple_list)
+
+c1 = _c(pnnl_colors["white"])
+n1 = 256
+c2 = _c(pnnl_colors['gold'])
+gold_cmap = list(c1.range_to(c2, n1))
+cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in gold_cmap]
+gold_cmap_mpl = LinearSegmentedColormap.from_list('gold_cmap', cmap_tuple_list)
