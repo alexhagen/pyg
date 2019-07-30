@@ -1,5 +1,6 @@
 from . import twod
 import matplotlib.image as mpimg
+import matplotlib.transforms as mptrans
 import numpy as np
 from matplotlib.patches import Ellipse, Polygon, Circle
 from matplotlib.image import BboxImage, AxesImage
@@ -35,7 +36,19 @@ class ann_im(twod.pyg2d):
             img = mpimg.imread(im_filename)
             self.im_filename = im_filename
             self.ax.set_facecolor('white')
-            self.ax.imshow(img, interpolation='gaussian')
+            #self.aximg = self.ax.figure.figimage(img, 0.0, 0.0, resize=False)
+            ##self.aximg.set_clip_path(False)
+            #self.aximg.set_clip_path(None)
+            #self.aximg.set_clip_box(None)
+            #print(self.aximg.magnification)
+            #self.aximg.magnification(2.0)
+            ##tform = mptrans.Affine2D().scale(2.0)
+            ##self.aximg.set_transform(tform)
+            #print(dir(self.aximg))
+            #print(img.shape)
+            #self.xlim(0, img.shape[1])
+            #self.ylim(0, img.shape[0])
+            self.ax.imshow(img, interpolation='nearest')
             #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
             if proj_matrix is None:
                 self.get_proj_matrix()
@@ -135,11 +148,11 @@ class ann_im(twod.pyg2d):
                                              place=place, **kwargs)
         return self
 
-    #def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
-    #    x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
-    #    x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
-    #    super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
-    #    return self
+    def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
+        x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
+        x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
+        super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+        return self
 
     def add_text(self, x, y, z, string=None, **kwargs):
         if 'axes' in kwargs:
@@ -173,13 +186,15 @@ class ann_im(twod.pyg2d):
         #h2 = self.add_vline(x2, y1 + offset * total_width,
         #               y1 + offset * total_width + length * total_width,
         #               lw=lw, axes=axes)
-        x_mid = (x2 + x1) / 2.0
-        y_mid = y1#(y1 + offset * total_width +
-        #         y1 + offset * total_width + length * total_width) / 2.0
-        z_mid = z1#(z1 + offset * total_width +
-        #         z1 + offset * total_width + length * total_width) / 2.0
-        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, z_mid, z_mid, fc=fc, string=self.latex_string(string), axes=axes)
-        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, z_mid, z_mid, fc=fc, string=self.latex_string(string), axes=axes)
+        _x1, _y1 = self.convert_3d_to_2d(x1, y1, z1)
+        _x2, _y2 = self.convert_3d_to_2d(x2, y1, z1)
+        x_mid = (_x2 + _x1) / 2.0
+        y_mid = (_y1 + _y2) / 2.0
+        print(x_mid, y_mid)
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+                            string=self.latex_string(string), axes=axes)
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+                            string=self.latex_string(string), axes=axes)
         self.allartists.append((h3, h4))
         return self
 
