@@ -180,17 +180,54 @@ class ann_im(twod.pyg2d):
         total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
         length = 0.05
         lw = 0.5
-        #h1 = self.add_vline(x1, y1 + offset * total_width,
-        #               y1 + offset * total_width + length * total_width,
-        #               lw=lw, axes=axes)
-        #h2 = self.add_vline(x2, y1 + offset * total_width,
-        #               y1 + offset * total_width + length * total_width,
-        #               lw=lw, axes=axes)
         _x1, _y1 = self.convert_3d_to_2d(x1, y1, z1)
         _x2, _y2 = self.convert_3d_to_2d(x2, y1, z1)
         x_mid = (_x2 + _x1) / 2.0
         y_mid = (_y1 + _y2) / 2.0
-        print(x_mid, y_mid)
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+                            string=self.latex_string(string), axes=axes)
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+                            string=self.latex_string(string), axes=axes)
+        self.allartists.append((h3, h4))
+        return self
+
+    def add_ymeasure(self, x1, y1, y2, z1, string=None, place=None, offset=0.01,
+                     axes=None, units='', fc='black'):
+        if axes is None:
+            axes = self.ax
+        if string is None:
+            string = r"$%.0f\,\mathrm{" % np.sqrt((x2 - x1)**2.0) + units + "}$"
+        if place is None:
+            place = "up"
+        total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
+        length = 0.05
+        lw = 0.5
+        _x1, _y1 = self.convert_3d_to_2d(x1, y1, z1)
+        _x2, _y2 = self.convert_3d_to_2d(x1, y2, z1)
+        x_mid = (_x2 + _x1) / 2.0
+        y_mid = (_y1 + _y2) / 2.0
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+                            string=self.latex_string(string), axes=axes)
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+                            string=self.latex_string(string), axes=axes)
+        self.allartists.append((h3, h4))
+        return self
+
+    def add_zmeasure(self, x1, y1, z1, z2, string=None, place=None, offset=0.01,
+                     axes=None, units='', fc='black'):
+        if axes is None:
+            axes = self.ax
+        if string is None:
+            string = r"$%.0f\,\mathrm{" % np.sqrt((x2 - x1)**2.0) + units + "}$"
+        if place is None:
+            place = "up"
+        total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
+        length = 0.05
+        lw = 0.5
+        _x1, _y1 = self.convert_3d_to_2d(x1, y1, z1)
+        _x2, _y2 = self.convert_3d_to_2d(x1, y1, z2)
+        x_mid = (_x2 + _x1) / 2.0
+        y_mid = (_y1 + _y2) / 2.0
         h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
                             string=self.latex_string(string), axes=axes)
         h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
