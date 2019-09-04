@@ -112,6 +112,7 @@ preamble = [
             r'\definecolor{grey40}{HTML}{A7A9AC}',
             r'\usepackage{amsmath, amssymb}',
             r'\usepackage{stackrel}',
+            r'\usepackage{wasysym}',
             r'\providecommand{\unit}[1]{\ensuremath{' +
             r'{\mathrm{#1}}}}'
            ]

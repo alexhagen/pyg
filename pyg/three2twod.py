@@ -170,7 +170,7 @@ class ann_im(twod.pyg2d):
         return self
 
     def add_xmeasure(self, x1, x2, y1, z1, string=None, place=None, offset=0.01,
-                     axes=None, units='', fc='black'):
+                     axes=None, units='', fc='0.3'):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -192,7 +192,7 @@ class ann_im(twod.pyg2d):
         return self
 
     def add_ymeasure(self, x1, y1, y2, z1, string=None, place=None, offset=0.01,
-                     axes=None, units='', fc='black'):
+                     axes=None, units='', fc='0.3'):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -214,7 +214,7 @@ class ann_im(twod.pyg2d):
         return self
 
     def add_zmeasure(self, x1, y1, z1, z2, string=None, place=None, offset=0.01,
-                     axes=None, units='', fc='black'):
+                     axes=None, units='', fc='0.3'):
         if axes is None:
             axes = self.ax
         if string is None:
