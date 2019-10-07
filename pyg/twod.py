@@ -2217,20 +2217,23 @@ class pyg2d(object):
         if directory not in bi.__exported_files__:
             bi.__exported_files__[directory] = []
         if hasattr(self, 'pgf_filename'):
-            self.add_metadata(self.pgf_filename)
-            shutil.copy(self.pgf_filename, directory)
-            bi.__exported_files__[directory] \
-                .extend([os.path.basename(self.pgf_filename)])
+            if self.pgf_filename is not None:
+                self.add_metadata(self.pgf_filename)
+                shutil.copy(self.pgf_filename, directory)
+                bi.__exported_files__[directory] \
+                    .extend([os.path.basename(self.pgf_filename)])
         if hasattr(self, 'pdf_filename'):
-            self.add_metadata(self.pdf_filename)
-            shutil.copy(self.pdf_filename, directory)
-            bi.__exported_files__[directory] \
-                .extend([os.path.basename(self.pdf_filename)])
+            if self.pdf_filename is not None:
+                self.add_metadata(self.pdf_filename)
+                shutil.copy(self.pdf_filename, directory)
+                bi.__exported_files__[directory] \
+                    .extend([os.path.basename(self.pdf_filename)])
         if hasattr(self, 'png_filename'):
-            self.add_metadata(self.png_filename)
-            shutil.copy(self.png_filename, directory)
-            bi.__exported_files__[directory] \
-                .extend([os.path.basename(self.png_filename)])
+            if self.png_filename is not None:
+                self.add_metadata(self.png_filename)
+                shutil.copy(self.png_filename, directory)
+                bi.__exported_files__[directory] \
+                    .extend([os.path.basename(self.png_filename)])
 
 
 def commit_publications(message='automated commit'):
