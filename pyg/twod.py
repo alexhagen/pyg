@@ -46,7 +46,7 @@ except ModuleNotFoundError:
     from . import bi as bi
 from lyxithea import lyxithea as lyx
 from itertools import count
-
+from scipy.stats import gaussian_kde
 import pickle
 #import dill as pickle
 import os.path
@@ -521,6 +521,15 @@ class pyg2d(object):
             if __context__.val == 'pres':
                 self.rcparamsarray["font.size"] = 14.0
         matplotlib.rcParams.update(self.rcparamsarray)
+
+    def drop_main_axis(self):
+        self.ax.spines['top'].set_visible(False)
+        self.ax.spines['right'].set_visible(False)
+        self.ax.spines['bottom'].set_visible(False)
+        self.ax.spines['left'].set_visible(False)
+        self.xticks([], [], axes=self.ax)
+        self.yticks([], [], axes=self.ax)
+        return self
 
     def add_to_preamble(self, line):
         preamble = self.rcparamsarray['pgf.preamble']
@@ -1576,6 +1585,27 @@ class pyg2d(object):
             return False
         return True
 
+    def scatter_density_plot(self, x, y, cmap=None, axes=None, **kwargs):
+        """Plot a scatter plot colored by the density of the points.
+
+        inputs:
+            - `x`: locations of each point on the `x` axis - a 1-D list or
+                array
+            - `y`: locations of each point on the `y` axis - a 1-D list or
+                array
+            - `cmap`: the colormap to use to color the points
+        """
+        if cmap is None:
+            cmap = 'viridis'
+        if axes is None:
+            axes = self.ax
+        xy = np.vstack([x, y])
+        z = gaussian_kde(xy)(xy)
+        idx = z.argsort()
+        x, y, z = x[idx], y[idx], z[idx]
+        axes.scatter(x, y, c=z, edgecolor='', cmap=cmap, **kwargs)
+        return self
+
     def violin(self, x, y, points=20, widths=None, showmeans=True,
                showextrema=True, fc=None, ec=None, lw=0.5, axes=None,
                name='', **kwargs):
@@ -1713,28 +1743,6 @@ class pyg2d(object):
     def y_axis_off(self):
         self.ax.spines['left'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
-
-    def scatter_density_plot(self):
-        '''import numpy as np
-        import matplotlib.pyplot as plt
-        from scipy.stats import gaussian_kde
-
-        # Generate fake data
-        x = np.random.normal(size=1000)
-        y = x * 3 + np.random.normal(size=1000)
-
-        # Calculate the point density
-        xy = np.vstack([x,y])
-        z = gaussian_kde(xy)(xy)
-
-        # Sort the points by density, so that the densest points are plotted last
-        idx = z.argsort()
-        x, y, z = x[idx], y[idx], z[idx]
-
-        fig, ax = plt.subplots()
-        ax.scatter(x, y, c=z, s=50, edgecolor='')
-        plt.show()'''
-        pass
 
     def trisurf(self, x, y, tri, vector=False):
         """Create a surface plot on a two-d chart.
