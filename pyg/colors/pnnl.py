@@ -312,3 +312,12 @@ c2 = _c(pnnl_colors['gold'])
 gold_cmap = list(c1.range_to(c2, n1))
 cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in gold_cmap]
 gold_cmap_mpl = LinearSegmentedColormap.from_list('gold_cmap', cmap_tuple_list)
+
+def from_to(c1, c2, name='new_cmap'):
+    c1 = _c(pnnl_colors[c1])
+    n1 = 256
+    c2 = _c(pnnl_colors[c2])
+    _cmap = list(c1.range_to(c2, n1))
+    cmap_tuple_list = [(__c.red, __c.green, __c.blue) for __c in _cmap]
+    _cmap_mpl = LinearSegmentedColormap.from_list(name, cmap_tuple_list)
+    return _cmap_mpl
