@@ -998,6 +998,35 @@ class pyg2d(object):
         self.allartists.append(ann)
         return self
 
+    def draw_brace(ax, xspan, text):
+        """Draws an annotated brace on the axes.
+
+        Original code written by
+        https://stackoverflow.com/users/4691830/joooeey
+        for stack overflow question
+        https://stackoverflow.com/questions/18386210/annotating-ranges-of-data-in-matplotlib
+        """
+        xmin, xmax = xspan
+        xspan = xmax - xmin
+        ax_xmin, ax_xmax = ax.get_xlim()
+        xax_span = ax_xmax - ax_xmin
+        ymin, ymax = ax.get_ylim()
+        yspan = ymax - ymin
+        resolution = int(xspan/xax_span*100)*2+1 # guaranteed uneven
+        beta = 300./xax_span # the higher this is, the smaller the radius
+
+        x = np.linspace(xmin, xmax, resolution)
+        x_half = x[:resolution/2+1]
+        y_half_brace = (1/(1.+np.exp(-beta*(x_half-x_half[0])))
+                        + 1/(1.+np.exp(-beta*(x_half-x_half[-1]))))
+        y = np.concatenate((y_half_brace, y_half_brace[-2::-1]))
+        y = ymin + (.05*y - .01)*yspan # adjust vertical position
+
+        ax.autoscale(False)
+        ax.plot(x, y, color='black', lw=1)
+
+        ax.text((xmax+xmin)/2., ymin+.07*yspan, text, ha='center', va='bottom')
+
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
                      axes=None, units='', log=False):
         if axes is None:
