@@ -1452,15 +1452,15 @@ class pyg2d(object):
                                    ec=ec, alpha=1.0, label=name))
 
     def add_to_legend(self, name=None, line=True, arrow=False, color=None, linestyle=None,
-                      linewidth=0.5, alpha=1.0, axes=None):
+                      linewidth=0.5, alpha=1.0, axes=None, x=np.nan, y=np.nan):
         if axes is None:
             axes = self.ax
         if not line:
-            patch = axes.add_patch(Polygon([[0, 0], [0, 0], [0, 0]],
+            patch = axes.add_patch(Polygon([[x, y], [x, y], [x, y]],
                                    color=color, alpha=alpha, label=name))
             self.bars[name] = patch
         elif not arrow:
-            line = axes.add_line(Line2D([0, 0], [0, 0],
+            line = axes.add_line(Line2D([x, y], [x, y],
                                  color=color, alpha=alpha,
                                  linestyle=linestyle, linewidth=linewidth,
                                  label=name))
@@ -1471,6 +1471,11 @@ class pyg2d(object):
                                  linestyle=linestyle, linewidth=linewidth,
                                  label=name))
             self.bars[name] = line
+
+    def subplots_adjust(self, *args, **kwargs):
+        """ left=None, bottom=None, right=None, top=None, wspace=None, hspace=None"""
+        plt.subplots_adjust(*args, **kwargs)
+        return self
 
     def fill_betweenx(self, x1, x2, y, fc='red', name='plot', ec='None',
                       leg=True, axes=None, alpha=0.5):
