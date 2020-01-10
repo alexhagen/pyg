@@ -2055,7 +2055,7 @@ class pyg2d(object):
                 or self.force_export or __force__.val:
                 self.fig.savefig(filename + self.sizestring[size] + add,
                             bbox_extra_artists=self.artists, bbox_inches='tight',
-                            transparent=True)
+                            transparent=True, dpi=300)
         if format is 'html':
             add = '.html'
             import mpld3
