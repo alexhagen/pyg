@@ -1028,7 +1028,7 @@ class pyg2d(object):
         ax.text((xmax+xmin)/2., ymin+.07*yspan, text, ha='center', va='bottom')
 
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
-                     axes=None, units='', log=False):
+                     axes=None, units='', log=False, **kwargs):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -1050,8 +1050,8 @@ class pyg2d(object):
             y_mid = (y2 + y1) / 2.0
         x_mid = (x1 - offset * total_width +
                  x1 - offset * total_width - length * total_width) / 2.0
-        h3 = self.add_arrow(x_mid, x_mid, y_mid, y1, string=self.latex_string(string), axes=axes)
-        h4 = self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string), axes=axes)
+        h3 = self.add_arrow(x_mid, x_mid, y_mid, y1, string=self.latex_string(string), axes=axes, **kwargs)
+        h4 = self.add_arrow(x_mid, x_mid, y_mid, y2, string=self.latex_string(string), axes=axes, **kwargs)
         self.allartists.append((h1, h2, h3, h4))
 
     def add_detail_circ(self, x, y, r, string, r2=None, fc='0.5', axes=None):
@@ -1089,7 +1089,7 @@ class pyg2d(object):
                                       connectionstyle="angle, angleA=90, angleB=180, rad=%f" % (1.)))
 
     def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
-                     axes=None, units='', log=False, rotation=0):
+                     axes=None, units='', log=False, rotation=0, **kwargs):
         if axes is None:
             axes = self.ax
         if string is None:
@@ -1111,8 +1111,8 @@ class pyg2d(object):
             x_mid = (x2 + x1) / 2.0
         y_mid = (y1 + offset * total_width +
                  y1 + offset * total_width + length * total_width) / 2.0
-        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation)
-        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation)
+        h3 = self.add_arrow(x_mid, x1, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation, **kwargs)
+        h4 = self.add_arrow(x_mid, x2, y_mid, y_mid, string=self.latex_string(string), axes=axes, rotation=rotation, **kwargs)
         self.allartists.append((h1, h2, h3, h4))
 
     def equal_aspect_ratio(self):
