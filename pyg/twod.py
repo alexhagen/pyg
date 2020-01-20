@@ -52,6 +52,8 @@ import pickle
 import os.path
 import warnings
 import __init__
+from sys import platform
+import os
 _c = __init__.__builtins__['colors']
 #from pym import func as pym
 
@@ -166,8 +168,6 @@ def load(fname, svg=False):
 
 class svg(object):
     def __init__(self, filename):
-        from sys import platform
-        import os
         if platform == "darwin":
             self.filename = os.path.abspath(filename)
             self.show_filename = filename#os.path.abspath(filename)
@@ -178,7 +178,6 @@ class svg(object):
 
     @staticmethod
     def get_width(fname):
-        from sys import platform
         if platform == "linux" or platform == "linux2":
             command = 'inkscape'
         elif platform == "darwin":
@@ -201,7 +200,6 @@ class svg(object):
 
     @staticmethod
     def get_height(fname):
-        from sys import platform
         if platform == "linux" or platform == "linux2":
             command = 'inkscape'
         elif platform == "darwin":
@@ -236,7 +234,6 @@ class svg(object):
         :param bool convert: Whether to convert to PDF from SVG - default
             ``True``
         """
-        from sys import platform
         if platform == "linux" or platform == "linux2":
             command = 'inkscape'
         elif platform == "darwin":
@@ -291,10 +288,16 @@ class svg(object):
                 if fig_width * curr_height / curr_width > bbox[1]:
                     fig_width = bbox[1] * curr_width / curr_height
             svg_filename = self.filename
-            pdf_filename = self.filename.replace('.svg', '.pdf')
+            if '.svg' in self.filename:
+                pdf_filename = self.filename.replace('.svg', '.pdf')
+            elif '.png' in self.filename:
+                pdf_filename = self.filename.replace('.png', '.pdf')
             if convert:
-                os.system('{command} --without-gui -f {svg_filename} -A {pdf_filename}'.format(command=command, pdf_filename=pdf_filename, svg_filename=svg_filename))
-                #os.system('rsvg-convert -f pdf -o {pdf_filename} {svg_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename))
+                if '.png' in self.filename:
+                    _cmd = 'convert {svg_filename} -quality 100 -units PixelsPerInch -density 300x300 {pdf_filename}'.format(pdf_filename=pdf_filename, svg_filename=svg_filename)
+                else:
+                    _cmd = '{command} --without-gui -f {svg_filename} -A {pdf_filename}'.format(command=command, pdf_filename=pdf_filename, svg_filename=svg_filename)
+                os.system(_cmd)
             if sideways:
                 env = 'sidewaysfigure'
             else:
