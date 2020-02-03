@@ -1132,7 +1132,7 @@ class pyg2d(object):
 
     def add_data_pointer(self, x, curve=None, string=None, point=None,
                          place='up-right', ha='left', axes=None, latex=True,
-                         fc='0.3', rel_place=False, **kwargs):
+                         fc='0.3', rel_place=False, curve_vert=True, **kwargs):
         if isinstance(x, int):
             x = float(x)
         if axes is None:
@@ -1168,15 +1168,23 @@ class pyg2d(object):
                 curve_place = place
         if latex:
             string = self.latex_string(string)
+        if curve_vert:
+            ap = dict(arrowstyle="fancy",
+                      fc=fc, ec="none",
+                      patchB=Ellipse((2, -1), 0.5, 0.5),
+                      connectionstyle=
+                      "angle3,angleA=0,angleB=-90")
+        else:
+            ap = dict(arrowstyle="fancy",
+                      fc=fc, ec="none",
+                      patchB=Ellipse((2, -1), 0.5, 0.5),
+                      connectionstyle=
+                      "angle3,angleA=90,angleB=0")
         ann = axes.annotate(string,
                       xy=(x, y),
                       xytext=curve_place,
                       ha=ha, color=fc, **kwargs,
-                      arrowprops=dict(arrowstyle="fancy",
-                                      fc=fc, ec="none",
-                                      patchB=Ellipse((2, -1), 0.5, 0.5),
-                                      connectionstyle=
-                                      "angle3,angleA=0,angleB=-90")
+                      arrowprops=ap
                       )
         self.allartists.append(ann)
 
