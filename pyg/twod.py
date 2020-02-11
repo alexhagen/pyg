@@ -608,7 +608,7 @@ class pyg2d(object):
             gs2 = int(gsstr[1])
             gs3 = int(gsstr[2])
             subp = [gs1, gs2, gs3]
-        if isinstance(subp, list):
+        if isinstance(subp, list) or isinstance(subp, tuple):
             gs1 = subp[0]
             gs2 = subp[1]
             gs3 = subp[2]
