@@ -1334,7 +1334,7 @@ class pyg2d(object):
         return self
 
     def surf(self, X, Y, Z, cmap, axes=None, interpolation='bilinear',
-             vmin=None, vmax=None, **kwargs):
+             vmin=None, vmax=None, aspect='auto', origin='lower', **kwargs):
         """Plot the a three dimensional function's output with colormap `cmap`.
 
         :param: X
@@ -1344,18 +1344,18 @@ class pyg2d(object):
         """
         if axes is None:
             axes = self.ax
-        self.cmin = np.nanmin(Z)
-        self.cmax = np.nanmax(Z)
+        self.cmin = np.nanmin(Z[np.isfinite(Z)])
+        self.cmax = np.nanmax(Z[np.isfinite(Z)])
         self.cmap = cmap
         if vmin is None:
             vmin = self.cmin
         if vmax is None:
             vmax = self.cmax
         axes.imshow(Z, cmap=cmap, interpolation=interpolation,
-                    vmin=vmin, vmax=vmax, origin='lower',
+                    vmin=vmin, vmax=vmax, origin=origin,
                     extent=[np.nanmin(X), np.nanmax(X),
                             np.nanmin(Y), np.nanmax(Y)],
-                    aspect='auto', **kwargs)
+                    aspect=aspect, **kwargs)
         return self
 
     def colorbar(self, loc1=None, loc2=None):
@@ -1891,13 +1891,15 @@ class pyg2d(object):
         self.ax2.get_yaxis().tick_right();
 
     def add_hist(self, y, bins, facecolor='gray', alpha=0.5, name='plot',
-                 **kwargs):
+                 axes=None, log=False, **kwargs):
+        if axes is None:
+            axes = self.ax
         self.plotnum = self.plotnum + 1
         if name is 'plot':
             name = 'plot%d' % (self.plotnum)
-        n, bins, patches = self.ax.hist(y, bins=bins, label=name,
+        n, bins, patches = axes.hist(y, bins=bins, label=name,
                                     facecolor=facecolor, alpha=alpha,
-                                    normed=False)
+                                    normed=False, log=log, **kwargs)
         self.bars[name] = patches
         self.allartists.append(self.bars[name])
         return n, bins
