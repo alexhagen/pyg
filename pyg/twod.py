@@ -1358,7 +1358,7 @@ class pyg2d(object):
                     aspect=aspect, **kwargs)
         return self
 
-    def colorbar(self, loc1=None, loc2=None):
+    def colorbar(self, loc1=None, loc2=None, **kwargs):
         if loc1 is None:
             loc1 = [0.95, 0.05, 0.25, 0.50]
         self.cax = self.fig.add_axes(loc1)
@@ -1368,7 +1368,7 @@ class pyg2d(object):
         norm = matplotlib.colors.Normalize(vmax=self.cmax,
                                            vmin=self.cmin)
         self.cb = matplotlib.colorbar.ColorbarBase(self.cax, cmap=self.cmap,
-                                                   norm=norm)
+                                                   norm=norm, **kwargs)
         return self
 
     def colorbar2(self, cmin, cmax, cmap, loc1=None, loc2=None):
@@ -1385,7 +1385,7 @@ class pyg2d(object):
         return self
 
     def clabel(self, label):
-        self.ylabel(label, axes=self.cax)
+        self.cb.set_label(label)
         return self
 
     def fill_under_curve(self, curve, scale=0., *args, **kwargs):
@@ -1941,6 +1941,7 @@ class pyg2d(object):
         fstring=fstring.replace("\\rmfamily\\fontsize{8.328000}{9.993600}\\selectfont","\\scriptsize")
         fstring=fstring.replace("\\rmfamily\\fontsize{12.000000}{14.400000}\\selectfont","\\normalsize")
         fstring = ''.join(list(filter(lambda x: x in string.printable, fstring)))
+        fstring = fstring.replace('pgfimage', 'includegraphics')
         f.write(fstring)
         f.close()
 
@@ -2163,7 +2164,9 @@ class pyg2d(object):
             if self.force_pdf:
                 include_line = '\includegraphics{%s}' % self.pdf_filename
             else:
-                include_line = '\input{%s}' % (self.pgf_filename)
+                pgf_path = self.pgf_filename#os.path.abspath(self.pgf_filename)
+                head, tail = os.path.split(pgf_path)
+                include_line = f'\import{{{head}/}}{{{tail}}}'
             if __context__.val == 'tufte' and self.width > 5.0:
                 figfloat = 'figure*'
                 centering = ''
@@ -2192,10 +2195,10 @@ class pyg2d(object):
                                    self.caption, self.label, figfloat)
             __figures__.val[label] = bi.__figcount__
             bi.__figcount__ += 1
-            fig = Latex(strlatex)
-            self.close()
             if need_string:
                 return strlatex
+            fig = Latex(strlatex)
+            self.close()
         else:
             if self.pdf_filename is not None:
                 if platform.system() == "Darwin":
