@@ -729,7 +729,8 @@ class pyg2d(object):
                                borderaxespad=0., **kwargs)
             self.artists.append(lobj)
         else:
-            axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
+            lobj = axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
+            self.artists.append(lobj)
 
     def xticks(self, ticks=None, labels=None, axes=None, rotation='horizontal',
                log=False, fmt=None):
@@ -959,7 +960,7 @@ class pyg2d(object):
 
     def add_text(self, x1, y1, string=None, ha='center', va='center',
                  color="#746C66", rotation=0, axes=None, fontsize=None,
-                 backgroundcolor=None, backgroundalpha=None):
+                 backgroundcolor=None, backgroundalpha=None, fig=False):
         """Add text at a specified spot on the axis.
 
         inputs:
@@ -991,13 +992,18 @@ class pyg2d(object):
         if backgroundcolor is not None and backgroundalpha is not None:
             _bgc = colour(backgroundcolor).hex
             backgroundcolor = _bgc + hex(int(255 * backgroundalpha))[-2:]
+        kwargs = {}
+        if fig:
+            kwargs['transform'] = self.fig.transFigure
         if fontsize is not None:
             ann = axes.text(x1, y1, string, fontsize=fontsize, ha=ha, va=va,
                             color=color, rotation=rotation,
-                            backgroundcolor=backgroundcolor)
+                            backgroundcolor=backgroundcolor, **kwargs)
         else:
             ann = axes.text(x1, y1, string, ha=ha, va=va, color=color,
-                            rotation=rotation, backgroundcolor=backgroundcolor)
+                            rotation=rotation, backgroundcolor=backgroundcolor,
+                            **kwargs)
+        self.artists.append(ann)
         self.allartists.append(ann)
         return self
 
@@ -1760,7 +1766,12 @@ class pyg2d(object):
                                                             lw=linewidth,
                                                             clip_on=True,
                                                             markevery=markevery)
-                self.lines[name] = (line)
+                name_number = 0
+                lines_key = f'{name}_{name_number}'
+                while lines_key in self.lines.keys():
+                    name_number += 1
+                    lines_key = f'{name}_{name_number}'
+                self.lines[lines_key] = (line)
             else:
                 self.add_line(x, y, xerr=None, yerr=None, name=name,
                               linewidth=0.5, linestyle=linestyle,
