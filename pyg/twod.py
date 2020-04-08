@@ -687,7 +687,8 @@ class pyg2d(object):
             axes = self.ax
         axes.set_ylim([miny, maxy])
 
-    def legend(self, loc=1, exclude='saljfdaljdfaslkjfd', axes=None, **kwargs):
+    def legend(self, loc=1, exclude='saljfdaljdfaslkjfd', title_fontsize=None,
+               axes=None, **kwargs):
         """ ``pyg2d.legend`` shows the legend on the plot.
 
         ``pyg2d.legend`` toggles the legend showing on.  This is done by getting
@@ -731,6 +732,8 @@ class pyg2d(object):
         else:
             lobj = axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
             self.artists.append(lobj)
+        if title_fontsize is not None:
+            plt.setp(lobj,fontsize=title_fontsize)
 
     def xticks(self, ticks=None, labels=None, axes=None, rotation='horizontal',
                log=False, fmt=None):
