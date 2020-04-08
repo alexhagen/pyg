@@ -733,7 +733,7 @@ class pyg2d(object):
             lobj = axes.legend(inc_objs, inc_titles, loc=loc, **kwargs)
             self.artists.append(lobj)
         if title_fontsize is not None:
-            plt.setp(lobj,fontsize=title_fontsize)
+            lobj.get_title().set_fontsize(title_fontsize)
 
     def xticks(self, ticks=None, labels=None, axes=None, rotation='horizontal',
                log=False, fmt=None):
