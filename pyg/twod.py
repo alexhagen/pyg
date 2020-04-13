@@ -1803,6 +1803,16 @@ class pyg2d(object):
         self.ax.spines['left'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
 
+    def remove_spine(self, spine, axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.spines[spine].set_visible(False)
+    
+    def add_spine(self, spine, axes=None):
+        if axes is None:
+            axes = self.ax
+        axes.spines[spine].set_visible(True)
+
     def trisurf(self, x, y, tri, vector=False):
         """Create a surface plot on a two-d chart.
         """
