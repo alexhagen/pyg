@@ -196,7 +196,7 @@ class ann_im(twod.pyg2d):
         if axes is None:
             axes = self.ax
         if string is None:
-            string = r"$%.0f\,\mathrm{" % np.sqrt((x2 - x1)**2.0) + units + "}$"
+            string = r"$%.0f\,\mathrm{" % np.sqrt((y2 - y1)**2.0) + units + "}$"
         if place is None:
             place = "up"
         total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
@@ -218,7 +218,7 @@ class ann_im(twod.pyg2d):
         if axes is None:
             axes = self.ax
         if string is None:
-            string = r"$%.0f\,\mathrm{" % np.sqrt((x2 - x1)**2.0) + units + "}$"
+            string = r"$%.0f\,\mathrm{" % np.sqrt((z2 - z1)**2.0) + units + "}$"
         if place is None:
             place = "up"
         total_width = np.max(axes.get_ylim()) - np.min(axes.get_ylim())
