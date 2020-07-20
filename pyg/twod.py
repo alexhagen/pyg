@@ -1639,6 +1639,12 @@ class pyg2d(object):
             return False
         return True
 
+    def scatter(self, x, y, *args, axes=None, **kwargs):
+        if axes is None:
+            axes = self.ax
+        axes.scatter(x, y, *args, **kwargs)
+        return self
+
     def scatter_density_plot(self, x, y, cmap=None, axes=None, **kwargs):
         """Plot a scatter plot colored by the density of the points.
 
