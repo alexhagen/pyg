@@ -8,6 +8,7 @@ from colour import Color
 import os
 import copyreg
 import types
+import copy
 
 def _pickle_method(method):
     func_name = method.im_func.__name__
@@ -48,7 +49,15 @@ class ann_im(twod.pyg2d):
             #print(img.shape)
             #self.xlim(0, img.shape[1])
             #self.ylim(0, img.shape[0])
-            self.ax.imshow(img, interpolation='nearest', zorder=100000)
+            ax1 = self.ax
+            ax1.imshow(img, interpolation='nearest', zorder=0)
+            ax2 = self.fig.add_axes(self.ax.get_position())
+            ax2.set_axis_off()
+            ax2.set_facecolor('none')
+            ax2.set_xlim(ax1.get_xlim())
+            ax2.set_ylim(ax1.get_ylim())
+            self.ax = ax2
+
             #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
             if proj_matrix is None:
                 self.get_proj_matrix()
@@ -74,7 +83,11 @@ class ann_im(twod.pyg2d):
         ax.set_facecolor('white')
         img = mpimg.imread(im_filename)
         img2 = np.zeros_like(img)
-        ax.imshow(img, interpolation='gaussian')
+        ax.imshow(img, interpolation='gaussian', zorder=0)
+        ax2 = self.fig.add_axes([blx, bly, w, h])
+        ax2.set_axis_off()
+        ax2.set_facecolor('transparent')
+        self.ax = ax2
         pmatrix = self.get_proj_matrix(fname=im_filename)
         self.axes_stack[name] = (ax, pmatrix)
         return self
@@ -122,7 +135,7 @@ class ann_im(twod.pyg2d):
             place = place.replace('down', 'up')
 
         super(ann_im, self).add_data_pointer(x, point=y, string=string,
-                                             place=place, **kwargs)
+                                             place=place, axes=self.ax, **kwargs)
         return self
 
     def add_2d_data_pointer(self, x, y,  string='', place='down-right',
@@ -145,21 +158,115 @@ class ann_im(twod.pyg2d):
             place = place.replace('down', 'up')
 
         super(ann_im, self).add_data_pointer(x, point=y, string=string,
-                                             place=place, **kwargs)
+                                             place=place, axes=self.ax, **kwargs)
         return self
 
     def add_arrow(self, x1, x2, y1, y2, z1, z2, **kwargs):
         x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
         x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
-        super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+        super(ann_im, self).add_arrow(x1, x2, y1, y2, zorder=100, axes=self.ax, **kwargs)
         return self
 
     def add_line(self, x1, x2, y1, y2, z1, z2, **kwargs):
         x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
         x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
         #ap = dict(arrowstyle="-", fc=fc, ec=fc, alpha=alpha)
-        super(ann_im, self).add_line([x1, x2], [y1, y2], **kwargs)
+        super(ann_im, self).add_line([x1, x2], [y1, y2], zorder=100, axes=self.ax, **kwargs)
         #super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
+        return self
+
+    def add_angle(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle0=None, angle1=None, textangle=None,
+                  **kwargs):
+        c = np.array(c)
+        p1 = np.array(p1)
+        p2 = np.array(p2)
+        v1 = p1 - c
+        v2 = p2 - c
+        r1 = np.sqrt(np.sum(np.power(v1, 2.0)))
+        r2 = np.sqrt(np.sum(np.power(v2, 2.0)))
+        # this is a vector normal to the plane
+        n = np.cross(v1, v2)
+        # now solve for a vector where dot(u, v) = 0 and dot(u, n) = 0
+        u = np.cross(n, v1)
+        u = r2*u/np.sqrt(np.sum(np.power(u, 2.0)))
+        v1 = v1 / np.sqrt(np.sum(np.power(v1, 2.0)))
+        u = u / np.sqrt(np.sum(np.power(u, 2.0)))
+        # now find the second vector (this one should be 90deg from p1 in the same plane as p1 and p2)
+        xc = c[0]
+        x1 = v1[0]
+        x2 = u[0]
+        yc = c[1]
+        y1 = v1[1]
+        y2 = u[1]
+        zc = c[2]
+        z1 = v1[2]
+        z2 = u[2]
+        xs = []
+        ys = []
+        zs = []
+        if angle0 is None:
+            angle0 = 0.0
+        if angle1 is None:
+            angle1 = np.arccos((x1*x2 + y1*y2 + z1*z2) / (r1 + r2))
+        for phi in np.linspace(angle0, angle1, 25):
+            xi = xc + r1*np.cos(phi)*x1 + r2*np.sin(phi)*x2
+            yi = yc + r1*np.cos(phi)*y1 + r2*np.sin(phi)*y2
+            zi = zc + r1*np.cos(phi)*z1 + r2*np.sin(phi)*z2
+            xs.append(xi)
+            ys.append(yi)
+            zs.append(zi)
+        _xs = []
+        _ys = []
+        for x, y, z in zip(xs, ys, zs):
+            _x, _y = self.convert_3d_to_2d(x, y, z)
+            _xs.append(_x)
+            _ys.append(_y)
+        super(ann_im, self).add_line(_xs, _ys, axes=self.ax, **kwargs)
+        return self
+
+    def get_pos_by_angle(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle=None):
+        c = np.array(c)
+        p1 = np.array(p1)
+        p2 = np.array(p2)
+        v1 = p1 - c
+        v2 = p2 - c
+        r1 = np.sqrt(np.sum(np.power(v1, 2.0)))
+        r2 = np.sqrt(np.sum(np.power(v2, 2.0)))
+        # this is a vector normal to the plane
+        n = np.cross(v1, v2)
+        # now solve for a vector where dot(u, v) = 0 and dot(u, n) = 0
+        u = np.cross(n, v1)
+        u = r2*u/np.sqrt(np.sum(np.power(u, 2.0)))
+        v1 = v1 / np.sqrt(np.sum(np.power(v1, 2.0)))
+        u = u / np.sqrt(np.sum(np.power(u, 2.0)))
+        # now find the second vector (this one should be 90deg from p1 in the same plane as p1 and p2)
+        xc = c[0]
+        x1 = v1[0]
+        x2 = u[0]
+        yc = c[1]
+        y1 = v1[1]
+        y2 = u[1]
+        zc = c[2]
+        z1 = v1[2]
+        z2 = u[2]
+        xi = xc + r1*np.cos(angle)*x1 + r2*np.sin(angle)*x2
+        yi = yc + r1*np.cos(angle)*y1 + r2*np.sin(angle)*y2
+        zi = zc + r1*np.cos(angle)*z1 + r2*np.sin(angle)*z2
+        return xi, yi, zi
+
+    def add_anglemeasure(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle=None, textangle=None, string='', **kwargs):
+        kwargs_plot = copy.copy(kwargs)
+        if 'color' in kwargs.keys():
+            kwargs_plot['linecolor'] = kwargs['color']
+            del kwargs_plot['color']
+        self.add_line(c[0], p1[0], c[1], p1[1], c[2], p1[2], **kwargs_plot)
+        self.add_line(c[0], p2[0], c[1], p2[1], c[2], p2[2], **kwargs_plot)
+        if textangle is None:
+            textangle = 0.1
+        self.add_angle(c=c, p1=p1, p2=p2, angle0=0.0, angle1=(0.5 - textangle)*angle, **kwargs_plot)
+        self.add_angle(c=c, p1=p1, p2=p2, angle0=(0.5 + textangle)*angle, angle1=angle, **kwargs_plot)
+        textx, texty, textz = self.get_pos_by_angle(c, p1, p2, angle=0.5*angle)
+        self.add_text(textx, texty, textz, string=string, **kwargs)
         return self
 
     def add_text(self, x, y, z, string=None, **kwargs):
@@ -174,7 +281,7 @@ class ann_im(twod.pyg2d):
             axes = self.ax
             proj_matrix = self.proj_matrix
         x, y = self.convert_3d_to_2d(x, y, z, proj_matrix=proj_matrix)
-        super(ann_im, self).add_text(x, y, string=string, **kwargs)
+        super(ann_im, self).add_text(x, y, string=string, axes=self.ax, **kwargs)
         return self
 
     def add_xmeasure(self, x1, x2, y1, z1, string=None, place=None, offset=0.01,

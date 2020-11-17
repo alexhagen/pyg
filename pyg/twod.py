@@ -9,13 +9,13 @@ import matplotlib
 #import bi
 if False: #bi.is_interactive():
     #print 'using interactive backend'
-    matplotlib.use('Qt5Agg', warn=False)
+    matplotlib.use('Qt5Agg')#, warn=False)
 else:
     #print 'using non interactive backend'
     if "DISPLAY" not in os.environ.keys():
-        matplotlib.use('Agg', warn=False)
+        matplotlib.use('Agg')#, warn=False)
     else:
-        matplotlib.use('pgf', warn=False)
+        matplotlib.use('pgf')#, warn=False)
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse, Polygon, Circle, Arrow, FancyArrowPatch
 from matplotlib.lines import Line2D
@@ -514,7 +514,7 @@ class pyg2d(object):
                 "savefig.transparent": True,
                 "path.simplify": True,
                 "text.usetex": True,
-                "text.latex.unicode": True,
+                #"text.latex.unicode": True,
                 'axes.unicode_minus': False,
                 "pgf.preamble": preamble,
                 "text.latex.preamble": preamble,
@@ -768,7 +768,7 @@ class pyg2d(object):
             axes.set_xticklabels(labels, rotation=rotation)
 
     def yticks(self, ticks=None, labels=None, axes=None,
-               log=False, fmt=None):
+               log=False, fmt=None, **kwargs):
         """ ``pyg2d.yticks`` changes the ticks and labels to provided values.
 
         ``pyg2d.yticks`` will move the ticks on the ordinate axis to the
@@ -786,7 +786,7 @@ class pyg2d(object):
         else:
             axes = self.ax
         if not log:
-            axes.set_yticks(ticks)
+            axes.set_yticks(ticks, **kwargs)
             axes.set_yticklabels(labels)
         else:
             if fmt is None:
@@ -946,7 +946,7 @@ class pyg2d(object):
 
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
                   alpha=1.0, ha='center', va='center', arrowprops=None,
-                  rotation=0):
+                  rotation=0, **kwargs):
         if arrowprops is None:
             arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc, alpha=alpha)
         if axes is None:
@@ -958,12 +958,12 @@ class pyg2d(object):
                       horizontalalignment=ha,
                       verticalalignment=va,
                       rotation=rotation,
-                      arrowprops=arrowprops)
+                      arrowprops=arrowprops, **kwargs)
         self.allartists.append(ann)
 
     def add_text(self, x1, y1, string=None, ha='center', va='center',
                  color="#746C66", rotation=0, axes=None, fontsize=None,
-                 backgroundcolor=None, backgroundalpha=None, fig=False):
+                 backgroundcolor=None, backgroundalpha=None, fig=False, **kwargs):
         """Add text at a specified spot on the axis.
 
         inputs:
