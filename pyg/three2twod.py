@@ -29,7 +29,7 @@ def _unpickle_method(func_name, obj, cls):
 copyreg.pickle(types.MethodType, _pickle_method, _unpickle_method)
 
 class ann_im(twod.pyg2d):
-    def __init__(self, im_filename, proj_matrix=None):
+    def __init__(self, im_filename, proj_matrix=None, ortho=False, pscale=1.0):
         super(ann_im, self).__init__()
         self.axes_stack = {}
         self.ax.set_axis_off()
@@ -50,13 +50,22 @@ class ann_im(twod.pyg2d):
             #self.xlim(0, img.shape[1])
             #self.ylim(0, img.shape[0])
             ax1 = self.ax
+            ax1.set_axis_off()
             ax1.imshow(img, interpolation='nearest', zorder=0)
             ax2 = self.fig.add_axes(self.ax.get_position())
+            ax2.invert_yaxis()
             ax2.set_axis_off()
             ax2.set_facecolor('none')
+            ax2.set_aspect('equal')
+            #ax2.plot([0, 128], [0, 128], 'k-')
+            #ax1.plot([0, 256], [0, 256], 'r--')
             ax2.set_xlim(ax1.get_xlim())
             ax2.set_ylim(ax1.get_ylim())
+            self.im_w=img.shape[1]
+            self.im_h = img.shape[0]
             self.ax = ax2
+            self.ortho = ortho
+            self.pscale = pscale
 
             #self.fig.figimage(img, xo, yo, resize=True, origin='lower')
             if proj_matrix is None:
@@ -104,14 +113,19 @@ class ann_im(twod.pyg2d):
     def convert_3d_to_2d(self, x, y, z, proj_matrix=None):
         if proj_matrix is None:
             proj_matrix = self.proj_matrix
-        arr = np.array([x, y, z, 1.])
-        mat = np.array(proj_matrix).T
+        arr = np.array([x, y, z, 1.]).T
+        mat = np.array(proj_matrix)
         mat = mat.astype(float)
-        pcam = np.matmul(arr, mat)
+        pcam = np.matmul(mat, arr)
         pcam /= pcam[2]
         # print pcam
-        x = pcam[0]
-        y = pcam[1]
+        if self.ortho:
+            pcam /= self.pscale
+            x = self.im_w * 0.5 * (1.0 - pcam[0])
+            y = self.im_h * 0.5 * (1.0 + pcam[1])
+        else:
+            x = self.im_w * 0.5 * (pcam[0] + 1)
+            y = self.im_h * 0.5 * (1.0 - pcam[1])
         return x, y
 
     def add_data_pointer(self, x, y, z, string='', place='down-right', **kwargs):
@@ -167,11 +181,11 @@ class ann_im(twod.pyg2d):
         super(ann_im, self).add_arrow(x1, x2, y1, y2, zorder=100, axes=self.ax, **kwargs)
         return self
 
-    def add_line(self, x1, x2, y1, y2, z1, z2, **kwargs):
+    def add_line(self, x1, x2, y1, y2, z1, z2, zorder=100, **kwargs):
         x1, y1 = self.convert_3d_to_2d(x1, y1, z1)
         x2, y2 = self.convert_3d_to_2d(x2, y2, z2)
         #ap = dict(arrowstyle="-", fc=fc, ec=fc, alpha=alpha)
-        super(ann_im, self).add_line([x1, x2], [y1, y2], zorder=100, axes=self.ax, **kwargs)
+        super(ann_im, self).add_line([x1, x2], [y1, y2], zorder=zorder, axes=self.ax, **kwargs)
         #super(ann_im, self).add_arrow(x1, x2, y1, y2, **kwargs)
         return self
 
@@ -299,9 +313,9 @@ class ann_im(twod.pyg2d):
         _x2, _y2 = self.convert_3d_to_2d(x2, y1, z1)
         x_mid = (_x2 + _x1) / 2.0
         y_mid = (_y1 + _y2) / 2.0
-        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, color=fc,
                             string=self.latex_string(string), axes=axes)
-        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, color=fc,
                             string=self.latex_string(string), axes=axes)
         self.allartists.append((h3, h4))
         return self
@@ -321,9 +335,9 @@ class ann_im(twod.pyg2d):
         _x2, _y2 = self.convert_3d_to_2d(x1, y2, z1)
         x_mid = (_x2 + _x1) / 2.0
         y_mid = (_y1 + _y2) / 2.0
-        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, color=fc,
                             string=self.latex_string(string), axes=axes)
-        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, color=fc,
                             string=self.latex_string(string), axes=axes)
         self.allartists.append((h3, h4))
         return self
@@ -343,9 +357,9 @@ class ann_im(twod.pyg2d):
         _x2, _y2 = self.convert_3d_to_2d(x1, y1, z2)
         x_mid = (_x2 + _x1) / 2.0
         y_mid = (_y1 + _y2) / 2.0
-        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, fc=fc,
+        h3 = super(ann_im, self).add_arrow(x_mid, _x1, y_mid, _y1, color=fc,
                             string=self.latex_string(string), axes=axes)
-        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, fc=fc,
+        h4 = super(ann_im, self).add_arrow(x_mid, _x2, y_mid, _y2, color=fc,
                             string=self.latex_string(string), axes=axes)
         self.allartists.append((h3, h4))
         return self
@@ -358,4 +372,5 @@ class ann_im(twod.pyg2d):
 
     def export(self, *args, **kwargs):
         kwargs['force_pdf'] = True
+        kwargs['tight'] = False
         super(ann_im, self).export(*args, **kwargs)

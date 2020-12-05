@@ -944,17 +944,17 @@ class pyg2d(object):
     def change_style(self, rcparamsarray):
         matplotlib.rcParams.update(rcparamsarray)
 
-    def add_arrow(self, x1, x2, y1, y2, string='', axes=None, fc="0.5",
+    def add_arrow(self, x1, x2, y1, y2, string='', axes=None, color="0.5",
                   alpha=1.0, ha='center', va='center', arrowprops=None,
                   rotation=0, **kwargs):
         if arrowprops is None:
-            arrowprops = dict(arrowstyle="-|>", fc=fc, ec=fc, alpha=alpha)
+            arrowprops = dict(arrowstyle="-|>", fc=color, ec=color, alpha=alpha)
         if axes is None:
             axes = self.ax
         ann = axes.annotate(string,
                       xy=(x2, y2),
                       xytext=(x1, y1),
-                      color=fc, alpha=alpha,
+                      color=color, alpha=alpha,
                       horizontalalignment=ha,
                       verticalalignment=va,
                       rotation=rotation,
@@ -1113,10 +1113,10 @@ class pyg2d(object):
         lw = 0.5
         h1 = self.add_vline(x1, y1 + offset * total_width,
                        y1 + offset * total_width + length * total_width,
-                       lw=lw, axes=axes)
+                       lw=lw, axes=axes, **kwargs)
         h2 = self.add_vline(x2, y1 + offset * total_width,
                        y1 + offset * total_width + length * total_width,
-                       lw=lw, axes=axes)
+                       lw=lw, axes=axes, **kwargs)
         if log:
             x_mid = np.sqrt(x1 * x2)
         else:
