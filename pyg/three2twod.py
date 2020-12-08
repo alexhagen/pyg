@@ -154,6 +154,20 @@ class ann_im(twod.pyg2d):
 
     def add_2d_data_pointer(self, x, y,  string='', place='down-right',
                             **kwargs):
+        """Add a datapointer using the two dimensional pixel coordinates of the
+        image.
+
+        :param float x: Pixel location on horizontal coordinate of the point of the
+          pointer.
+        :param float y: Pixel location on vertical coordinate of the point of the 
+          pointer.
+        :param str string: Label to put at the tail of the pointer.
+        :param str place: Location of tail of pointer, can be 'down-right',
+          'down-left', 'up-right', 'up-left', or a tuple indicating an
+          absolute location.
+        :param dict kwargs: Other keyword arguments that will be passed to 
+          the `add_data_pointer` method.
+        """
         if 'axes' in kwargs:
             if isinstance(kwargs['axes'], str):
                 axname = kwargs['axes']
