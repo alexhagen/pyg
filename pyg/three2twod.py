@@ -205,6 +205,16 @@ class ann_im(twod.pyg2d):
 
     def add_angle(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle0=None, angle1=None, textangle=None,
                   **kwargs):
+        """Add a circle segment showing the sweep of an angle.
+
+        :param list c: The center of the circle segment
+        :param list p1: The start of the angle
+        :param list p2: The end of the angle
+        :param list angle0: The start of the angle
+        :param list angle1: The end of the angle
+        :param list textangle: Text to print on the angle
+        :param dict kwargs: Keyword arguments passed on to `add_line`
+        """
         c = np.array(c)
         p1 = np.array(p1)
         p2 = np.array(p2)
