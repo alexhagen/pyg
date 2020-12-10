@@ -263,6 +263,14 @@ class ann_im(twod.pyg2d):
         return self
 
     def get_pos_by_angle(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle=None):
+        """Measure the position that is `angle` radians from `p1` toward `p2`, centered at `c`.
+
+        :param list c: center of circle
+        :param list p1: start of angle sweep
+        :param list p2: end of angle sweep
+        :param list angle: number of radians to sweep from `p1` towards `p2`.
+        :returns: `xi`, `yi`, `zi` the location calculated
+        """
         c = np.array(c)
         p1 = np.array(p1)
         p2 = np.array(p2)
