@@ -300,7 +300,18 @@ class ann_im(twod.pyg2d):
         zi = zc + r1*np.cos(angle)*z1 + r2*np.sin(angle)*z2
         return xi, yi, zi
 
-    def add_anglemeasure(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle=None, textangle=None, string='', **kwargs):
+    def add_anglemeasure(self, c=(0.0, 0.0, 0.0), p1=(0.0, 0.0, 1.0), p2=(0.0, 1.0, 0.0), angle=None, textangle=None,
+                         string='', **kwargs):
+        """Add an annotation showing the angle between two points `p1` and `p2` centered at `c`
+
+        :param list c: the center of the circle
+        :param list p1: the starting point
+        :param list p2: the ending point
+        :param float angle: the number of radians to move from `p1` towards `p2`
+        :param float textangle: the sweep of angle to remove to place the text
+        :param str string: the label to print
+        :param dict kwargs: additional keyword arguments to be passed to `add_line`, `add_angle`, and `add_text`
+        """
         kwargs_plot = copy.copy(kwargs)
         if 'color' in kwargs.keys():
             kwargs_plot['linecolor'] = kwargs['color']
