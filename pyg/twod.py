@@ -430,6 +430,10 @@ class pyg2d(object):
         self.set_rcparams(env)
 
     def set_rcparams(self, env):
+    """Set the rcparams for matplotlib to match the `pyg` style.
+    
+    :param str env: the environment type: such as 'gui' or 'paper'
+    """
         if env is 'gui':
             self.rcparamsarray = {
                 "pgf.texsystem": "pdflatex",
