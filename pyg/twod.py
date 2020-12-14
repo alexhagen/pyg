@@ -1639,6 +1639,11 @@ class pyg2d(object):
             return np.array(x)
 
     def is_num(self, x):
+        """Checks if input `x` is a number of some sort.
+
+        :param x: input which may or may not be a number
+        :returns: `True` if x is a number of a list of number, `False` otherwise
+        """
         try:
             float(x)
         except:
