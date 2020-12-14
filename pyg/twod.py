@@ -530,6 +530,8 @@ class pyg2d(object):
         matplotlib.rcParams.update(self.rcparamsarray)
 
     def drop_main_axis(self):
+    """Turn off the main axes
+    """
         self.ax.spines['top'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
         self.ax.spines['bottom'].set_visible(False)
