@@ -430,10 +430,10 @@ class pyg2d(object):
         self.set_rcparams(env)
 
     def set_rcparams(self, env):
-    """Set the rcparams for matplotlib to match the `pyg` style.
-    
-    :param str env: the environment type: such as 'gui' or 'paper'
-    """
+        """Set the rcparams for matplotlib to match the `pyg` style.
+        
+        :param str env: the environment type: such as 'gui' or 'paper'
+        """
         if env is 'gui':
             self.rcparamsarray = {
                 "pgf.texsystem": "pdflatex",
@@ -530,8 +530,8 @@ class pyg2d(object):
         matplotlib.rcParams.update(self.rcparamsarray)
 
     def drop_main_axis(self):
-    """Turn off the main axes
-    """
+        """Turn off the main axes
+        """
         self.ax.spines['top'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
         self.ax.spines['bottom'].set_visible(False)
