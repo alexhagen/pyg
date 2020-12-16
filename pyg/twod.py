@@ -1651,6 +1651,14 @@ class pyg2d(object):
         return True
 
     def scatter(self, x, y, *args, axes=None, **kwargs):
+        """Plot a collection of points as a scatter plot.
+
+        :param list x: x-coordinates of points
+        :param list y: y-coordinates of points
+        :param axes: which axes to plot to
+        :param dict kwargs: any further keywords arguments to send to 
+            `matplotlib.pyplot.scatter`
+        """
         if axes is None:
             axes = self.ax
         axes.scatter(x, y, *args, **kwargs)
