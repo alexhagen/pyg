@@ -541,6 +541,10 @@ class pyg2d(object):
         return self
 
     def add_to_preamble(self, line):
+        """Add a line to the latex preamble for the plot.
+
+        :param str line: valid LaTeX to add to the plot preamble
+        """
         preamble = self.rcparamsarray['pgf.preamble']
         preamble += '\n' + line + '\n'
         self.rcparamsarray['pgf.preamble'] = preamble

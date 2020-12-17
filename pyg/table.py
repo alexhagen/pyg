@@ -75,8 +75,8 @@ def table(array, caption='', label=None, headers=None, floatfmt=".2f",
         display(Latex(strlatex))
 
 def figures():
-    print bi.__tables__
-    print bi.__figures__
+    print(bi.__tables__)
+    print(bi.__figures__)
 
 def cref(label):
     if run_from_ipython and not need_latex():

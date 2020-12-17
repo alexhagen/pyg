@@ -29,19 +29,19 @@ def _center_ys(layers, mode='spread'):
 
 def nn_layout(G, layers=None, layer_mode='first_digit', center=None, dim=2,
               seed=None):
-    print G._node
+    #print(G._node)
     xs = np.linspace(0., 1., len(layers))
-    print xs, layers
+    #print xs, layers
     pos = np.zeros((len(G), dim))
     ys = _center_ys(layers, mode='expcenter')
     if layer_mode == 'first_digit':
         for i, node in enumerate(G):
-            print node
+            #print node
             pos[i, 0] = xs[int(node[:3])]
             pos[i, 1] = ys[int(node[:3]), int(node[3:])]
     elif layer_mode == 'attr':
         for i, node in enumerate(G._node.items()):
-            print node
+            #print node
             pos[i, 0] = xs[int(node[1]['layer'])]
             pos[i, 1] = ys[int(node[1]['layer']), int(node[1]['node'])]
     pos = pos.astype(np.float32)
