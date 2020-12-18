@@ -552,6 +552,8 @@ class pyg2d(object):
         matplotlib.rcParams.update(self.rcparamsarray)
 
     def pnnl_color_cycle(self):
+        """Updates rcparams with a color cycle made of pnnl colors.
+        """
         from cycler import cycler
         from .colors import pnnl as pnnl
         self.rcparamsarray['axes.prop_cycle'] = \
@@ -565,6 +567,8 @@ class pyg2d(object):
 
     @staticmethod
     def change_context(context):
+        """Changes context ('paper', 'vis', 'darkmode') globally
+        """
         __context__.val = context
 
     def xlabel(self, label, axes=None):
