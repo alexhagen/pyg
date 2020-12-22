@@ -949,6 +949,13 @@ class pyg2d(object):
                               linewidth=lw, color=color, alpha=alpha)
 
     def add_label(self, x, y, string, color='black'):
+        """Adds a string label at a location.
+
+        :param float x: x coordinate to place label
+        :param float y: y coordinate to place label
+        :param str string: text to print at label location
+        :param str color: name or hex of color
+        """
         curve_place = (x, y)
         ann = self.ax.annotate(string,
                          xy=curve_place,
@@ -956,6 +963,10 @@ class pyg2d(object):
         self.allartists.append(ann)
 
     def change_style(self, rcparamsarray):
+        """Changes the style according to argument `rcparamsarray`.
+
+        :param dict rcparamsarray: Dictionary of new style arguments
+        """
         matplotlib.rcParams.update(rcparamsarray)
 
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, color="0.5",
