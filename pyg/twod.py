@@ -811,6 +811,12 @@ class pyg2d(object):
         return self
 
     def cticks(self, *args, **kwargs):
+        """Redefine the ticks on the colorbar.
+
+        :param list args: arguments to pass to `plt.yticks` of the colorbar
+        :param dict kwargs: keyword arguments to pass to `plt.yticks` of the
+            colorbar
+        """
         self.yticks(*args, axes=self.cax, **kwargs)
         return self
 
