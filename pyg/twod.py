@@ -1057,7 +1057,7 @@ class pyg2d(object):
         self.allartists.append(ann)
         return self
 
-    def draw_brace(ax, xspan, text):
+    def draw_brace(self, ax, xspan, text):
         """Draws an annotated brace on the axes.
 
         Original code written by
@@ -1088,6 +1088,19 @@ class pyg2d(object):
 
     def add_vmeasure(self, x1, y1, y2, string=None, place=None, offset=0.01,
                      axes=None, units='', log=False, **kwargs):
+        """Adds a vertical measurement to the plot from `y1` to `y2`.
+
+        :param float x1: horizontal coordinate
+        :param float y1: vertical bottom coordinate
+        :param float y2: vertical top coordinate
+        :param str string: label for coordinate, otherwise the data distance
+        :param place: where to place the label
+        :param float offset: how far to offset the label
+        :param axes: axes object to place measure on
+        :param str units: units to add to data distance measurement
+        :param bool log: whether the plot is in log space
+        :param dict kwargs: keyword arguments to pass to `add_arrow`
+        """
         if axes is None:
             axes = self.ax
         if string is None:
