@@ -978,6 +978,22 @@ class pyg2d(object):
     def add_arrow(self, x1, x2, y1, y2, string='', axes=None, color="0.5",
                   alpha=1.0, ha='center', va='center', arrowprops=None,
                   rotation=0, **kwargs):
+        """Draws and arrow from (x1, y1) to (x2, y2) and labels it.
+
+        :param float x1: horizontal coordinate of the start of the arrow
+        :param float x2: horizontal coordinate of the end of the arrow
+        :param float y1: vertical coordinate of the start of the arrow
+        :param float y2: vertical coordinate of the end of the arrow
+        :param str string: string label for the arrow
+        :param axes: axes object to place this on
+        :param str color: arrow and text color
+        :param float alpha: transparency of the arrow and text
+        :param str ha: horizontal text alignment
+        :param str va: vertical text alignment
+        :param dict arrowprops: properties for the arrow
+        :param float rotation: rotation of the string
+        :param dict kwargs: keyword args passed to `plt.annotate()`
+        """
         if arrowprops is None:
             arrowprops = dict(arrowstyle="-|>", fc=color, ec=color, alpha=alpha)
         if axes is None:
