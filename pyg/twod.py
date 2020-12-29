@@ -1127,6 +1127,16 @@ class pyg2d(object):
         self.allartists.append((h1, h2, h3, h4))
 
     def add_detail_circ(self, x, y, r, string, r2=None, fc='0.5', axes=None):
+        """Add a circle around a small detail
+
+        :param float x: horizontal coordinate of the circle
+        :param float y: vertical coordinate of the circle
+        :param float r: radius of the circle in data coordinates
+        :param str string: circle label
+        :param float r2: second radius, smaller makes this a rounded rectangle
+        :param str fc: circle and label color
+        :param axes: axes object on which to place detail circle
+        """
         if axes is None:
             axes = self.ax
         if r2 is None:
