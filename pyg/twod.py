@@ -2373,18 +2373,28 @@ class pyg2d(object):
                     self.png_filename = filename + '.png'
 
     def close(self):
+        """Closes the current plot."""
         plt.close(self.fig)
 
     def __call__(self):
-
+        """A shortcut to export and show the plot."""
         self.export(self.temp_name, force=True)
         self.show('Temporary figure %s' % self.temp_name)
 
     def add_metadata(self, filename):
+        """Adds the generating file and date to the file metadata.
+
+        :param str filename: location of filename to add the metadata
+        """
         os.system("setfattr -n user.creation_script -v \'%s\' %s" % (__file__, filename))
         os.system("setfattr -n user.creation_date -v \'%s\' %s" % (time.strftime("%d/%m/%Y"), filename))
 
     def publish_to(self, directory):
+        """Copies the file to a directory.
+
+        :param str directory: path to copy the file to. Either a full path or a key to
+            a setup directory in builtins
+        """
         if directory not in bi.__exported_files__:
             bi.__exported_files__[directory] = []
         if hasattr(self, 'pgf_filename'):
@@ -2405,15 +2415,6 @@ class pyg2d(object):
                 shutil.copy(self.png_filename, directory)
                 bi.__exported_files__[directory] \
                     .extend([os.path.basename(self.png_filename)])
-
-
-def commit_publications(message='automated commit'):
-    for key, val in bi.__exported_files__.iteritems():
-        os.chdir(key)
-        for filename in val:
-            os.system('git add %s' % filename)
-        os.system('git commit -am "%s"' % message)
-
 
 plot = pyg2d()
 plt.cla()
