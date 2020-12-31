@@ -2033,20 +2033,36 @@ class pyg2d(object):
         return x, y, delta
 
     def add_legend(self, axes=None):
+        """Add a legend to the given axes.
+
+        :param axes: axes object to which to add the legend
+        """
         if axes is None:
             axes = self.ax
         self.leg = True
         leg = axes.legend()
         self.artists.append(leg)
+        return self
 
     def det_height(self, ratio="golden"):
+        """Detect the height given the current width and the ratio.
+
+        :param ratio: the visual aspect ratio, one of `'golden', 'silver'
+            'bronze', 'invgolden', 'invsilver', 'invbronze', 'square'` or
+            a number
+        """
         r = metal_dim(ratio)
         if self.landscape:
             self.height = self.width / r
         else:
             self.height = self.width * r
+        return self
 
-    def remove_font_sizes(self,filename):
+    def remove_font_sizes(self, filename):
+        """Remove font sizes from the pgf file so it autosizes to each latex document
+
+        :param str filename: pgf filename from which to remove font sizes
+        """
         f=open(filename,'r')
         fstring = "\\centering \n" + f.read()
         f.close()
@@ -2057,6 +2073,7 @@ class pyg2d(object):
         fstring = fstring.replace('pgfimage', 'includegraphics')
         f.write(fstring)
         f.close()
+        return self
 
     def add_math_jax(self, filename):
         f = open(filename, 'r')
