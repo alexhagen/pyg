@@ -1198,10 +1198,19 @@ class pyg2d(object):
         self.allartists.append((h1, h2, h3, h4))
 
     def equal_aspect_ratio(self):
+        """Set the plots data aspect ratio to be 1:1.
+        """
         self.ax.set_aspect('equal', 'datalim')
 
     @staticmethod
     def latex_string(string):
+        """Format a string for pretty LaTeX representation.
+        
+        latex_string replaces e+03 with \times 10^{3} for better representation
+        when passed through a latex compiler.
+        
+        :param str string: string to modify for good latex representation
+        """
         try:
             power = int(re.search('(e([+-]?[0-9]+))', string).group(2))
             string = re.sub('e([+-]?[0-9]+)', (r'\times 10^{%d}' % power).encode('string-escape'), string)
