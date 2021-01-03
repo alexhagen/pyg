@@ -1221,6 +1221,24 @@ class pyg2d(object):
     def add_data_pointer(self, x, curve=None, string=None, point=None,
                          place='up-right', ha='left', axes=None, latex=True,
                          fc='0.3', rel_place=False, curve_vert=True, **kwargs):
+        """Add a label to a data point with a curved arrow.
+        
+        :param float x: horizontal coordinate of labeled data point
+        :param pym.curve curve: curve object to locat data point vertical
+            coordinate
+        :param str string: data point label
+        :param float point: vertical coordinate of labeled data point
+        :param str place: location of label
+        :param bool rel_place: whether placement is relative to data point
+            or absolute in data coordinates
+        :param axes: axes object to which to add pointer and label
+        :param str fc: color of arrow and label
+        :param str ha: horizontal alignment of label
+        :param bool latex: whether to format label as latex
+        :param bool curve_vert: whether pointer should exit vertically from
+            data point
+        :param dict kwargs: additional keyword arguments to pass to annotate
+        """
         if isinstance(x, int):
             x = float(x)
         if axes is None:
