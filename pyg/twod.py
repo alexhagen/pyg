@@ -1172,6 +1172,19 @@ class pyg2d(object):
 
     def add_hmeasure(self, x1, x2, y1, string=None, place=None, offset=0.01,
                      axes=None, units='', log=False, rotation=0, **kwargs):
+        """Adds a horizontal measurement to the plot from `x1` to `x2`.
+
+        :param float x1: horizontal left coordinate
+        :param float y2: horizontal right coordinate
+        :param float y1: vertical coordinate
+        :param str string: label for coordinate, otherwise the data distance
+        :param place: where to place the label
+        :param float offset: how far to offset the label
+        :param axes: axes object to place measure on
+        :param str units: units to add to data distance measurement
+        :param bool log: whether the plot is in log space
+        :param dict kwargs: keyword arguments to pass to `add_arrow`
+        """
         if axes is None:
             axes = self.ax
         if string is None:
