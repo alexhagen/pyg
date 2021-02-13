@@ -132,9 +132,18 @@ gui_preamble = [
            ]
 
 def force(val=True):
+    """Set the global force regenerate flag.
+    
+    :param bool val: value to set the global force flag.
+    """
     __force__.val = val
 
 def which(program):
+    """Checks if a program exists and is executable.
+    
+    :param str program: Program name to check.
+    :returns: Absolute path to program if it exists, None otherwise.
+    """
     import os
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
