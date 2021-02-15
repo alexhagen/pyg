@@ -162,6 +162,10 @@ def which(program):
 
 
 def load(fname, svg=False):
+    """Loads a saved pyg plot.
+    
+    :param bool svg: Whether this file is an svg.
+    """
     _fig = pickle.load(open(os.path.expanduser('~') +
                             '/.pyg/%s.pickle' % fname, 'rb'))
     if not svg:
